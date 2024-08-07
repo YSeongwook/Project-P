@@ -1,69 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Puzzle : MonoBehaviour
 {
-    private int puzzle3X3 = 9;
-    private int puzzle4X4 = 16;
-    private int puzzle5X5 = 25;
-    private int puzzle6X6 = 36;
-    private int puzzle7X7 = 49;
-
-    [SerializeField]
-    private GameObject puzzleprefab;
+    [SerializeField] private GameObject puzzlePrefab;
+    
+    private const int Puzzle3X3 = 9;
+    private const int Puzzle4X4 = 16;
+    private const int Puzzle5X5 = 25;
+    private const int Puzzle6X6 = 36;
+    private const int Puzzle7X7 = 49;
 
     public void OnCreate3X3Puzzle()
     {
         DestroyAllChildren();
-        for (int i = 0; i < puzzle3X3; i++)
-        {
-            GameObject puzzlePiece = Instantiate(puzzleprefab, transform.position, transform.rotation);
-            puzzlePiece.transform.SetParent(gameObject.transform);
-        }
+        CreatePuzzle(Puzzle3X3);
     }
 
     public void OnCreate4X4Puzzle()
     {
         DestroyAllChildren();
-        for (int i = 0; i < puzzle4X4; i++)
-        {
-            GameObject puzzlePiece = Instantiate(puzzleprefab, transform.position, transform.rotation);
-            puzzlePiece.transform.SetParent(gameObject.transform);
-        }
+        CreatePuzzle(Puzzle4X4);
     }
 
     public void OnCreate5X5Puzzle()
     {
         DestroyAllChildren();
-        for (int i = 0; i < puzzle5X5; i++)
-        {
-            GameObject puzzlePiece = Instantiate(puzzleprefab, transform.position, transform.rotation);
-            puzzlePiece.transform.SetParent(gameObject.transform);
-        }
+        CreatePuzzle(Puzzle5X5);
     }
 
     public void OnCreate6X6Puzzle()
     {
         DestroyAllChildren();
-        for (int i = 0; i < puzzle6X6; i++)
-        {
-            GameObject puzzlePiece = Instantiate(puzzleprefab, transform.position, transform.rotation);
-            puzzlePiece.transform.SetParent(gameObject.transform);
-        }
+        CreatePuzzle(Puzzle6X6);
     }
 
     public void OnCreate7X7Puzzle()
     {
         DestroyAllChildren();
-        for (int i = 0; i < puzzle7X7; i++)
-        {
-            GameObject puzzlePiece = Instantiate(puzzleprefab, transform.position, transform.rotation);
-            puzzlePiece.transform.SetParent(gameObject.transform);
-        }
+        CreatePuzzle(Puzzle7X7);
     }
 
-    public void DestroyAllChildren()
+    private void DestroyAllChildren()
     {
         int childCount = transform.childCount;
 
@@ -77,5 +54,12 @@ public class Puzzle : MonoBehaviour
         }
     }
 
-
+    private void CreatePuzzle(int puzzleSize)
+    {
+        for (int i = 0; i < puzzleSize; i++)
+        {
+            GameObject puzzlePiece = Instantiate(puzzlePrefab, transform.position, transform.rotation);
+            puzzlePiece.transform.SetParent(gameObject.transform);
+        }
+    }
 }
