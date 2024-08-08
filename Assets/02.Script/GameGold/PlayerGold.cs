@@ -1,5 +1,6 @@
 using EnumTypes;
 using EventLibrary;
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,8 +9,8 @@ using UnityEngine;
 
 public class PlayerGold : Singleton<PlayerGold>
 {
-    [SerializeField] private TMP_Text GoldPrice;    // 골드 UI 표시
-    [SerializeField] private TMP_Text ERCPrice;     // ERC UI 표시
+    [FoldoutGroup("Player Gold UI")][SerializeField] private TMP_Text GoldPrice;    // 골드 UI 표시
+    [FoldoutGroup("Player Gold UI")][SerializeField] private TMP_Text ERCPrice;     // ERC UI 표시
 
     private float GoldValue;    // Player가 가지고 있는 Gold의 갯수
     private float ERCValue;     // Player가 가지고 있는 ERC의 갯수

@@ -1,5 +1,6 @@
 using EnumTypes;
 using EventLibrary;
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -28,8 +29,8 @@ public class Item_Basic : MonoBehaviour
     [SerializeField] float TempItemGoldPrice;
     [SerializeField] float TempItemERCPrice;
 
-    [SerializeField] TMP_Text Text_Name;        // 상점 아이템 이름 UI 표시
-    [SerializeField] TMP_Text Text_GoldPrice;   // 상점 아이템 골드 가격 UI 표시
+    [FoldoutGroup("Shop UI")][SerializeField] TMP_Text Text_Name;        // 상점 아이템 이름 UI 표시
+    [FoldoutGroup("Shop UI")][SerializeField] TMP_Text Text_GoldPrice;   // 상점 아이템 골드 가격 UI 표시
 
     private ItemData ItemInfo;      // 아이템의 정보
 

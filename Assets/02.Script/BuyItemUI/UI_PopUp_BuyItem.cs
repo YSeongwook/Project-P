@@ -1,5 +1,6 @@
 using EnumTypes;
 using EventLibrary;
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -11,8 +12,11 @@ public class UI_PopUp_BuyItem : MonoBehaviour
     private ItemData _data;     //구매할 아이템의 정보
     private float BuyItemCount; //구매할 아이템의 갯수
 
+    [FoldoutGroup("UI Prefab")]
     [SerializeField] private Image ItemIcon;    //구매할 아이템의 아이콘 표시 UI
+    [FoldoutGroup("UI Prefab")]
     [SerializeField] private TMP_Text Text_ItemPrice;   //구매할 아이템의 가격 표시 UI
+    [FoldoutGroup("UI Prefab")]
     [SerializeField] private TMP_Text Text_BuyItemCount;    //구매할 아이템의 갯수 표시 UI
 
     private void Awake()
