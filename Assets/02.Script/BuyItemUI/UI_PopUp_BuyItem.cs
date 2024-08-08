@@ -21,6 +21,8 @@ public class UI_PopUp_BuyItem : MonoBehaviour
 
     private void Awake()
     {
+        EventManager<UIEvents>.StartListening(UIEvents.OnClickEnablePopup, PopUpOn);
+        EventManager<UIEvents>.StartListening(UIEvents.OnClickDisablePopup, PopUpOff);
         EventManager<UIEvents>.StartListening(UIEvents.OnClickChangeBuyItemCount, UpdateBuyItemText);
         EventManager<UIEvents>.StartListening<ItemData>(UIEvents.OnClickBuyItem, SetBuyItem);
     }
@@ -32,6 +34,8 @@ public class UI_PopUp_BuyItem : MonoBehaviour
 
     private void OnDestroy()
     {
+        EventManager<UIEvents>.StopListening(UIEvents.OnClickEnablePopup, PopUpOn);
+        EventManager<UIEvents>.StopListening(UIEvents.OnClickDisablePopup, PopUpOff);
         EventManager<UIEvents>.StopListening(UIEvents.OnClickChangeBuyItemCount, UpdateBuyItemText);
         EventManager<UIEvents>.StopListening<ItemData>(UIEvents.OnClickBuyItem, SetBuyItem);
     }
@@ -40,6 +44,19 @@ public class UI_PopUp_BuyItem : MonoBehaviour
     {
         BuyItemCount = 1f;
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickChangeBuyItemCount);
+    }
+
+    //구매 창 PopUp On
+    private void PopUpOn()
+    {
+        this.gameObject.SetActive(true);
+    }
+
+
+    //구매 창 PopUp Off
+    private void PopUpOff()
+    {
+        this.gameObject.SetActive(false);
     }
 
     //구매할 아이템 초기화
@@ -51,14 +68,14 @@ public class UI_PopUp_BuyItem : MonoBehaviour
     //구매 갯수 증가
     public void Plus_BuyItemCount()
     {
-        BuyItemCount = Mathf.Clamp(BuyItemCount + 1, 0, 99);
+        BuyItemCount = Mathf.Clamp(BuyItemCount + 1, 1, 99);
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickChangeBuyItemCount);
     }
 
     //구매 갯수 감소
     public void Minus_BuyItemCount()
     {
-        BuyItemCount = Mathf.Clamp(BuyItemCount - 1, 0, 99);
+        BuyItemCount = Mathf.Clamp(BuyItemCount - 1, 1, 99);
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickChangeBuyItemCount);
     }
 

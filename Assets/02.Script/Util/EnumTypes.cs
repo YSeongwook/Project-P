@@ -43,7 +43,9 @@ namespace EnumTypes
         OnClickStart,
         OnClickBuyItem,
         OnClickItemBuyButton,
-        OnClickChangeBuyItemCount
+        OnClickChangeBuyItemCount,
+        OnClickEnablePopup,
+        OnClickDisablePopup,
     }
 
     public enum DataEvents
