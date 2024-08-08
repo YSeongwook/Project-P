@@ -12,8 +12,9 @@ public class PathGridGenerator : MonoBehaviour
 
     [FoldoutGroup("Tile Prefab")] public GameObject straightTilePrefab; // 일자 타일 프리팹
     [FoldoutGroup("Tile Prefab")] public GameObject crossTilePrefab; // 십자 타일 프리팹
-    [FoldoutGroup("Tile Prefab")] public GameObject tTilePrefab; // ㅗ자 타일 프리팹
+    [FoldoutGroup("Tile Prefab")] public GameObject tTilePrefab; // T자 타일 프리팹
     [FoldoutGroup("Tile Prefab")] public GameObject cornerTilePrefab; // ㄱ자 타일 프리팹
+    [FoldoutGroup("Tile Prefab")] public GameObject endTilePrefab; // 끝 부분 타일 프리팹
 
     private List<Vector2Int> _path; // 경로 저장
     private HashSet<Vector2Int> _occupied; // 점유된 타일 좌표 저장
@@ -21,12 +22,21 @@ public class PathGridGenerator : MonoBehaviour
 
     private void Start()
     {
-        Vector2Int startPoint = GetRandomPoint();
-        Vector2Int endPoint = GetDistantPoint(startPoint, minDistance);
+        GenerateAndPlacePath();
+    }
 
-        GeneratePath(startPoint, endPoint);
-        PlacePathTiles();
-        RotateTilesRandomly();
+    public void GenerateAndPlacePath()
+    {
+        bool success = GenerateFullGridPath();
+        if (success)
+        {
+            PlacePathTiles();
+            RotateTilesRandomly();
+        }
+        else
+        {
+            Debug.LogError("Failed to generate a valid path.");
+        }
     }
 
     // 무작위 시작점 반환
@@ -35,29 +45,21 @@ public class PathGridGenerator : MonoBehaviour
         return new Vector2Int(Random.Range(0, width), Random.Range(0, height));
     }
 
-    // 특정 거리 이상 떨어진 무작위 점 반환
-    private Vector2Int GetDistantPoint(Vector2Int startPoint, int minDistance)
-    {
-        Vector2Int endPoint;
-        do
-        {
-            endPoint = GetRandomPoint();
-        } while (Vector2Int.Distance(startPoint, endPoint) < minDistance);
-
-        return endPoint;
-    }
-
     // 경로 생성 메서드
-    private void GeneratePath(Vector2Int startPoint, Vector2Int endPoint)
+    private bool GenerateFullGridPath()
     {
         _path = new List<Vector2Int>();
         _occupied = new HashSet<Vector2Int>();
-        Vector2Int currentPos = startPoint;
-        _path.Add(currentPos);
-        _occupied.Add(currentPos);
 
-        while (currentPos != endPoint)
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        Vector2Int startPos = GetRandomPoint();
+        queue.Enqueue(startPos);
+        _path.Add(startPos);
+        _occupied.Add(startPos);
+
+        while (queue.Count > 0)
         {
+            Vector2Int currentPos = queue.Dequeue();
             List<Vector2Int> possibleMoves = new List<Vector2Int>();
 
             if (currentPos.x < width - 1 && !_occupied.Contains(currentPos + Vector2Int.right))
@@ -69,14 +71,19 @@ public class PathGridGenerator : MonoBehaviour
             if (currentPos.y > 0 && !_occupied.Contains(currentPos + Vector2Int.down))
                 possibleMoves.Add(Vector2Int.down);
 
-            if (possibleMoves.Count == 0) break; // 더 이상 이동할 곳이 없으면 종료
-
-            Vector2Int move = possibleMoves[Random.Range(0, possibleMoves.Count)];
-            currentPos += move;
-
-            _path.Add(currentPos);
-            _occupied.Add(currentPos);
+            foreach (Vector2Int move in possibleMoves)
+            {
+                Vector2Int newPos = currentPos + move;
+                if (!_occupied.Contains(newPos))
+                {
+                    queue.Enqueue(newPos);
+                    _path.Add(newPos);
+                    _occupied.Add(newPos);
+                }
+            }
         }
+
+        return _path.Count == width * height;
     }
 
     // 타일 배치 메서드
@@ -87,59 +94,167 @@ public class PathGridGenerator : MonoBehaviour
         {
             Vector2Int pos = _path[i];
             GameObject tile = null;
+            int rotation = 0;
 
-            if (i == 0 || i == _path.Count - 1)
+            if (i == 0)
             {
-                // 시작 타일과 끝 타일
-                tile = Instantiate(straightTilePrefab, gridParent.transform);
+                // 시작 타일
+                tile = Instantiate(endTilePrefab, gridParent.transform);
+                rotation = 0; // 하단 입구 설정
+                var rotationTile = tile.GetComponentInChildren<RotationTile>();
+                if (rotationTile != null)
+                {
+                    rotationTile.Entrances = new List<Vector2Int> { Vector2Int.up }; // 시작 타일 입구 설정
+                }
+            }
+            else if (i == _path.Count - 1)
+            {
+                // 끝 타일
+                tile = Instantiate(endTilePrefab, gridParent.transform);
+                rotation = 180; // 하단 입구 설정
+                var rotationTile = tile.GetComponentInChildren<RotationTile>();
+                if (rotationTile != null)
+                {
+                    rotationTile.Entrances = new List<Vector2Int> { Vector2Int.down }; // 끝 타일 입구 설정
+                }
             }
             else
             {
                 Vector2Int prevPos = _path[i - 1];
-                Vector2Int nextPos = _path[i + 1];
+                Vector2Int nextPos = (i < _path.Count - 1) ? _path[i + 1] : prevPos;
 
-                // 타일 종류 선택
-                tile = SelectTile(prevPos, pos, nextPos);
+                // 타일 종류 선택 및 배치
+                tile = SelectAndPlaceTile(prevPos, pos, nextPos);
             }
 
-            RectTransform rectTransform = tile.GetComponent<RectTransform>();
-            rectTransform.anchoredPosition = new Vector2(pos.x * 100, pos.y * 100); // 각 타일의 위치 설정
-            _tiles[pos] = tile;
+            if (tile != null)
+            {
+                tile.transform.rotation = Quaternion.Euler(0, 0, rotation);
 
-            // 클릭 이벤트 추가
-            tile.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => RotateTile(tile));
+                RectTransform rectTransform = tile.GetComponent<RectTransform>();
+                rectTransform.anchoredPosition = new Vector2(pos.x * 100, pos.y * 100); // 각 타일의 위치 설정
+                _tiles[pos] = tile;
+
+                Debug.Log($"Placed tile at position {pos}"); // 디버그 메시지 추가
+            }
+            else
+            {
+                Debug.LogError($"Failed to place tile at position {pos}");
+            }
         }
     }
 
-    // 타일 선택 메서드
-    private GameObject SelectTile(Vector2Int prevPos, Vector2Int currentPos, Vector2Int nextPos)
+
+    // 타일 선택 및 배치 메서드
+    private GameObject SelectAndPlaceTile(Vector2Int prevPos, Vector2Int currentPos, Vector2Int nextPos)
     {
-        if (prevPos.x == currentPos.x && nextPos.x == currentPos.x)
+        GameObject tile = null;
+        int rotation = 0;
+
+        // 일자 타일 조건 추가
+        if ((prevPos.x == currentPos.x && nextPos.x == currentPos.x) || (prevPos.y == currentPos.y && nextPos.y == currentPos.y))
         {
-            return Instantiate(straightTilePrefab, gridParent.transform); // 일자 타일
+            tile = Instantiate(straightTilePrefab, gridParent.transform); // 일자 타일
+            rotation = (prevPos.x == currentPos.x) ? 90 : 0; // 수직 또는 수평 방향
         }
-        else if (prevPos.y == currentPos.y && nextPos.y == currentPos.y)
+        // 십자 타일 조건 수정
+        else if (IsCross(prevPos, currentPos))
         {
-            return Instantiate(straightTilePrefab, gridParent.transform); // 일자 타일
+            tile = Instantiate(crossTilePrefab, gridParent.transform); // 십자 타일
+            rotation = 0; // 모든 방향
         }
-        else if (prevPos.x != currentPos.x && nextPos.x != currentPos.x && prevPos.y != currentPos.y && nextPos.y != currentPos.y)
+        // ㅗ자 타일 조건 추가
+        else if (IsTShape(prevPos, currentPos, nextPos, out rotation))
         {
-            return Instantiate(crossTilePrefab, gridParent.transform); // 십자 타일
+            tile = Instantiate(tTilePrefab, gridParent.transform); // T자 타일
         }
-        else if ((prevPos.x == currentPos.x && nextPos.y == currentPos.y) || (prevPos.y == currentPos.y && nextPos.x == currentPos.x))
+        // ㄱ자 타일 조건 추가
+        else if (IsCorner(prevPos, currentPos, nextPos, out rotation))
         {
-            return Instantiate(tTilePrefab, gridParent.transform); // ㅗ자 타일
+            tile = Instantiate(cornerTilePrefab, gridParent.transform); // ㄱ자 타일
+        }
+
+        if (tile != null)
+        {
+            tile.transform.rotation = Quaternion.Euler(0, 0, rotation);
+        
+            // 입구 정보 업데이트
+            RotationTile rotationTile = tile.GetComponentInChildren<RotationTile>();
+            if (rotationTile != null)
+            {
+                rotationTile.UpdateEntrances();
+            }
         }
         else
         {
-            return Instantiate(cornerTilePrefab, gridParent.transform); // ㄱ자 타일
+            Debug.LogError("Tile instantiation failed.");
         }
+        
+        return tile;
     }
 
-    // 타일 회전 메서드
-    private void RotateTile(GameObject tile)
+    // 십자 타일인지 확인하는 메서드 수정
+    private bool IsCross(Vector2Int prevPos, Vector2Int currentPos)
     {
-        tile.transform.rotation *= Quaternion.Euler(0, 0, 90); // 90도 회전
+        return (prevPos.x != currentPos.x && prevPos.y != currentPos.y);
+    }
+
+    // ㅗ자 타일인지 확인하는 메서드 및 회전값 설정
+    private bool IsTShape(Vector2Int prevPos, Vector2Int currentPos, Vector2Int nextPos, out int rotation)
+    {
+        rotation = 0;
+
+        if ((prevPos.y == currentPos.y && currentPos.x != nextPos.x) || (prevPos.x == currentPos.x && currentPos.y != nextPos.y))
+        {
+            if (currentPos.y > nextPos.y)
+            {
+                rotation = 0; // 아래 방향
+            }
+            else if (currentPos.y < nextPos.y)
+            {
+                rotation = 180; // 위 방향
+            }
+            else if (currentPos.x > nextPos.x)
+            {
+                rotation = 90; // 오른쪽 방향
+            }
+            else if (currentPos.x < nextPos.x)
+            {
+                rotation = 270; // 왼쪽 방향
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    // ㄱ자 타일인지 확인하는 메서드 및 회전값 설정
+    private bool IsCorner(Vector2Int prevPos, Vector2Int currentPos, Vector2Int nextPos, out int rotation)
+    {
+        rotation = 0;
+
+        if ((prevPos.x != currentPos.x && currentPos.y != nextPos.y) || (prevPos.y != currentPos.y && currentPos.x != nextPos.y))
+        {
+            if (currentPos.x < nextPos.x && currentPos.y < prevPos.y)
+            {
+                rotation = 0; // 오른쪽 아래
+            }
+            else if (currentPos.x < nextPos.x && currentPos.y > prevPos.y)
+            {
+                rotation = 270; // 오른쪽 위
+            }
+            else if (currentPos.x > nextPos.x && currentPos.y < prevPos.y)
+            {
+                rotation = 90; // 왼쪽 아래
+            }
+            else if (currentPos.x > nextPos.x && currentPos.y > prevPos.y)
+            {
+                rotation = 180; // 왼쪽 위
+            }
+            return true;
+        }
+
+        return false;
     }
 
     // 타일 랜덤 회전 메서드
@@ -149,6 +264,13 @@ public class PathGridGenerator : MonoBehaviour
         {
             int randomRotation = Random.Range(0, 4) * 90; // 0, 90, 180, 270 중 하나 선택
             entry.Value.transform.rotation = Quaternion.Euler(0, 0, randomRotation);
+            
+            // 회전 후 입구 정보 업데이트
+            RotationTile rotationTile = entry.Value.GetComponentInChildren<RotationTile>();
+            if (rotationTile != null)
+            {
+                rotationTile.UpdateEntrances();
+            }
         }
     }
 }
