@@ -17,11 +17,7 @@ MonoBehaviour:
   m_RendererType: 1
   m_RendererData: {fileID: 0}
   m_RendererDataList:
-<<<<<<< HEAD
   - {fileID: 11400000, guid: 38cb1a148eb70c545b15b2c25d0e9afb, type: 2}
-=======
-  - {fileID: 11400000, guid: ad4bf69a447497a45b2b02ebb79d4430, type: 2}
->>>>>>> Kanggeon
   m_DefaultRendererIndex: 0
   m_RequireDepthTexture: 0
   m_RequireOpaqueTexture: 0
