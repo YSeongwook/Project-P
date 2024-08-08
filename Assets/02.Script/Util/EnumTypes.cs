@@ -41,18 +41,9 @@ namespace EnumTypes
     {
         OnClickSignInGoogle,
         OnClickStart,
-        OnClickManualGPGSSignIn,
-        OnClickEmailSignIn,
-        StartLoading,
-        EndLoading,
-        OnTouchStartJoystick,
-        OnTouchEndJoystick,
-        OnClickAutoButton,
-        OnClickShowOnlyOwnedButton,
-        OnClickSortListAttackButton,
-        OnClickHeroTabButton,
-        OnClickFormationTabButton,
-        FormationChanged,
+        OnClickBuyItem,
+        OnClickItemBuyButton,
+        OnClickChangeBuyItemCount
     }
 
     public enum DataEvents
@@ -61,15 +52,6 @@ namespace EnumTypes
         OnUserDataLoad,
         OnUserDataReset,
         HeroCollectionUpdated,
-    }
-
-    public enum GachaEvents
-    {
-        GachaSingle,
-        GachaTen,
-        GachaThirty,
-        AddGachaTen,
-        AddGachaThirty
     }
 
     public enum GoogleEvents
