@@ -161,4 +161,7 @@ fabric.properties
 Assets\StreamingAssets\google-services.json
 Assets\StreamingAssets\google-services-desktop.json
 
+#Thirdparty with LFS
+Assets\11.Thirdparty\**
+
 # End of https://www.toptal.com/developers/gitignore/api/rider
