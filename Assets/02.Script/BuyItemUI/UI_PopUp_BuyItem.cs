@@ -21,6 +21,11 @@ public class UI_PopUp_BuyItem : MonoBehaviour
         EventManager<UIEvents>.StartListening<ItemData>(UIEvents.OnClickBuyItem, SetBuyItem);
     }
 
+    private void Start()
+    {
+        gameObject.SetActive(false);
+    }
+
     private void OnDestroy()
     {
         EventManager<UIEvents>.StopListening(UIEvents.OnClickChangeBuyItemCount, UpdateBuyItemText);

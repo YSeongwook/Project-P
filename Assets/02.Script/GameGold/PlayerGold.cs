@@ -58,12 +58,12 @@ public class PlayerGold : Singleton<PlayerGold>
     // 아이템 구매 - 골드 (기본)
     public void BuyItem_Gold(ItemData itemInfo, float Count)
     {
-        if (GoldValue < itemInfo.GoldPrice)
+        if (GoldValue < itemInfo.GoldPrice * Count)
         {
             BuyItem_ERC(itemInfo, Count);
         }
         else
-            GoldValue -= itemInfo.GoldPrice;
+            GoldValue -= itemInfo.GoldPrice * Count;
 
         UpdateUIText();
     }
@@ -71,12 +71,12 @@ public class PlayerGold : Singleton<PlayerGold>
     //아이템 구매 - ERC (Gold가 구매 가격보다 적으면)
     private void BuyItem_ERC(ItemData itemInfo, float Count)
     {
-        if (ERCValue < itemInfo.ERCPrice)
+        if (ERCValue < itemInfo.ERCPrice * Count)
         {
             DebugLogger.Log("금액이 부족합니다.");
             return;
         }
         else
-            ERCValue -= itemInfo.ERCPrice;
+            ERCValue -= itemInfo.ERCPrice * Count;
     }
 }
