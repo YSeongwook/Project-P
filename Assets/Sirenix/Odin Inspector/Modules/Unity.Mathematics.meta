@@ -1,9 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Sirenix/Odin Inspector/Modules/Unity.Mathematics.meta
 <<<<<<< HEAD:Assets/Plugins/Sirenix/Odin Inspector/Modules/Unity.Mathematics.meta
 guid: 7631f16de18b471439eeca718b18076e
 =======
 guid: 0c6a3e8174bc15d4599207a1459615fb
 >>>>>>> Jinmyung:Assets/Sirenix/Odin Inspector/Modules/Unity.Mathematics.meta
+=======
+guid: 5a1307b6e37dd2246a503b52cbd3b48f
+>>>>>>> Kanggeon:Assets/Plugins/Sirenix/Odin Inspector/Modules/Unity.Mathematics.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

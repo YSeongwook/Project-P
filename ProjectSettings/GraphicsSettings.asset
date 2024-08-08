@@ -40,10 +40,14 @@ GraphicsSettings:
   m_PreloadShadersBatchTimeLimit: -1
   m_SpritesDefaultMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_CustomRenderPipeline: {fileID: 11400000, guid: a71e9d5c4924443428103e46e31d949e, type: 2}
 =======
   m_CustomRenderPipeline: {fileID: 0}
 >>>>>>> Jinmyung
+=======
+  m_CustomRenderPipeline: {fileID: 11400000, guid: 9d176bef6c94f81418364642e3b7b5d9, type: 2}
+>>>>>>> Kanggeon
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 0, z: 1}
   m_DefaultRenderingPath: 1
@@ -63,6 +67,7 @@ GraphicsSettings:
   m_FogKeepExp2: 1
   m_AlbedoSwatchInfos: []
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_LightsUseLinearIntensity: 1
   m_LightsUseColorTemperature: 1
   m_DefaultRenderingLayerMask: 1
@@ -77,5 +82,13 @@ GraphicsSettings:
   m_SRPDefaultSettings:
     UnityEngine.Rendering.Universal.UniversalRenderPipeline: {fileID: 11400000, guid: 5515d6d34c83e704a998253cd6699968, type: 2}
 >>>>>>> Jinmyung
+=======
+  m_LightsUseLinearIntensity: 1
+  m_LightsUseColorTemperature: 1
+  m_DefaultRenderingLayerMask: 1
+  m_LogWhenShaderIsCompiled: 0
+  m_SRPDefaultSettings:
+    UnityEngine.Rendering.Universal.UniversalRenderPipeline: {fileID: 11400000, guid: 0ce70f661f9e7ea408942d5910ebd6f7, type: 2}
+>>>>>>> Kanggeon
   m_CameraRelativeLightCulling: 0
   m_CameraRelativeShadowCulling: 0
