@@ -51,15 +51,15 @@ public class PathGridGenerator : MonoBehaviour
         _path = new List<Vector2Int>();
         _occupied = new HashSet<Vector2Int>();
 
-        Queue<Vector2Int> queue = new Queue<Vector2Int>();
-        Vector2Int startPos = GetRandomPoint();
-        queue.Enqueue(startPos);
-        _path.Add(startPos);
-        _occupied.Add(startPos);
+        Stack<Vector2Int> stack = new Stack<Vector2Int>();
+        Vector2Int currentPos = new Vector2Int(0, 0);
+        stack.Push(currentPos);
+        _path.Add(currentPos);
+        _occupied.Add(currentPos);
 
-        while (queue.Count > 0)
+        while (stack.Count > 0)
         {
-            Vector2Int currentPos = queue.Dequeue();
+            currentPos = stack.Peek();
             List<Vector2Int> possibleMoves = new List<Vector2Int>();
 
             if (currentPos.x < width - 1 && !_occupied.Contains(currentPos + Vector2Int.right))
@@ -71,15 +71,18 @@ public class PathGridGenerator : MonoBehaviour
             if (currentPos.y > 0 && !_occupied.Contains(currentPos + Vector2Int.down))
                 possibleMoves.Add(Vector2Int.down);
 
-            foreach (Vector2Int move in possibleMoves)
+            if (possibleMoves.Count > 0)
             {
-                Vector2Int newPos = currentPos + move;
-                if (!_occupied.Contains(newPos))
-                {
-                    queue.Enqueue(newPos);
-                    _path.Add(newPos);
-                    _occupied.Add(newPos);
-                }
+                Vector2Int move = possibleMoves[Random.Range(0, possibleMoves.Count)];
+                currentPos += move;
+
+                stack.Push(currentPos);
+                _path.Add(currentPos);
+                _occupied.Add(currentPos);
+            }
+            else
+            {
+                stack.Pop();
             }
         }
 
@@ -135,7 +138,6 @@ public class PathGridGenerator : MonoBehaviour
                 rectTransform.anchoredPosition = new Vector2(pos.x * 100, pos.y * 100); // 각 타일의 위치 설정
                 _tiles[pos] = tile;
 
-                Debug.Log($"Placed tile at position {pos}"); // 디버그 메시지 추가
             }
             else
             {
@@ -143,7 +145,6 @@ public class PathGridGenerator : MonoBehaviour
             }
         }
     }
-
 
     // 타일 선택 및 배치 메서드
     private GameObject SelectAndPlaceTile(Vector2Int prevPos, Vector2Int currentPos, Vector2Int nextPos)
@@ -158,7 +159,7 @@ public class PathGridGenerator : MonoBehaviour
             rotation = (prevPos.x == currentPos.x) ? 90 : 0; // 수직 또는 수평 방향
         }
         // 십자 타일 조건 수정
-        else if (IsCross(prevPos, currentPos))
+        else if (IsCross(prevPos, currentPos, nextPos))
         {
             tile = Instantiate(crossTilePrefab, gridParent.transform); // 십자 타일
             rotation = 0; // 모든 방향
@@ -194,9 +195,10 @@ public class PathGridGenerator : MonoBehaviour
     }
 
     // 십자 타일인지 확인하는 메서드 수정
-    private bool IsCross(Vector2Int prevPos, Vector2Int currentPos)
+    private bool IsCross(Vector2Int prevPos, Vector2Int currentPos, Vector2Int nextPos)
     {
-        return (prevPos.x != currentPos.x && prevPos.y != currentPos.y);
+        bool isCross = (prevPos.x != currentPos.x && prevPos.y != currentPos.y) || (nextPos.x != currentPos.x && nextPos.y != currentPos.y);
+        return isCross;
     }
 
     // ㅗ자 타일인지 확인하는 메서드 및 회전값 설정
@@ -225,6 +227,7 @@ public class PathGridGenerator : MonoBehaviour
             return true;
         }
 
+        Debug.Log($"IsTShape evaluated to false for {prevPos}, {currentPos}, {nextPos}");
         return false;
     }
 
@@ -254,6 +257,7 @@ public class PathGridGenerator : MonoBehaviour
             return true;
         }
 
+        Debug.Log($"IsCorner evaluated to false for {prevPos}, {currentPos}, {nextPos}");
         return false;
     }
 
