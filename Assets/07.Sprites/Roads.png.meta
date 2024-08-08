@@ -33,7 +33,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -117,11 +117,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: road_cross
+      name: Road_cross
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
+        x: 186
+        y: 32
         width: 64
         height: 64
       alignment: 0
@@ -138,11 +138,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: road_h
+      name: Road_T
       rect:
         serializedVersion: 2
-        x: 448
-        y: 64
+        x: 384
+        y: 31
         width: 64
         height: 64
       alignment: 0
@@ -159,11 +159,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: road_linear
+      name: Road_Straight
       rect:
         serializedVersion: 2
-        x: 192
-        y: 128
+        x: 6
+        y: 39
         width: 64
         height: 64
       alignment: 0
@@ -180,11 +180,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: road_end
+      name: Road_end
       rect:
         serializedVersion: 2
-        x: 320
-        y: 128
+        x: 250
+        y: 43
         width: 64
         height: 64
       alignment: 0
@@ -201,11 +201,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: road_corner
+      name: Road_corner
       rect:
         serializedVersion: 2
-        x: 128
-        y: 64
+        x: 93
+        y: 27
         width: 64
         height: 64
       alignment: 0
@@ -221,6 +221,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Roads_end2
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 43
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9c3963f205a46840874f3650db02f3f
+      internalID: -1493912242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -232,11 +253,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      road_corner: 1210937206
-      road_cross: -1446428360
-      road_end: -1955178436
-      road_h: 33532268
-      road_linear: -2062186635
+      Road_Straight: -2062186635
+      Road_T: 33532268
+      Road_corner: 1210937206
+      Road_cross: -1446428360
+      Road_end: -1955178436
+      Roads_end2: -1493912242
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

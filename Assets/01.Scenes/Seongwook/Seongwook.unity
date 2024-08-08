@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -978,7 +978,7 @@ MonoBehaviour:
   crossTilePrefab: {fileID: 4886918754351498150, guid: 0a972e3c721f9534f8d7ed8add1242c6, type: 3}
   tTilePrefab: {fileID: 4886918754351498150, guid: 70140775640eb4049ba5cd28fdba47f5, type: 3}
   cornerTilePrefab: {fileID: 4886918754351498150, guid: c984b851be6f3204e88509a3afab5a2e, type: 3}
-  endTilePrefab: {fileID: 4886918754351498150, guid: c5ec0e6965f31994086c5a8395c98349, type: 3}
+  endTilePrefab: {fileID: 4886918754351498150, guid: f77cb287e711d934598bc85a72c848c6, type: 3}
 --- !u!4 &843032640
 Transform:
   m_ObjectHideFlags: 0
