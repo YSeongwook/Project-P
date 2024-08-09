@@ -1,5 +1,6 @@
 using EnumTypes;
 using EventLibrary;
+using DataStruct;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,10 +22,10 @@ public class UI_PopUp_BuyItem : MonoBehaviour
 
     private void Awake()
     {
-        EventManager<UIEvents>.StartListening(UIEvents.OnClickEnablePopup, PopUpOn);
-        EventManager<UIEvents>.StartListening(UIEvents.OnClickDisablePopup, PopUpOff);
+        EventManager<UIEvents>.StartListening(UIEvents.OnClickEnableItemBuyPopup, PopUpOn);
+        EventManager<UIEvents>.StartListening(UIEvents.OnClickItemBuyExit, PopUpOff);
         EventManager<UIEvents>.StartListening(UIEvents.OnClickChangeBuyItemCount, UpdateBuyItemText);
-        EventManager<UIEvents>.StartListening<ItemData>(UIEvents.OnClickBuyItem, SetBuyItem);
+        EventManager<DataEvents>.StartListening<ItemData>(DataEvents.OnItemDataLoad, SetBuyItem);
     }
 
     private void Start()
@@ -34,10 +35,10 @@ public class UI_PopUp_BuyItem : MonoBehaviour
 
     private void OnDestroy()
     {
-        EventManager<UIEvents>.StopListening(UIEvents.OnClickEnablePopup, PopUpOn);
-        EventManager<UIEvents>.StopListening(UIEvents.OnClickDisablePopup, PopUpOff);
+        EventManager<UIEvents>.StopListening(UIEvents.OnClickEnableItemBuyPopup, PopUpOn);
+        EventManager<UIEvents>.StopListening(UIEvents.OnClickItemBuyExit, PopUpOff);
         EventManager<UIEvents>.StopListening(UIEvents.OnClickChangeBuyItemCount, UpdateBuyItemText);
-        EventManager<UIEvents>.StopListening<ItemData>(UIEvents.OnClickBuyItem, SetBuyItem);
+        EventManager<DataEvents>.StopListening<ItemData>(DataEvents.OnItemDataLoad, SetBuyItem);
     }
 
     private void OnEnable()
@@ -89,6 +90,6 @@ public class UI_PopUp_BuyItem : MonoBehaviour
     //아이템 구매
     public void BuyItem_Gold()
     {
-        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickStart, _data, BuyItemCount);
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickItemBuyButton, _data, BuyItemCount);
     }
 }

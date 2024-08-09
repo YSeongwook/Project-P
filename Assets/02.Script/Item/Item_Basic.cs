@@ -1,6 +1,7 @@
 using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
+using DataStruct;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -39,7 +40,6 @@ public class Item_Basic : MonoBehaviour
 
     private void Awake()
     {
-        //SetItemInfo();
         AddEvents();
     }
 
@@ -50,18 +50,16 @@ public class Item_Basic : MonoBehaviour
     
     private void AddEvents()
     {
-        //EventManager<DataEvents>.StartListening<int>(DataEvents.OnUserDataLoad, SetItemInfo);
     }
 
     private void RemoveEvents()
     {
-        //EventManager<DataEvents>.StopListening<int>(DataEvents.OnUserDataLoad, SetItemInfo);
     }
 
     //BuyItemUIPopUp
     public void BuyItem_Gold()
     {
-        EventManager<UIEvents>.TriggerEvent<ItemData>(UIEvents.OnClickBuyItem, ItemInfo);
-        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickEnablePopup);
+        EventManager<DataEvents>.TriggerEvent<ItemData>(DataEvents.OnItemDataLoad, ItemInfo);
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickEnableItemBuyPopup);
     }
 }

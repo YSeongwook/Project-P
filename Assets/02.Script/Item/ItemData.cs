@@ -1,11 +1,24 @@
 using System.IO;
 
-public struct ItemData
+namespace DataStruct
 {
-    public int ItemID;
-    public string Name;
-    public string Description;
-    public float GoldPrice;
-    public float ERCPrice;
-    public string Image;
+    public struct ItemData
+    {
+        public int ItemID;
+        public string Name;
+        public string Description;
+        public float GoldPrice;
+        public float ERCPrice;
+        public string Image;
+    }
+
+    public struct GoldPackageData
+    {
+        public int PackageID;
+        public string Name;
+        public string Description;
+        public float ERCPrice;
+        public float GiveGold;
+        public string Image;
+    }
 }

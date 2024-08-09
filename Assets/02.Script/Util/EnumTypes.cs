@@ -41,11 +41,17 @@ namespace EnumTypes
     {
         OnClickSignInGoogle,
         OnClickStart,
-        OnClickBuyItem,
         OnClickItemBuyButton,
+        OnClickGoldBuyButton,
         OnClickChangeBuyItemCount,
-        OnClickEnablePopup,
-        OnClickDisablePopup,
+        OnClickEnableItemBuyPopup,
+        OnClickEnableGoldBuyPopup,
+        OnClickItemBuyExit,
+        OnClickGoldBuyExit,
+        OnCreateItemSlot,
+        OnCreateGoldPackageSlot,
+        GoldStorePopup,
+        GoldStoreExit
     }
 
     public enum DataEvents
@@ -53,7 +59,16 @@ namespace EnumTypes
         OnUserDataSave,
         OnUserDataLoad,
         OnUserDataReset,
+        OnItemDataLoad,
         HeroCollectionUpdated,
+        OnPaymentSuccessful
+    }
+
+    public enum GoldEvent
+    {
+        OnGetGold,
+        OnUseERC,
+        OnGetERC
     }
 
     public enum GoogleEvents
