@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 
 namespace DataStruct
@@ -20,5 +21,13 @@ namespace DataStruct
         public float ERCPrice;
         public float GiveGold;
         public string Image;
+    }
+
+    public struct Inventory
+    {
+        public int PlayerID;
+        public float Gold;
+        public float ERC;
+        public Dictionary<ItemData, int> ItemList;
     }
 }

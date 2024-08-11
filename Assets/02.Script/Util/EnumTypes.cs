@@ -56,12 +56,14 @@ namespace EnumTypes
 
     public enum DataEvents
     {
-        OnUserDataSave,
-        OnUserDataLoad,
-        OnUserDataReset,
+        OnUserInventoryLoad,
+
         OnItemDataLoad,
         HeroCollectionUpdated,
-        OnPaymentSuccessful
+        OnPaymentSuccessful,
+        MVVMChangedGold,
+        MVVMChangedERC,
+        MVVMChangedInventoryItemDictionary
     }
 
     public enum GoldEvent
