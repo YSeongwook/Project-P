@@ -10,15 +10,15 @@ using UnityEngine;
 
 public class PlayerGold : Singleton<PlayerGold>
 {
-    [FoldoutGroup("Player Gold UI")][SerializeField] private TMP_Text GoldPrice;    // °ñµå UI Ç¥½Ã
-    [FoldoutGroup("Player Gold UI")][SerializeField] private TMP_Text ERCPrice;     // ERC UI Ç¥½Ã
+    [FoldoutGroup("Player Gold UI")][SerializeField] private TMP_Text GoldPrice;    // ê³¨ë“œ UI í‘œì‹œ
+    [FoldoutGroup("Player Gold UI")][SerializeField] private TMP_Text ERCPrice;     // ERC UI í‘œì‹œ
 
     [FoldoutGroup("Payment UI")][SerializeField] private GameObject PaymentPopup;
 
     public Canvas canvas { get; private set; }
 
-    private float GoldValue;    // Player°¡ °¡Áö°í ÀÖ´Â GoldÀÇ °¹¼ö
-    private float ERCValue;     // Player°¡ °¡Áö°í ÀÖ´Â ERCÀÇ °¹¼ö
+    private float GoldValue;    // Playerê°€ ê°€ì§€ê³  ìˆëŠ” Goldì˜ ê°¯ìˆ˜
+    private float ERCValue;     // Playerê°€ ê°€ì§€ê³  ìˆëŠ” ERCì˜ ê°¯ìˆ˜
 
     protected new void Awake()
     {
@@ -50,24 +50,24 @@ public class PlayerGold : Singleton<PlayerGold>
         EventManager<GoldEvent>.StopListening<float>(GoldEvent.OnGetGold, GetGold);
     }
 
-    //DataManager¿¡¼­ Data¸¦ ÀĞ¾î¿À±â
+    //DataManagerì—ì„œ Dataë¥¼ ì½ì–´ì˜¤ê¸°
     private void ReadPlayerCapital()
     {
-        //µğ¹ö±×¿ë
+        //ë””ë²„ê·¸ìš©
         GoldValue = 10000;
         ERCValue = 1000;
 
         UpdateUIText();
     }
 
-    // Player ÀÚ¿ø UI ¾÷µ¥ÀÌÆ®
+    // Player ìì› UI ì—…ë°ì´íŠ¸
     private void UpdateUIText()
     {
         GoldPrice.text = GoldValue.ToString();
         ERCPrice.text = ERCValue.ToString();
     }
 
-    // ¾ÆÀÌÅÛ ±¸¸Å - °ñµå (±âº»)
+    // ì•„ì´í…œ êµ¬ë§¤ - ê³¨ë“œ (ê¸°ë³¸)
     private void BuyItem_Gold(ItemData itemInfo, float Count)
     {
         if (GoldValue < itemInfo.GoldPrice * Count)
@@ -75,7 +75,7 @@ public class PlayerGold : Singleton<PlayerGold>
             //BuyItem_ERC(itemInfo, Count);
             //EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickGoldBuyButton, itemInfo, Count);
 
-            // ÆË¾÷ Ã¢ µîÀå
+            // íŒì—… ì°½ ë“±ì¥
             EventManager<UIEvents>.TriggerEvent(UIEvents.GoldStorePopup);
         }
         else
@@ -87,14 +87,14 @@ public class PlayerGold : Singleton<PlayerGold>
         UpdateUIText();
     }
 
-    //¾ÆÀÌÅÛ ±¸¸Å - ERC (Gold°¡ ±¸¸Å °¡°İº¸´Ù ÀûÀ¸¸é)
+    //ì•„ì´í…œ êµ¬ë§¤ - ERC (Goldê°€ êµ¬ë§¤ ê°€ê²©ë³´ë‹¤ ì ìœ¼ë©´)
     private void BuyItem_ERC(GoldPackageData itemInfo)
     {
         if (ERCValue < itemInfo.ERCPrice)
         {
-            DebugLogger.Log("±İ¾×ÀÌ ºÎÁ·ÇÕ´Ï´Ù.");
+            DebugLogger.Log("ê¸ˆì•¡ì´ ë¶€ì¡±í•©ë‹ˆë‹¤.");
 
-            //±İ¾× ºÎÁ· Popup On
+            //ê¸ˆì•¡ ë¶€ì¡± Popup On
             EventManager<DataEvents>.TriggerEvent(DataEvents.OnPaymentSuccessful, false);
 
             return;
@@ -103,7 +103,7 @@ public class PlayerGold : Singleton<PlayerGold>
         {
             ERCValue -= itemInfo.ERCPrice;
 
-            //°è»ê ¿Ï·á PopUp On 
+            //ê³„ì‚° ì™„ë£Œ PopUp On 
             EventManager<DataEvents>.TriggerEvent(DataEvents.OnPaymentSuccessful, true);
         }
 

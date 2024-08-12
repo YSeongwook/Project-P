@@ -46,7 +46,7 @@ public class PlayerInventory : MonoBehaviour
 
     }
 
-    //ÇÃ·¹ÀÌ¾îÀÇ ÀÎº¥Åä¸® ÃÊ±âÈ­
+    //í”Œë ˆì´ì–´ì˜ ì¸ë²¤í† ë¦¬ ì´ˆê¸°í™”
     private void SetPlayerInventory()
     {
         var playerInvenData = DataManager.Instance.GetPlayerInventoryDatas();
