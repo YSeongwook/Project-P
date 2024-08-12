@@ -37,12 +37,7 @@ public class GoldPackageSlot : MonoBehaviour
         EventManager<UIEvents>.StopListening(UIEvents.OnClickGoldBuyExit, PopUpOff);
     }
 
-    //private void Start()
-    //{
-    //    Canvas.gameObject.SetActive(false);
-    //}
-
-    //ÆĞÅ°Áö Á¤º¸ ÃÊ±âÈ­
+    //íŒ¨í‚¤ì§€ ì •ë³´ ì´ˆê¸°í™”
     public void SetPackageInfo(GoldPackageData packageData)
     {
         PackageInfo = packageData;
@@ -51,29 +46,29 @@ public class GoldPackageSlot : MonoBehaviour
         Text_PriceERC.text = PackageInfo.ERCPrice.ToString();
     }
 
-    //±¸¸Å Ã¢ PopUp On
+    //êµ¬ë§¤ ì°½ PopUp On
     private void PopUpOn()
     {
         this.gameObject.SetActive(true);
     }
 
-    //±¸¸Å Ã¢ PopUp Off
+    //êµ¬ë§¤ ì°½ PopUp Off
     private void PopUpOff()
     {
         this.gameObject.SetActive(false);
     }
 
-    //°ñµå ±¸¸Å
+    //ê³¨ë“œ êµ¬ë§¤
     public void BuyGold_ERC()
     {
-        //ERC °¨¼Ò
+        //ERC ê°ì†Œ
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickGoldBuyButton, PackageInfo);
-        // ERC ÄÚÀÎ ¼Òºñ ÄÚµå Àü¼Û
+        // ERC ì½”ì¸ ì†Œë¹„ ì½”ë“œ ì „ì†¡
 
-        //°ñµå È¹µæ
+        //ê³¨ë“œ íšë“
         EventManager<GoldEvent>.TriggerEvent(GoldEvent.OnGetGold, PackageInfo.GiveGold);
 
-        //°ñµå »óÁ¡ ´İ±â
+        //ê³¨ë“œ ìƒì  ë‹«ê¸°
         //EventManager<UIEvents>.TriggerEvent(UIEvents.GoldStoreExit);
     }
 }

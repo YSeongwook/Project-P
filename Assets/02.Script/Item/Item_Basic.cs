@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-//µğ¹ö±×¿ë
+//ë””ë²„ê·¸ìš©
 public enum ItemID
 {
     I1001,
@@ -23,15 +23,15 @@ public enum PaymentMethod
 
 public class Item_Basic : MonoBehaviour
 {
-    [FoldoutGroup("Shop UI")][SerializeField] TMP_Text Text_Name;        // »óÁ¡ ¾ÆÀÌÅÛ ÀÌ¸§ UI Ç¥½Ã
-    [FoldoutGroup("Shop UI")][SerializeField] TMP_Text Text_GoldPrice;   // »óÁ¡ ¾ÆÀÌÅÛ °ñµå °¡°İ UI Ç¥½Ã
+    [FoldoutGroup("Shop UI")][SerializeField] TMP_Text Text_Name;        // ìƒì  ì•„ì´í…œ ì´ë¦„ UI í‘œì‹œ
+    [FoldoutGroup("Shop UI")][SerializeField] TMP_Text Text_GoldPrice;   // ìƒì  ì•„ì´í…œ ê³¨ë“œ ê°€ê²© UI í‘œì‹œ
 
-    private ItemData ItemInfo;      // ¾ÆÀÌÅÛÀÇ Á¤º¸
+    private ItemData ItemInfo;      // ì•„ì´í…œì˜ ì •ë³´
 
-    //¾ÆÀÌÅÛ Á¤º¸ ¼³Á¤
+    //ì•„ì´í…œ ì •ë³´ ì„¤ì •
     public void SetItemInfo(ItemData itemdata)
     {
-        //µğ¹ö±×¿ë
+        //ë””ë²„ê·¸ìš©
         ItemInfo = itemdata;
 
         Text_Name.text = ItemInfo.Name;

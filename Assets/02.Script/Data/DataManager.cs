@@ -125,7 +125,7 @@ public class DataManager : Singleton<DataManager>
         }
     }
 
-    //¾ÆÀÌÅÛ ÀÎº¥Åä¸® ID¿Í °¹¼ö·Î ³ª´©±â
+    //ì•„ì´í…œ ì¸ë²¤í† ë¦¬ IDì™€ ê°¯ìˆ˜ë¡œ ë‚˜ëˆ„ê¸°
     private Dictionary<ItemData, int> ParseItemList(string itemListString)
     {
         var itemList = new Dictionary<ItemData, int>();
@@ -148,9 +148,9 @@ public class DataManager : Singleton<DataManager>
     #endregion
 
     #region SaveData
-    //ÆÄÀÏÀ» ÀúÀåÇÒ À§Ä¡ ÁöÁ¤
+    //íŒŒì¼ì„ ì €ì¥í•  ìœ„ì¹˜ ì§€ì •
 
-    //Resource ÆÄÀÏÀÇ Data Update´Â ºÒ°¡.
+    //Resource íŒŒì¼ì˜ Data UpdateëŠ” ë¶ˆê°€.
 
     #endregion
 
