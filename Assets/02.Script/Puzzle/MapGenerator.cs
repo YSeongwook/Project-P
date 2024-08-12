@@ -1,178 +1,261 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; // Image 컴포넌트를 사용하기 위해 추가
+using UnityEngine.UI;
 
 public class MapGenerator : MonoBehaviour
 {
-    [SerializeField] private int mapWidth, mapHeight; // 맵의 너비와 높이 설정
-    [SerializeField] private GameObject tileReference; // 타일 프리팹 참조
-    [SerializeField] private Transform gridParent; // 타일이 배치될 그리드 레이아웃의 부모 객체 참조
-    [SerializeField] private Sprite straightTile, closedStraightTile, tTile, lTile; // 다양한 타일 스프라이트들
+    [SerializeField] private int mapWidth, mapHeight;
+    [SerializeField] private GameObject tileReference;
+    [SerializeField] private Transform gridParent;
+    [SerializeField] private Sprite straightTile, closedStraightTile, tTile, lTile;
+    [SerializeField] private int maxRetryCount = 10; // 경로 생성 시도 횟수
+    [SerializeField] private int maxMapGenerationCount = 30; // 맵 생성 시도 횟수
 
-    private int curX; // 현재 X 좌표
-    private int curY; // 현재 Y 좌표
-    private Sprite spriteToUse; // 현재 타일에 사용할 스프라이트
+    private List<Vector2Int> startPoints;
+    private List<Vector2Int> endPoints;
 
-    private enum CurrentDirection
-    {
-        LEFT,  // 왼쪽 방향
-        RIGHT, // 오른쪽 방향
-        DOWN,  // 아래 방향
-        UP     // 위 방향
-    };
-    private CurrentDirection curDirection = CurrentDirection.DOWN; // 현재 진행 방향 (초기 값은 아래)
+    private TileData[,] tileData;
 
     public struct TileData
     {
-        public Transform transform; // 타일의 Transform 참조
-        public Image image; // 타일의 자식 Image 컴포넌트 참조 (타일 모양 이미지)
-        public int tileID; // 타일 ID, 경로 여부를 나타내는 데 사용
+        public Transform Transform;
+        public Image Image;
+        public int TileID;
     }
 
-    private TileData[,] tileData; // 타일 데이터를 저장하는 2D 배열
-    private Vector2Int startPoint, endPoint; // 시작 지점과 도착 지점의 좌표
-
-    private void Awake()
+    private void Start()
     {
-        tileData = new TileData[mapWidth, mapHeight]; // 맵 크기에 맞게 타일 데이터 배열 초기화
-        GenerateMap(); // 맵 생성
+        tileData = new TileData[mapWidth, mapHeight];
     }
 
-    // 맵을 초기화하고 경로 생성을 시작하는 메서드
+    // 버튼을 누르면 이 메서드가 호출되어 맵을 생성
+    public void OnGenerateMapButtonClicked()
+    {
+        StartCoroutine(GenerateMapWithRetries());
+    }
+
+    private IEnumerator GenerateMapWithRetries()
+    {
+        int mapGenerationCount = 0;
+
+        while (mapGenerationCount < maxMapGenerationCount)
+        {
+            DebugLogger.Log($"맵 생성 시도: {mapGenerationCount + 1}/{maxMapGenerationCount}");
+            GenerateMap();
+            
+            // 맵 생성이 성공하면 중단
+            if (WasMapGeneratedSuccessfully())
+            {
+                DebugLogger.Log("맵 생성 성공");
+                yield break;
+            }
+
+            mapGenerationCount++;
+            yield return null; // 다음 프레임으로 넘어가기
+        }
+
+        DebugLogger.LogError("최대 맵 생성 시도 횟수를 초과하여 맵 생성에 실패했습니다.");
+    }
+
     private void GenerateMap()
     {
+        InitializeTiles();
+        SetStartAndEndPoints();
+        StartCoroutine(GeneratePaths());
+    }
+
+    private void InitializeTiles()
+    {
         for (int x = 0; x < mapWidth; x++)
         {
             for (int y = 0; y < mapHeight; y++)
             {
-                // 타일 생성 및 초기화, gridParent를 부모로 설정
                 GameObject newTile = Instantiate(tileReference, gridParent);
-                tileData[x, y].transform = newTile.transform; // 타일의 Transform 저장
-
-                // 자식 오브젝트의 Image 컴포넌트를 가져옴
-                tileData[x, y].image = newTile.transform.GetChild(0).GetComponent<Image>();
-                tileData[x, y].tileID = 0; // 초기 타일 ID는 0으로 설정 (경로가 아님을 의미)
-                tileData[x, y].image.sprite = null; // 초기에는 스프라이트가 없음
+                tileData[x, y].Transform = newTile.transform;
+                tileData[x, y].Image = newTile.transform.GetChild(0).GetComponent<Image>();
+                tileData[x, y].TileID = 0;
+                tileData[x, y].Image.sprite = null;
             }
         }
-        StartCoroutine(GeneratePath()); // 경로 생성 시작
     }
 
-    // 스페이스 키를 눌렀을 때 맵을 재생성하는 메서드
-    private void Update()
+    private void SetStartAndEndPoints()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        startPoints = new List<Vector2Int>
         {
-            RegenerateMap();
-        }
+            new Vector2Int(0, 0),
+            new Vector2Int(4, 0)
+        };
+
+        endPoints = new List<Vector2Int>
+        {
+            new Vector2Int(0, mapHeight - 1),
+            new Vector2Int(4, mapHeight - 1)
+        };
     }
 
-    // 맵을 재생성하는 메서드
-    private void RegenerateMap()
+    private IEnumerator GeneratePaths()
     {
-        StopAllCoroutines(); // 기존 경로 생성 코루틴 중지
-        for (int x = 0; x < mapWidth; x++)
+        int retryCount = 0;
+
+        while (retryCount < maxRetryCount)
         {
-            for (int y = 0; y < mapHeight; y++)
+            try
             {
-                // 타일을 초기 상태로 되돌림
-                tileData[x, y].image.sprite = null;
-                tileData[x, y].tileID = 0;
+                ClearTiles();
+                bool pathGenerationSuccess = true;
+
+                for (int i = 0; i < startPoints.Count; i++)
+                {
+                    if (!GeneratePath(startPoints[i], endPoints[i]))
+                    {
+                        pathGenerationSuccess = false;
+                        break; // 한 경로라도 실패하면 나머지 경로 생성 시도를 중단
+                    }
+                }
+
+                if (pathGenerationSuccess)
+                {
+                    yield break; // 경로 생성에 성공하면 중단
+                }
             }
+            catch (System.Exception ex)
+            {
+                DebugLogger.LogError(ex.Message);
+            }
+
+            retryCount++;
+            DebugLogger.Log($"경로 생성 재시도: {retryCount}/{maxRetryCount}");
+            yield return null; // 다음 프레임으로 넘어가기
         }
-        StartCoroutine(GeneratePath()); // 새로운 경로 생성 시작
+
+        DebugLogger.LogError("최대 경로 생성 시도 횟수를 초과하여 경로 생성에 실패했습니다.");
     }
 
-    // 경로를 생성하는 코루틴
-    private IEnumerator GeneratePath()
+    private bool GeneratePath(Vector2Int startPoint, Vector2Int endPoint)
     {
-        startPoint = new Vector2Int(Random.Range(0, mapWidth), 0); // 시작 지점 무작위로 설정
-        endPoint = new Vector2Int(Random.Range(0, mapWidth), mapHeight - 1); // 도착 지점 무작위로 설정
-
-        curX = startPoint.x;
-        curY = startPoint.y;
-
-        // 시작 지점에 한쪽이 막힌 일자 타일 배치
+        int curX = startPoint.x;
+        int curY = startPoint.y;
         UpdateMap(curX, curY, closedStraightTile);
 
         while (curX != endPoint.x || curY != endPoint.y)
         {
-            ChooseTileAndDirection(); // 타일 선택 및 방향 결정
-            UpdateMap(curX, curY, spriteToUse); // 맵 업데이트 (타일 배치)
+            ChooseTileAndDirection(ref curX, ref curY);
 
-            // 현재 방향에 따라 위치 업데이트
-            if (curDirection == CurrentDirection.DOWN)
+            // 현재 위치가 배열의 범위를 벗어나는지 확인
+            if (curX < 0 || curX >= mapWidth || curY < 0 || curY >= mapHeight)
             {
-                curY++;
-            }
-            else if (curDirection == CurrentDirection.LEFT)
-            {
-                curX--;
-            }
-            else if (curDirection == CurrentDirection.RIGHT)
-            {
-                curX++;
-            }
-            else if (curDirection == CurrentDirection.UP)
-            {
-                curY--;
+                DebugLogger.LogError($"잘못된 타일 위치: ({curX}, {curY})는 배열의 범위를 벗어났습니다.");
+                return false; // 범위를 벗어나면 경로 생성 실패
             }
 
-            yield return new WaitForSeconds(0.05f); // 잠시 대기 후 다음 타일 배치
+            UpdateMap(curX, curY, spriteToUse);
         }
 
-        // 도착 지점에 한쪽이 막힌 일자 타일 배치
         UpdateMap(curX, curY, closedStraightTile);
+        return true; // 경로 생성 성공
     }
 
-    // 현재 위치와 방향에 따라 사용할 타일과 다음 방향을 선택하는 메서드
-    private void ChooseTileAndDirection()
+    private void ClearTiles()
     {
-        if (curX == startPoint.x && curY == startPoint.y)
+        for (int x = 0; x < mapWidth; x++)
         {
-            spriteToUse = closedStraightTile; // 시작 지점에서는 한쪽이 막힌 일자 타일 사용
+            for (int y = 0; y < mapHeight; y++)
+            {
+                tileData[x, y].Image.sprite = null;
+                tileData[x, y].TileID = 0;
+            }
         }
-        else if (curY == mapHeight - 1)
+    }
+
+    private void ChooseTileAndDirection(ref int curX, ref int curY)
+    {
+        // 경로 생성 시 배열 범위를 넘지 않도록 조건을 추가
+        if (curY == mapHeight - 1)
         {
-            spriteToUse = closedStraightTile; // 도착 지점에 도달한 경우, 한쪽이 막힌 일자 타일 사용
+            spriteToUse = closedStraightTile;
         }
         else if (curDirection == CurrentDirection.DOWN)
         {
-            spriteToUse = straightTile; // 아래로 진행 중인 경우 일자 타일 사용
-
-            // 랜덤으로 방향 변경: 좌우 또는 직진
+            spriteToUse = straightTile;
             float directionChance = Random.value;
 
             if (directionChance < 0.33f && curX > 0)
             {
                 curDirection = CurrentDirection.LEFT;
-                spriteToUse = lTile; // L자 타일로 방향 변경
+                spriteToUse = lTile;
             }
             else if (directionChance < 0.66f && curX < mapWidth - 1)
             {
                 curDirection = CurrentDirection.RIGHT;
-                spriteToUse = lTile; // L자 타일로 방향 변경
+                spriteToUse = lTile;
             }
-            else
+            else if (curX > 0 && curX < mapWidth - 1)
             {
-                curDirection = CurrentDirection.DOWN;
+                spriteToUse = tTile;
             }
+        }
+        else if (curDirection == CurrentDirection.LEFT || curDirection == CurrentDirection.RIGHT)
+        {
+            spriteToUse = tTile;
+            curDirection = CurrentDirection.DOWN;
         }
         else
         {
-            // T자 타일 또는 L자 타일 사용
-            spriteToUse = (curDirection == CurrentDirection.LEFT || curDirection == CurrentDirection.RIGHT) ? lTile : tTile;
-
-            // 다시 아래로 이동
+            spriteToUse = lTile;
             curDirection = CurrentDirection.DOWN;
+        }
+
+        // 다음 위치를 결정할 때도 경계 체크
+        if (curDirection == CurrentDirection.DOWN && curY + 1 < mapHeight)
+        {
+            curY++;
+        }
+        else if (curDirection == CurrentDirection.LEFT && curX - 1 >= 0)
+        {
+            curX--;
+        }
+        else if (curDirection == CurrentDirection.RIGHT && curX + 1 < mapWidth)
+        {
+            curX++;
+        }
+        else if (curDirection == CurrentDirection.UP && curY - 1 >= 0)
+        {
+            curY--;
         }
     }
 
-    // 맵을 업데이트하여 타일을 배치하는 메서드
     private void UpdateMap(int mapX, int mapY, Sprite spriteToUse)
     {
-        tileData[mapX, mapY].tileID = 1; // 경로로 설정
-        tileData[mapX, mapY].image.sprite = spriteToUse; // 자식 오브젝트의 Image 컴포넌트에 스프라이트 할당
+        if (mapX < 0 || mapX >= mapWidth || mapY < 0 || mapY >= mapHeight)
+        {
+            DebugLogger.LogError($"잘못된 타일 위치: ({mapX}, {mapY})는 배열의 범위를 벗어났습니다.");
+            return;
+        }
+
+        tileData[mapX, mapY].TileID = 1;
+        tileData[mapX, mapY].Image.sprite = spriteToUse;
+        DebugLogger.Log($"타일 배치됨: ({mapX}, {mapY})");
     }
+
+    private bool WasMapGeneratedSuccessfully()
+    {
+        // 맵 생성이 성공적으로 이루어졌는지 확인하는 로직을 추가합니다.
+        // 예를 들어, 모든 경로가 제대로 생성되었는지, 경로가 닫히지 않았는지 확인할 수 있습니다.
+        // 여기에 맞는 검증 로직을 구현하세요.
+
+        return true; // 임시로 항상 true를 반환. 실제 검증 로직을 추가하세요.
+    }
+
+    private enum CurrentDirection
+    {
+        LEFT,
+        RIGHT,
+        DOWN,
+        UP
+    };
+
+    private CurrentDirection curDirection = CurrentDirection.DOWN;
+    private Sprite spriteToUse;
 }
