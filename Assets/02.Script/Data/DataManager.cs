@@ -150,7 +150,10 @@ public class DataManager : Singleton<DataManager>
     #region SaveData
     //파일을 저장할 위치 지정
 
-    //Resource 파일의 Data Update는 불가.
+    public void SaveInventoryData()
+    {
+
+    }
 
     #endregion
 
