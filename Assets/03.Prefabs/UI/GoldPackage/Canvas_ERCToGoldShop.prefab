@@ -267,8 +267,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Gold Shop
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5af157b3961f90a469afc4ddf711c084, type: 2}
+  m_sharedMaterial: {fileID: -2021376388158403214, guid: 5af157b3961f90a469afc4ddf711c084, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -742,4 +742,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d137bb4ca6f8c7c4da16a7c9bb42aede, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemSlotPrefab: {fileID: 2475623393949783074, guid: 81abf4ed9fa723e479aa83d03d07956d, type: 3}
+  itemSlotPrefab: {fileID: 6576665652866743762, guid: 1eff3f1ab8476b340bfd4b938b76e7cf, type: 3}

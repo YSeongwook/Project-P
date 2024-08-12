@@ -439,9 +439,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e7188f488a0f944bac9c1dbd522d4ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text_PriceERC: {fileID: 2475623394683662609}
-  Text_PackageName: {fileID: 2475623393162849722}
-  Image_PackageIcon: {fileID: 2475623393043427565}
+  textPriceErc: {fileID: 2475623394683662609}
+  textPackageName: {fileID: 2475623393162849722}
+  imagePackageIcon: {fileID: 2475623393043427565}
 --- !u!1 &2475623394683662611
 GameObject:
   m_ObjectHideFlags: 0

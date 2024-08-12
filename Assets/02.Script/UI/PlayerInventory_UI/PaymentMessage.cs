@@ -1,24 +1,21 @@
 using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class PaymentMessage : MonoBehaviour
 {
-    [FoldoutGroup("Payment Message")]
-    [SerializeField] private TMP_Text Text_Message;
+    [BoxGroup("Payment Message")] [SerializeField] private TMP_Text textMessage;
 
     private void Awake()
     {
-        AddEvenet();
+        AddEvent();
     }
 
     private void OnDestroy()
     {
-        RemoveEvenet();
+        RemoveEvent();
     }
 
     private void Start()
@@ -26,11 +23,11 @@ public class PaymentMessage : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void AddEvenet()
+    private void AddEvent()
     {
         EventManager<DataEvents>.StartListening<bool>(DataEvents.OnPaymentSuccessful, PopUpMessage);
     }
-    private void RemoveEvenet()
+    private void RemoveEvent()
     {
         EventManager<DataEvents>.StopListening<bool>(DataEvents.OnPaymentSuccessful, PopUpMessage);
     }
@@ -41,11 +38,11 @@ public class PaymentMessage : MonoBehaviour
 
         if (PaymentSuccessful)
         {
-            Text_Message.text = "Payment is Complete";
+            textMessage.text = "Payment is Complete";
         }
         else
         {
-            Text_Message.text = "Payment is Fail";
+            textMessage.text = "Payment is Fail";
         }
     }
 }

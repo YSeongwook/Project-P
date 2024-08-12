@@ -3,44 +3,56 @@ using DataStruct;
 using EnumTypes;
 using EventLibrary;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerInventory : Singleton<PlayerInventory>
 {
-    public PlayerViewModel playerViewModel { get; private set; }
-    private Inventory playerInventory;
+    public PlayerViewModel PlayerViewModel { get; private set; }
 
-    [SerializeField] private int Temp_PlayerId;
+    [SerializeField] private int tempPlayerId;
+    
+    private Inventory _playerInventory;
 
     protected new void Awake()
     {
         base.Awake();
 
-        if (playerViewModel == null)
+        if (PlayerViewModel == null)
         {
-            playerViewModel = new PlayerViewModel();
-            playerViewModel.PropertyChanged += OnPropertyChanged;
-            playerViewModel.RegisterPlayerGoldChanged(true);
-            playerViewModel.RegisterPlayerERCChanged(true);
-            playerViewModel.RegisterPlayerItemListChanged(true);
+            PlayerViewModel = new PlayerViewModel();
+            PlayerViewModel.PropertyChanged += OnPropertyChanged;
+            PlayerViewModel.RegisterPlayerGoldChanged(true);
+            PlayerViewModel.RegisterPlayerERCChanged(true);
+            PlayerViewModel.RegisterPlayerItemListChanged(true);
         }
 
+        AddEvents();
+    }
+
+    private void OnDestroy()
+    {
+        if (PlayerViewModel != null)
+        {
+            PlayerViewModel.RegisterPlayerItemListChanged(false);
+            PlayerViewModel.RegisterPlayerGoldChanged(false);
+            PlayerViewModel.RegisterPlayerERCChanged(false);
+            PlayerViewModel.PropertyChanged -= OnPropertyChanged;
+            PlayerViewModel = null;
+        }
+
+        RemoveEvents();
+    }
+
+    private void AddEvents()
+    {
         EventManager<DataEvents>.StartListening(DataEvents.OnUserInventoryLoad, SetPlayerInventory);
         EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
         EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
         EventManager<DataEvents>.StartListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
     }
 
-    private void OnDestroy()
+    private void RemoveEvents()
     {
-        if (playerViewModel != null)
-        {
-            playerViewModel.RegisterPlayerItemListChanged(false);
-            playerViewModel.RegisterPlayerGoldChanged(false);
-            playerViewModel.RegisterPlayerERCChanged(false);
-            playerViewModel.PropertyChanged -= OnPropertyChanged;
-            playerViewModel = null;
-        }
-
         EventManager<DataEvents>.StopListening(DataEvents.OnUserInventoryLoad, SetPlayerInventory);
         EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
         EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
@@ -51,54 +63,53 @@ public class PlayerInventory : Singleton<PlayerInventory>
     {
         switch (e.PropertyName)
         {
-            case nameof(playerViewModel.PlayerERC):
+            case nameof(PlayerViewModel.PlayerERC):
                 //코인 삭제
-
-                playerInventory.ERC = playerViewModel.PlayerERC;
+                _playerInventory.ERC = PlayerViewModel.PlayerERC;
                 break;
-            case nameof(playerViewModel.PlayerGold):
-                playerInventory.Gold = playerViewModel.PlayerGold;
+            case nameof(PlayerViewModel.PlayerGold):
+                _playerInventory.Gold = PlayerViewModel.PlayerGold;
                 break;
-            case nameof(playerViewModel.PlayerInventory):
-                playerInventory.ItemList = playerViewModel.PlayerInventory;
+            case nameof(PlayerViewModel.PlayerInventory):
+                _playerInventory.ItemList = PlayerViewModel.PlayerInventory;
                 break;
         }
 
         // Player UI 반영
-        EventManager<UIEvents>.TriggerEvent(UIEvents.GetPlayerInventoryResources,
-                                                    playerViewModel.PlayerGold,
-                                                    playerViewModel.PlayerERC);
+        EventManager<UIEvents>.TriggerEvent(UIEvents.GetPlayerInventoryResources, 
+            PlayerViewModel.PlayerGold, PlayerViewModel.PlayerERC);
+        
         // Player Inventory Data XML로 Save
-        EventManager<DataEvents>.TriggerEvent(DataEvents.OnUserInventorySave, playerInventory);
+        EventManager<DataEvents>.TriggerEvent(DataEvents.OnUserInventorySave, _playerInventory);
     }
 
     //플레이어의 인벤토리 초기화
     private void SetPlayerInventory()
     {
         var playerInvenData = DataManager.Instance.GetPlayerInventoryDatas();
-        if (playerInvenData == null || !playerInvenData.ContainsKey(Temp_PlayerId)) return;
+        if (playerInvenData == null || !playerInvenData.ContainsKey(tempPlayerId)) return;
 
-        playerInventory = playerInvenData[Temp_PlayerId];
-        playerViewModel.RequestPlayerGoldChanged(playerInventory.Gold);
-        playerViewModel.RequestPlayerERCChanged(playerInventory.ERC);
-        foreach (var data in playerInventory.ItemList)
+        _playerInventory = playerInvenData[tempPlayerId];
+        PlayerViewModel.RequestPlayerGoldChanged(_playerInventory.Gold);
+        PlayerViewModel.RequestPlayerERCChanged(_playerInventory.ERC);
+        foreach (var data in _playerInventory.ItemList)
         {
-            playerViewModel.RequestPlayerItemListChanged(data.Key, data.Value);
+            PlayerViewModel.RequestPlayerItemListChanged(data.Key, data.Value);
         }
     }
 
     private void PlayerGoldChanged(float gold)
     {
-        playerViewModel.RequestPlayerGoldChanged(gold);
+        PlayerViewModel.RequestPlayerGoldChanged(gold);
     }
 
-    private void PlayerERCChanged(float ERC)
+    private void PlayerERCChanged(float erc)
     {
-        playerViewModel.RequestPlayerERCChanged(ERC);
+        PlayerViewModel.RequestPlayerERCChanged(erc);
     }
 
     private void PlayerItemListChanged(ItemData item, int count)
     {
-        playerViewModel.RequestPlayerItemListChanged(item, count);
+        PlayerViewModel.RequestPlayerItemListChanged(item, count);
     }
 }

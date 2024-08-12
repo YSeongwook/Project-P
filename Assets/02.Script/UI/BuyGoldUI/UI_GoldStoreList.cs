@@ -1,34 +1,32 @@
+using System.Collections.Generic;
 using DataStruct;
 using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
-using Sirenix.Reflection.Editor;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UI_GoldStoreList : MonoBehaviour
 {
-    [FoldoutGroup("Gold Shop List")]
-    [SerializeField] GameObject ItemSlotPrefab;
+    [FoldoutGroup("Gold Shop List")] [SerializeField]
+    private GameObject itemSlotPrefab;
 
-    private Canvas canvas;
-    private RectTransform rectTransform;
-    private GridLayoutGroup gridLayoutGroup;
+    private Canvas _canvas;
+    private RectTransform _rectTransform;
+    private GridLayoutGroup _gridLayoutGroup;
 
-    private Dictionary<int, GoldPackageData> GoldPackageDataDictionary;
+    private Dictionary<int, GoldPackageData> _goldPackageDataDictionary;
 
-    private float WidthValue;
-    private float CellHeight;
+    private float _widthValue;
+    private float _cellHeight;
 
     private void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
-        canvas = GetComponentInParent<Canvas>();
-        gridLayoutGroup = GetComponent<GridLayoutGroup>();
-        WidthValue = rectTransform.rect.width;
-        CellHeight = gridLayoutGroup.cellSize.y + gridLayoutGroup.spacing.y;
+        _rectTransform = GetComponent<RectTransform>();
+        _canvas = GetComponentInParent<Canvas>();
+        _gridLayoutGroup = GetComponent<GridLayoutGroup>();
+        _widthValue = _rectTransform.rect.width;
+        _cellHeight = _gridLayoutGroup.cellSize.y + _gridLayoutGroup.spacing.y;
 
         AddEvent();
     }
@@ -40,8 +38,8 @@ public class UI_GoldStoreList : MonoBehaviour
 
     private void Start()
     {
-        rectTransform.sizeDelta = new Vector2(WidthValue, 10);
-        canvas.gameObject.SetActive(false);
+        _rectTransform.sizeDelta = new Vector2(_widthValue, 10);
+        _canvas.gameObject.SetActive(false);
     }
 
     private void AddEvent()
@@ -60,27 +58,27 @@ public class UI_GoldStoreList : MonoBehaviour
 
     private void CreateGoldPackageSlot()
     {
-        GoldPackageDataDictionary = DataManager.Instance.GetGoldPackageDatas();
+        _goldPackageDataDictionary = DataManager.Instance.GetGoldPackageDatas();
 
-        float Count = 0;
-        foreach (var PackageData in GoldPackageDataDictionary.Values)
+        float count = 0;
+        foreach (var PackageData in _goldPackageDataDictionary.Values)
         {
-            Count++;
-            GameObject PackageSlot = Instantiate(ItemSlotPrefab, this.transform);
+            count++;
+            GameObject PackageSlot = Instantiate(itemSlotPrefab, this.transform);
             GoldPackageSlot goldPackageSlot = PackageSlot.GetComponent<GoldPackageSlot>();
             goldPackageSlot.SetPackageInfo(PackageData);
         }
 
-        rectTransform.sizeDelta = new Vector2(WidthValue, Count * CellHeight);
+        _rectTransform.sizeDelta = new Vector2(_widthValue, count * _cellHeight);
     }
 
     private void UI_PopUp()
     {
-        canvas.gameObject.SetActive(true);
+        _canvas.gameObject.SetActive(true);
     }
 
     private void UI_Exit()
     {
-        canvas.gameObject.SetActive(false);
+        _canvas.gameObject.SetActive(false);
     }
 }
