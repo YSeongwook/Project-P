@@ -154,6 +154,7 @@ public class DataManager : Singleton<DataManager>
     {
 
     }
+    //Resource 파일의 Data Update는 불가.
 
     #endregion
 
