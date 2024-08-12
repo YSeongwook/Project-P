@@ -1,10 +1,7 @@
+using System.ComponentModel;
 using DataStruct;
 using EnumTypes;
 using EventLibrary;
-using Sirenix.OdinInspector.Editor;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEngine;
 
 public class PlayerInventory : Singleton<PlayerInventory>

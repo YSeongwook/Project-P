@@ -30,7 +30,7 @@ public class PlayerViewModel
         }
     }
 
-    private Dictionary<ItemData, int> inventory;
+    private Dictionary<ItemData, int> inventory = new Dictionary<ItemData, int>();
     public Dictionary<ItemData, int> PlayerInventory
     {
         get { return inventory; }
