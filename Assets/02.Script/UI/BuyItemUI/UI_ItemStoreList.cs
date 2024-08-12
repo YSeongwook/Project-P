@@ -45,6 +45,13 @@ public class UI_ItemStoreList : MonoBehaviour
         EventManager<UIEvents>.StopListening(UIEvents.OnCreateItemSlot, CreateItemSlot);
     }
 
+    private void Start()
+    {
+        Canvas canvas = GetComponentInParent<Canvas>();
+        canvas.gameObject.SetActive(false);
+    }
+
+    // 상점 아이템 List 나열
     private void CreateItemSlot()
     {
         ItemDataDictionary = DataManager.Instance.GetItemInfoDatas();

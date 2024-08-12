@@ -10,33 +10,31 @@ using UnityEngine.UI;
 
 public class UI_PopUp_BuyItem : MonoBehaviour
 {
-    private ItemData _data;     //±¸¸ÅÇÒ ¾ÆÀÌÅÛÀÇ Á¤º¸
-    private float BuyItemCount; //±¸¸ÅÇÒ ¾ÆÀÌÅÛÀÇ °¹¼ö
+    private ItemData _data;     //êµ¬ë§¤í•  ì•„ì´í…œì˜ ì •ë³´
+    private float BuyItemCount; //êµ¬ë§¤í•  ì•„ì´í…œì˜ ê°¯ìˆ˜
 
     [FoldoutGroup("UI Prefab")]
-    [SerializeField] private Image ItemIcon;    //±¸¸ÅÇÒ ¾ÆÀÌÅÛÀÇ ¾ÆÀÌÄÜ Ç¥½Ã UI
+    [SerializeField] private Image ItemIcon;    //êµ¬ë§¤í•  ì•„ì´í…œì˜ ì•„ì´ì½˜ í‘œì‹œ UI
     [FoldoutGroup("UI Prefab")]
-    [SerializeField] private TMP_Text Text_ItemPrice;   //±¸¸ÅÇÒ ¾ÆÀÌÅÛÀÇ °¡°İ Ç¥½Ã UI
+    [SerializeField] private TMP_Text Text_ItemPrice;   //êµ¬ë§¤í•  ì•„ì´í…œì˜ ê°€ê²© í‘œì‹œ UI
     [FoldoutGroup("UI Prefab")]
-    [SerializeField] private TMP_Text Text_BuyItemCount;    //±¸¸ÅÇÒ ¾ÆÀÌÅÛÀÇ °¹¼ö Ç¥½Ã UI
+    [SerializeField] private TMP_Text Text_BuyItemCount;    //êµ¬ë§¤í•  ì•„ì´í…œì˜ ê°¯ìˆ˜ í‘œì‹œ UI
 
     private void Awake()
     {
         EventManager<UIEvents>.StartListening(UIEvents.OnClickEnableItemBuyPopup, PopUpOn);
-        EventManager<UIEvents>.StartListening(UIEvents.OnClickItemBuyExit, PopUpOff);
         EventManager<UIEvents>.StartListening(UIEvents.OnClickChangeBuyItemCount, UpdateBuyItemText);
         EventManager<DataEvents>.StartListening<ItemData>(DataEvents.OnItemDataLoad, SetBuyItem);
     }
 
     private void Start()
     {
-        gameObject.SetActive(false);
+        transform.parent.gameObject.SetActive(false);
     }
 
     private void OnDestroy()
     {
         EventManager<UIEvents>.StopListening(UIEvents.OnClickEnableItemBuyPopup, PopUpOn);
-        EventManager<UIEvents>.StopListening(UIEvents.OnClickItemBuyExit, PopUpOff);
         EventManager<UIEvents>.StopListening(UIEvents.OnClickChangeBuyItemCount, UpdateBuyItemText);
         EventManager<DataEvents>.StopListening<ItemData>(DataEvents.OnItemDataLoad, SetBuyItem);
     }
@@ -47,47 +45,47 @@ public class UI_PopUp_BuyItem : MonoBehaviour
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickChangeBuyItemCount);
     }
 
-    //±¸¸Å Ã¢ PopUp On
+    //êµ¬ë§¤ ì°½ PopUp On
     private void PopUpOn()
     {
-        this.gameObject.SetActive(true);
+        this.transform.parent.gameObject.SetActive(true);
     }
 
 
-    //±¸¸Å Ã¢ PopUp Off
-    private void PopUpOff()
+    //êµ¬ë§¤ ì°½ PopUp Off
+    public void PopUpOff()
     {
-        this.gameObject.SetActive(false);
+        this.transform.parent.gameObject.SetActive(false);
     }
 
-    //±¸¸ÅÇÒ ¾ÆÀÌÅÛ ÃÊ±âÈ­
+    //êµ¬ë§¤í•  ì•„ì´í…œ ì´ˆê¸°í™”
     private void SetBuyItem(ItemData item)
     {
         _data = item;
     }
 
-    //±¸¸Å °¹¼ö Áõ°¡
+    //êµ¬ë§¤ ê°¯ìˆ˜ ì¦ê°€
     public void Plus_BuyItemCount()
     {
         BuyItemCount = Mathf.Clamp(BuyItemCount + 1, 1, 99);
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickChangeBuyItemCount);
     }
 
-    //±¸¸Å °¹¼ö °¨¼Ò
+    //êµ¬ë§¤ ê°¯ìˆ˜ ê°ì†Œ
     public void Minus_BuyItemCount()
     {
         BuyItemCount = Mathf.Clamp(BuyItemCount - 1, 1, 99);
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickChangeBuyItemCount);
     }
 
-    //±¸¸ÅÇÒ ¾ÆÀÌÅÛ Á¤º¸ Ç¥½Ã UI Update
+    //êµ¬ë§¤í•  ì•„ì´í…œ ì •ë³´ í‘œì‹œ UI Update
     private void UpdateBuyItemText()
     {
         Text_ItemPrice.text = (_data.GoldPrice * BuyItemCount).ToString();
         Text_BuyItemCount.text = BuyItemCount.ToString();
     }
 
-    //¾ÆÀÌÅÛ ±¸¸Å
+    //ì•„ì´í…œ êµ¬ë§¤
     public void BuyItem_Gold()
     {
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickItemBuyButton, _data, BuyItemCount);
