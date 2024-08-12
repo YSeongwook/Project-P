@@ -8,7 +8,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerGold : Singleton<PlayerGold>
+public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
 {
     [FoldoutGroup("Player Gold UI")][SerializeField] private TMP_Text GoldPrice;    // 골드 UI 표시
     [FoldoutGroup("Player Gold UI")][SerializeField] private TMP_Text ERCPrice;     // ERC UI 표시
@@ -26,8 +26,6 @@ public class PlayerGold : Singleton<PlayerGold>
 
         canvas = GetComponentInParent<Canvas>();
 
-        ReadPlayerCapital();
-
         AddEvents();
     }
 
@@ -38,6 +36,7 @@ public class PlayerGold : Singleton<PlayerGold>
 
     private void AddEvents()
     {
+        EventManager<UIEvents>.StartListening<float, float>(UIEvents.GetPlayerInventoryResources, ReadPlayerCapital);
         EventManager<UIEvents>.StartListening<ItemData, float>(UIEvents.OnClickItemBuyButton, BuyItem_Gold);
         EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyItem_ERC);
         EventManager<GoldEvent>.StartListening<float>(GoldEvent.OnGetGold, GetGold);
@@ -45,17 +44,18 @@ public class PlayerGold : Singleton<PlayerGold>
 
     private void RemoveEvents()
     {
+        EventManager<UIEvents>.StopListening<float, float>(UIEvents.GetPlayerInventoryResources, ReadPlayerCapital);
         EventManager<UIEvents>.StopListening<ItemData, float>(UIEvents.OnClickItemBuyButton, BuyItem_Gold);
         EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyItem_ERC);
         EventManager<GoldEvent>.StopListening<float>(GoldEvent.OnGetGold, GetGold);
     }
 
-    //DataManager에서 Data를 읽어오기
-    private void ReadPlayerCapital()
+    //Gold와 ERC 초기화
+    private void ReadPlayerCapital(float Gold, float ERC)
     {
         //디버그용
-        GoldValue = 10000;
-        ERCValue = 1000;
+        GoldValue = Gold;
+        ERCValue = ERC;
 
         UpdateUIText();
     }
@@ -72,15 +72,17 @@ public class PlayerGold : Singleton<PlayerGold>
     {
         if (GoldValue < itemInfo.GoldPrice * Count)
         {
-            //BuyItem_ERC(itemInfo, Count);
-            //EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickGoldBuyButton, itemInfo, Count);
-
             // 팝업 창 등장
             EventManager<UIEvents>.TriggerEvent(UIEvents.GoldStorePopup);
         }
         else
         {
             GoldValue -= itemInfo.GoldPrice * Count;
+            // Player Inventory View Model에 반영
+            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, GoldValue);
+            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerItemListChanged, itemInfo, Count);
+            
+            // 구매 완료 Message 출력
             EventManager<DataEvents>.TriggerEvent(DataEvents.OnPaymentSuccessful, true);
         }
 
@@ -102,6 +104,8 @@ public class PlayerGold : Singleton<PlayerGold>
         else
         {
             ERCValue -= itemInfo.ERCPrice;
+            // Player Inventory View Model에 반영
+            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerERCChanged, ERCValue);
 
             //계산 완료 PopUp On 
             EventManager<DataEvents>.TriggerEvent(DataEvents.OnPaymentSuccessful, true);
@@ -111,6 +115,7 @@ public class PlayerGold : Singleton<PlayerGold>
         UpdateUIText();
     }
 
+    //골드 획득
     private void GetGold(float getGold)
     {
         GoldValue += getGold;

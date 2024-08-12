@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using UnityEngine;
 using System.Xml.Serialization;
+using Unity.VisualScripting;
+using DG.Tweening;
+using System.IO;
 
 public enum DataType
 {
@@ -150,12 +153,42 @@ public class DataManager : Singleton<DataManager>
     #region SaveData
     //파일을 저장할 위치 지정
 
-    public void SaveInventoryData()
+    private void SaveInventoryData(Inventory inventory)
     {
+        var textAsset = textAssetDic[DataType.PlayerInven];
+        if (textAsset == null) return;
 
+        XDocument xmlDoc = XDocument.Parse(textAsset.text);
+
+        XElement dataElement = xmlDoc.Element("Temp_PlayerInventory")
+                                        .Element("dataCategory")
+                                        .Element("data");
+
+        if(dataElement != null)
+        {
+            dataElement.SetAttributeValue("PlayerID", $"P{inventory.PlayerID}");
+            dataElement.SetAttributeValue("Gold", inventory.Gold);
+            dataElement.SetAttributeValue("ERC", inventory.ERC);
+            dataElement.SetAttributeValue("ItemList", SerializeItemList(inventory.ItemList));
+        }
+
+        string filePath = Path.Combine(Application.dataPath, "Resources/Temp_PlayerInventory.xml");
+        xmlDoc.Save(filePath);
     }
     //Resource 파일의 Data Update는 불가.
 
+    private string SerializeItemList(Dictionary<ItemData, int> itemList)
+    {
+        List<string> items = new List<string>();
+
+        foreach (var item in itemList)
+        {
+            string itemString = $"I{item.Key.ItemID}:{item.Value}";
+            items.Add(itemString);
+        }
+
+        return "{" + string.Join(",", items) + "}";
+    }
     #endregion
 
     public Dictionary<int, ItemData> GetItemInfoDatas()
@@ -185,6 +218,13 @@ public class DataManager : Singleton<DataManager>
 
         LoadFile();
         ReadDataOnAwake();
+
+        EventManager<DataEvents>.StartListening<Inventory>(DataEvents.OnUserInventorySave, SaveInventoryData);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager<DataEvents>.StopListening<Inventory>(DataEvents.OnUserInventorySave, SaveInventoryData);
     }
 
     private void Start()

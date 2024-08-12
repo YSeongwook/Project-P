@@ -45,13 +45,13 @@ public static class PlayerViewModelExtenstion
     #region Player Item Inventory
     public static void RegisterPlayerItemListChanged(this PlayerViewModel vm, bool isRegister)
     {
-        if (isRegister) EventManager<DataEvents>.StartListening<ItemData, int>(DataEvents.MVVMChangedERC, vm.OnResponsePlayerItemListChangedEvent);
-        else EventManager<DataEvents>.StopListening<ItemData, int>(DataEvents.MVVMChangedERC, vm.OnResponsePlayerItemListChangedEvent);
+        if (isRegister) EventManager<DataEvents>.StartListening<ItemData, int>(DataEvents.MVVMChangedInventoryItemDictionary, vm.OnResponsePlayerItemListChangedEvent);
+        else EventManager<DataEvents>.StopListening<ItemData, int>(DataEvents.MVVMChangedInventoryItemDictionary, vm.OnResponsePlayerItemListChangedEvent);
     }
 
     public static void RequestPlayerItemListChanged(this PlayerViewModel vm, ItemData item, int count)
     {
-        EventManager<DataEvents>.TriggerEvent(DataEvents.MVVMChangedERC, item, count);
+        EventManager<DataEvents>.TriggerEvent(DataEvents.MVVMChangedInventoryItemDictionary, item, count);
     }
 
     public static void OnResponsePlayerItemListChangedEvent(this PlayerViewModel vm, ItemData item, int count)

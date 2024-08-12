@@ -50,6 +50,7 @@ namespace EnumTypes
         OnClickGoldBuyExit,
         OnCreateItemSlot,
         OnCreateGoldPackageSlot,
+        GetPlayerInventoryResources,
         GoldStorePopup,
         GoldStoreExit
     }
@@ -57,13 +58,16 @@ namespace EnumTypes
     public enum DataEvents
     {
         OnUserInventoryLoad,
-
+        OnUserInventorySave,
         OnItemDataLoad,
         HeroCollectionUpdated,
         OnPaymentSuccessful,
         MVVMChangedGold,
         MVVMChangedERC,
-        MVVMChangedInventoryItemDictionary
+        MVVMChangedInventoryItemDictionary,
+        PlayerGoldChanged,
+        PlayerERCChanged,
+        PlayerItemListChanged
     }
 
     public enum GoldEvent
