@@ -3,8 +3,10 @@ using Sirenix.OdinInspector.Editor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.VolumeComponent;
 using UnityRandom = UnityEngine.Random;
 
 public enum TileType
@@ -44,7 +46,8 @@ public class TempMazeCreate : MonoBehaviour
     }
 
     private Tile[,] tiles;
-    public Dictionary<int, List<Vector2Int>> pathList { get; private set; } = new Dictionary<int, List<Vector2Int>>();
+    //public Dictionary<int, List<Vector2Int>> pathList { get; private set; } = new Dictionary<int, List<Vector2Int>>();
+    public Dictionary<int, Dictionary<Vector2Int, List<Vector2Int>>> pathLists { get; private set; } = new Dictionary<int, Dictionary<Vector2Int, List<Vector2Int>>>();
     private const float RotationAngle = 90f;
 
     private void Start()
@@ -84,7 +87,10 @@ public class TempMazeCreate : MonoBehaviour
             setting.startPoint = new Vector2Int(UnityRandom.Range(0, mapSize), UnityRandom.Range(0, mapSize));
             tiles[setting.startPoint.y, setting.startPoint.x].Type = TileType.StartPoint;
 
-            pathList.Add(index, new List<Vector2Int> { setting.startPoint });
+            //pathList.Add(index, new List<Vector2Int> { setting.startPoint });
+            Dictionary<Vector2Int, List<Vector2Int>> tempDic = new Dictionary<Vector2Int, List<Vector2Int>>();
+            tempDic.Add(setting.startPoint, new List<Vector2Int> { setting.startPoint });
+            pathLists.Add(index, tempDic);
             AddRandomPoints(setting);
 
             index++;
@@ -116,33 +122,62 @@ public class TempMazeCreate : MonoBehaviour
     //경로 생성
     private void CreatePath()
     {
-        pathList.Clear();
+        pathLists.Clear();
         SetRandomPoint();
 
         int index = 0;
         foreach(var maze in mazeSettings)
         {
-            foreach(var endPoint in maze.EndPoints)
+            var pathList = pathLists[index];
+
+            int EndPointCount = 0;
+            foreach (var endPoint in maze.EndPoints)
             {
-                // 첫번째 
-                bool isEnd = false;
-                while (true)
+                EndPointCount++;
+
+                if(EndPointCount <= 1)
                 {
-                    Vector2Int CurrentTile = pathList[index].Last();
-                    NextPathTileType(CurrentTile, index, out isEnd);
+                    // 첫번째 
+                    bool isEnd = false;
+                    while (true)
+                    {
+                        Vector2Int CurrentTile = pathList[maze.startPoint].Last();
+                        NextPathTileType(CurrentTile, maze.startPoint, index, out isEnd);
 
-                    if (isEnd) break;
+                        if (isEnd) break;
+                    }
                 }
+                else
+                {
+                    // 두번째 이상
+                    bool isEnd = false;
+
+                    var list = pathList[maze.startPoint];
+                    var StartPoint = list[UnityRandom.Range(1, list.Count)];
+                    Vector2Int CurrentTile = Vector2Int.zero;
+
+                    while (true)
+                    {
+                        if (!pathList.ContainsKey(StartPoint))
+                        {
+                            pathLists[index].Add(StartPoint, new List<Vector2Int> { StartPoint } );
+                        }
+
+                        CurrentTile = pathList[StartPoint].Last();
+
+                        NextPathTileType(CurrentTile, StartPoint, index, out isEnd);
+
+                        if (isEnd) break;
+                    }
+                }                
             }
-
-
 
             index++;
         }        
     }
 
     //다음 타일로 무작위 이동 
-    private void NextPathTileType(Vector2Int currentTile, int index, out bool isEnd)
+    private void NextPathTileType(Vector2Int currentTile, Vector2Int startPoint, int index, out bool isEnd)
     {
         List<Vector2Int> directions = new List<Vector2Int>
         {
@@ -159,7 +194,7 @@ public class TempMazeCreate : MonoBehaviour
         {
             Vector2Int NextTile = currentTile + direction;
 
-            if(!IsValidTile(NextTile)) continue;
+            if(!IsValidTile(NextTile, startPoint, index)) continue;
 
             tileMoveAble = true;
 
@@ -170,24 +205,26 @@ public class TempMazeCreate : MonoBehaviour
                 isEnd = false;
             }
 
-            pathList[index].Add(NextTile);
+            //pathLists[index].Add(NextTile);
+            pathLists[index][startPoint].Add(NextTile);
             return;
         }
 
         if(!tileMoveAble)
         {
-            pathList[index].Remove(currentTile);
+            //pathLists[index].Remove(currentTile);
+            pathLists[index][startPoint].Remove(currentTile);
         }
 
         isEnd = false;
     }
 
     // 타일 조건 확인
-    private bool IsValidTile(Vector2Int tile)
+    private bool IsValidTile(Vector2Int tile, Vector2Int startPoint, int index)
     {
         return tile.x >= 0 && tile.x < mapSize &&
                tile.y >= 0 && tile.y < mapSize &&
-               (tiles[tile.y, tile.x].Type == TileType.None ||
+               (!pathLists[index][startPoint].Contains(tile) ||
                 tiles[tile.y, tile.x].Type == TileType.EndPoint);
     }
 
@@ -232,45 +269,85 @@ public class TempMazeCreate : MonoBehaviour
         Debug.Log(mazeRepresentation);
     }
 
+    // 마지막 지점 스프라이트 회전
     private void SetEndPointRotateValue(int y, int x)
     {
-        foreach(var Dic in pathList)
+        foreach(var Dic in pathLists)
         {
+            int key = Dic.Key;
+            Dictionary<Vector2Int, List<Vector2Int>> innerDictionary = Dic.Value;
+
             Vector2Int rotationValue = Vector2Int.zero;
 
-            if (Dic.Value.Contains(new Vector2Int(x,y)))
+            foreach(var List in innerDictionary)
             {
-                switch(tiles[y, x].Type)
+                if (List.Value.Contains(new Vector2Int(x, y)))
                 {
-                    case TileType.StartPoint:
-                        rotationValue = Dic.Value[1] - Dic.Value[0];                        
-                        break; 
-                    case TileType.EndPoint:
-                        int lastIndex = Dic.Value.Count - 1;
-                        rotationValue = Dic.Value[lastIndex-1] - Dic.Value[lastIndex];
-                        break;
-                    default:
-                        DebugLogger.Log("잘못된 사용입니다.");
-                        return;
-                }
+                    switch (tiles[y, x].Type)
+                    {
+                        case TileType.StartPoint:
+                            rotationValue = List.Value[1] - List.Value[0];
+                            break;
+                        case TileType.EndPoint:
+                            int lastIndex = List.Value.Count - 1;
+                            rotationValue = List.Value[lastIndex - 1] - List.Value[lastIndex];
+                            break;
+                        default:
+                            DebugLogger.Log("잘못된 사용입니다.");
+                            return;
+                    }
 
-                if (rotationValue == Vector2Int.up)
-                {
-                    tiles[y, x].TileRotate = 0;
-                }
-                else if (rotationValue == Vector2Int.right)
-                {
-                    tiles[y, x].TileRotate = 3;
-                }
-                else if (rotationValue == Vector2Int.down)
-                {
-                    tiles[y, x].TileRotate = 2;
-                }
-                else if (rotationValue == Vector2Int.left)
-                {
-                    tiles[y, x].TileRotate = 1;
+                    if (rotationValue == Vector2Int.up)
+                    {
+                        tiles[y, x].TileRotate = 0;
+                    }
+                    else if (rotationValue == Vector2Int.right)
+                    {
+                        tiles[y, x].TileRotate = 3;
+                    }
+                    else if (rotationValue == Vector2Int.down)
+                    {
+                        tiles[y, x].TileRotate = 2;
+                    }
+                    else if (rotationValue == Vector2Int.left)
+                    {
+                        tiles[y, x].TileRotate = 1;
+                    }
                 }
             }
+            //if (Dic.Contains(new Vector2Int(x,y)))
+            //{
+            //    switch(tiles[y, x].Type)
+            //    {
+            //        case TileType.StartPoint:
+            //            rotationValue = Dic.Value[1] - Dic.Value[0];                        
+            //            break; 
+            //        case TileType.EndPoint:
+            //            int lastIndex = Dic.Value.Count - 1;
+            //            rotationValue = Dic.Value[lastIndex-1] - Dic.Value[lastIndex];
+            //            break;
+            //        default:
+            //            DebugLogger.Log("잘못된 사용입니다.");
+            //            return;
+            //    }
+
+            //    if (rotationValue == Vector2Int.up)
+            //    {
+            //        tiles[y, x].TileRotate = 0;
+            //    }
+            //    else if (rotationValue == Vector2Int.right)
+            //    {
+            //        tiles[y, x].TileRotate = 3;
+            //    }
+            //    else if (rotationValue == Vector2Int.down)
+            //    {
+            //        tiles[y, x].TileRotate = 2;
+            //    }
+            //    else if (rotationValue == Vector2Int.left)
+            //    {
+            //        tiles[y, x].TileRotate = 1;
+            //    }
+            //}
         }
     }
 
@@ -321,68 +398,74 @@ public class TempMazeCreate : MonoBehaviour
     {
         Vector2Int currentTile = new Vector2Int(x, y);
 
-        foreach (var path in pathList.Values)
+        foreach (var path in pathLists.Values)
         {
-            int pathIndex = path.IndexOf(currentTile);
 
-            if (pathIndex == -1 || pathIndex == 0 || pathIndex == path.Count - 1)
+            foreach (var list in path.Values)
             {
-                continue; // 시작점과 끝점은 무시
-            }
+                int pathIndex = list.IndexOf(currentTile);
 
-            Vector2Int preTile = path[pathIndex - 1];
-            Vector2Int nextTile = path[pathIndex + 1];
+                if (pathIndex == -1 || pathIndex == 0 || pathIndex == path.Count - 1)
+                {
+                    continue; // 시작점과 끝점은 무시
+                }
 
-            Vector2Int preDirection = preTile - currentTile;
-            Vector2Int nextDirection = nextTile - currentTile;
+                Vector2Int preTile = list[pathIndex - 1];
+                Vector2Int nextTile = list[pathIndex + 1];
 
-            // 각 타일의 연결 방향을 확인하여 스프라이트 결정
-            if ((preDirection == Vector2Int.up && nextDirection == Vector2Int.down) ||
-                (preDirection == Vector2Int.down && nextDirection == Vector2Int.up))
-            {
-                tiles[y, x].TileShap = 0;
-                tiles[y, x].TileRotate = 0;
+                Vector2Int preDirection = preTile - currentTile;
+                Vector2Int nextDirection = nextTile - currentTile;
 
-                tiles[y, x].Image.sprite = straightTile;
-                return "│"; // 수직 연결
-            }
-            else if ((preDirection == Vector2Int.left && nextDirection == Vector2Int.right) ||
-                     (preDirection == Vector2Int.right && nextDirection == Vector2Int.left))
-            {
-                tiles[y, x].TileShap = 0;
-                tiles[y, x].TileRotate = 1;
+                // 각 타일의 연결 방향을 확인하여 스프라이트 결정
+                if ((preDirection == Vector2Int.up && nextDirection == Vector2Int.down) ||
+                    (preDirection == Vector2Int.down && nextDirection == Vector2Int.up))
+                {
+                    tiles[y, x].TileShap = 0;
+                    tiles[y, x].TileRotate = 0;
 
-                tiles[y, x].Image.sprite = straightTile;
-                return "─"; // 수평 연결
+                    tiles[y, x].Image.sprite = straightTile;
+                    return "│"; // 수직 연결
+                }
+                else if ((preDirection == Vector2Int.left && nextDirection == Vector2Int.right) ||
+                         (preDirection == Vector2Int.right && nextDirection == Vector2Int.left))
+                {
+                    tiles[y, x].TileShap = 0;
+                    tiles[y, x].TileRotate = 1;
+
+                    tiles[y, x].Image.sprite = straightTile;
+                    return "─"; // 수평 연결
+                }
+                else if ((preDirection == Vector2Int.down && nextDirection == Vector2Int.left) ||
+                         (preDirection == Vector2Int.left && nextDirection == Vector2Int.down))
+                {
+                    tiles[y, x].TileShap = 1;
+                    tiles[y, x].TileRotate = 0;
+                    return "┘"; // 오른쪽 아래 모서리
+                }
+                else if ((preDirection == Vector2Int.down && nextDirection == Vector2Int.right) ||
+                         (preDirection == Vector2Int.right && nextDirection == Vector2Int.down))
+                {
+                    tiles[y, x].TileShap = 1;
+                    tiles[y, x].TileRotate = 1;
+                    return "└"; // 왼쪽 아래 모서리
+                }
+                else if ((preDirection == Vector2Int.up && nextDirection == Vector2Int.right) ||
+                         (preDirection == Vector2Int.right && nextDirection == Vector2Int.up))
+                {
+                    tiles[y, x].TileShap = 1;
+                    tiles[y, x].TileRotate = 2;
+                    return "┌"; // 왼쪽 위 모서리
+                }
+                else if ((preDirection == Vector2Int.up && nextDirection == Vector2Int.left) ||
+                         (preDirection == Vector2Int.left && nextDirection == Vector2Int.up))
+                {
+                    tiles[y, x].TileShap = 1;
+                    tiles[y, x].TileRotate = 3;
+                    return "┐"; // 오른쪽 위 모서리
+                }
             }
-            else if ((preDirection == Vector2Int.down && nextDirection == Vector2Int.left) ||
-                     (preDirection == Vector2Int.left && nextDirection == Vector2Int.down))
-            {
-                tiles[y, x].TileShap = 1;
-                tiles[y, x].TileRotate = 0;
-                return "┘"; // 오른쪽 아래 모서리
-            }
-            else if ((preDirection == Vector2Int.down && nextDirection == Vector2Int.right) ||
-                     (preDirection == Vector2Int.right && nextDirection == Vector2Int.down))
-            {
-                tiles[y, x].TileShap = 1;
-                tiles[y, x].TileRotate = 1;
-                return "└"; // 왼쪽 아래 모서리
-            }
-            else if ((preDirection == Vector2Int.up && nextDirection == Vector2Int.right) ||
-                     (preDirection == Vector2Int.right && nextDirection == Vector2Int.up))
-            {
-                tiles[y, x].TileShap = 1;
-                tiles[y, x].TileRotate = 2;
-                return "┌"; // 왼쪽 위 모서리
-            }
-            else if ((preDirection == Vector2Int.up && nextDirection == Vector2Int.left) ||
-                     (preDirection == Vector2Int.left && nextDirection == Vector2Int.up))
-            {
-                tiles[y, x].TileShap = 1;
-                tiles[y, x].TileRotate = 3;
-                return "┐"; // 오른쪽 위 모서리
-            }
+           
+            
         }
 
         return "."; // 기본값
@@ -390,14 +473,20 @@ public class TempMazeCreate : MonoBehaviour
 
     private void PrintStack()
     {
-        string aa = "";
-        foreach ( var Dic in pathList )
+       
+        foreach ( var Dic in pathLists )
         {
-            foreach(var List in Dic.Value)
+
+            foreach (var Dic2 in Dic.Value)
             {
-                aa += $"{List} ";
+                string aa = "";
+                foreach (var list in Dic2.Value)
+                {
+                    aa += $"{list} ";
+                }
+                Debug.Log(aa);
             }
-            Debug.Log(aa);
+
         }
         
     }
