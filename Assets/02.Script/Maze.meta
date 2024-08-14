@@ -1,9 +1,10 @@
 fileFormatVersion: 2
 <<<<<<<< HEAD:Assets/01.Scenes/Jinmyung/Temp_Maze.unity.meta
-guid: a973d028d9cdcb842bf6f77bb5e8c621
+guid: 764a0f6c6d81ce544967bafa2023bd60
 ========
-guid: cc6c29501914dc145add7e477acfba22
->>>>>>>> Inseok:Assets/Plugins/Android/baseProjectTemplate.gradle.meta
+guid: 96484d5f9fffa684f8ee94532cf41d70
+folderAsset: yes
+>>>>>>>> 2ff6c2df88e48ae034a1c12e51cd917957bff2d6:Assets/02.Script/Maze.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

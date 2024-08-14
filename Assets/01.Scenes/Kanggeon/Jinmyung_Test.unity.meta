@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Plugins/Android/mainTemplate.gradle.meta
-guid: 5816bae198b942e42ba44e9a39f67ff5
-========
+<<<<<<<< HEAD:Assets/01.Scenes/Kanggeon/Jinmyung_Test.unity.meta
 guid: eb35d32a7cc233f49849a89ee0254496
->>>>>>>> origin/Kanggeon:Assets/01.Scenes/Kanggeon/Jinmyung_Test.unity.meta
+========
+guid: 26d38891f28489e4cad5e89e3a91599e
+>>>>>>>> Inseok:Assets/Plugins/Android/gradleTemplate.properties.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/03.Prefabs/UI/Tile.meta
-guid: de56b7b65541dcd4f9a0191f076c4f5e
-========
 guid: 8f198b58c24d5714caa57d2a8195d643
->>>>>>>> origin/Kanggeon:Assets/02.Script/UI/StageUI.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
