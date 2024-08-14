@@ -1,10 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/01.Scenes/Jinmyung/Temp_Maze.unity.meta
-guid: 27efe126d5e50644eb8d14c5ed5ee94a
-========
-guid: 96484d5f9fffa684f8ee94532cf41d70
-folderAsset: yes
->>>>>>>> 2ff6c2df88e48ae034a1c12e51cd917957bff2d6:Assets/02.Script/Maze.meta
+guid: d4fba806df6276d48a88d14f4aa60310
 DefaultImporter:
   externalObjects: {}
   userData: 

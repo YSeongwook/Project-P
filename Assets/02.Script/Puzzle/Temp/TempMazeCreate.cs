@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,12 @@ public enum TileType
     EndPoint
 }
 
-public enum TileShape
-{
-    
-}
-
 public class TempMazeCreate : MonoBehaviour
 {
     [SerializeField] private int mapSize;
     [SerializeField] private GameObject tileReference;
     [SerializeField] private Transform gridParent;
+    [SerializeField] private Sprite straightTile, closedStraightTile, tTile, lTile, crossTile;
 
     [FoldoutGroup("Maze Setting")]
     [SerializeField] List<MazeSetting> mazeSettings;
@@ -35,6 +32,8 @@ public class TempMazeCreate : MonoBehaviour
         public Image Image;
         public int TileID;
         public TileType Type;
+        public int TileShap;    // 0. ㅡ, 1. ㄱ, 2. T,  3. +, 4. closeTile
+        public int TileRotate;  // 0. ↑,  1. →,  2. ↓,  3. ←
     }
 
     [Serializable]
@@ -45,7 +44,8 @@ public class TempMazeCreate : MonoBehaviour
     }
 
     private Tile[,] tiles;
-    private Dictionary<Vector2Int, List<Vector2Int>> pathList = new Dictionary<Vector2Int, List<Vector2Int>>();
+    public Dictionary<int, List<Vector2Int>> pathList { get; private set; } = new Dictionary<int, List<Vector2Int>>();
+    private const float RotationAngle = 90f;
 
     private void Start()
     {
@@ -66,9 +66,11 @@ public class TempMazeCreate : MonoBehaviour
             {
                 GameObject tile = Instantiate(tileReference, gridParent);
                 tiles[i,j].Transform = tile.transform;
-                tiles[i,j].Image = tile.GetComponentInChildren<Image>();
+                tiles[i,j].Image = tile.transform.GetChild(0).GetComponent<Image>();
                 tiles[i, j].TileID = i/ mapSize + j+1;
                 tiles[i, j].Type = TileType.None;
+                tiles[i, j].TileShap = UnityRandom.Range(0, 4);
+                tiles[i, j].TileRotate = UnityRandom.Range(0, 4);
             }
         }
     }
@@ -76,13 +78,16 @@ public class TempMazeCreate : MonoBehaviour
     // 시작 및 끝 지점 랜덤 지정
     private void SetRandomPoint()
     {
+        int index = 0;
         foreach(var setting in mazeSettings)
         {
             setting.startPoint = new Vector2Int(UnityRandom.Range(0, mapSize), UnityRandom.Range(0, mapSize));
             tiles[setting.startPoint.y, setting.startPoint.x].Type = TileType.StartPoint;
 
-            pathList.Add(setting.startPoint, new List<Vector2Int> { setting.startPoint });
+            pathList.Add(index, new List<Vector2Int> { setting.startPoint });
             AddRandomPoints(setting);
+
+            index++;
         }
     }
 
@@ -114,24 +119,30 @@ public class TempMazeCreate : MonoBehaviour
         pathList.Clear();
         SetRandomPoint();
 
+        int index = 0;
         foreach(var maze in mazeSettings)
         {
             foreach(var endPoint in maze.EndPoints)
             {
+                // 첫번째 
                 bool isEnd = false;
                 while (true)
                 {
-                    Vector2Int CurrentTile = pathList[maze.startPoint].Last();
-                    NextPathTileType(CurrentTile, maze.startPoint, out isEnd);
+                    Vector2Int CurrentTile = pathList[index].Last();
+                    NextPathTileType(CurrentTile, index, out isEnd);
 
                     if (isEnd) break;
                 }
             }
+
+
+
+            index++;
         }        
     }
 
     //다음 타일로 무작위 이동 
-    private void NextPathTileType(Vector2Int currentTile, Vector2Int startPoint, out bool isEnd)
+    private void NextPathTileType(Vector2Int currentTile, int index, out bool isEnd)
     {
         List<Vector2Int> directions = new List<Vector2Int>
         {
@@ -159,13 +170,13 @@ public class TempMazeCreate : MonoBehaviour
                 isEnd = false;
             }
 
-            pathList[startPoint].Add(NextTile);
+            pathList[index].Add(NextTile);
             return;
         }
 
         if(!tileMoveAble)
         {
-            pathList[startPoint].Remove(currentTile);
+            pathList[index].Remove(currentTile);
         }
 
         isEnd = false;
@@ -192,10 +203,14 @@ public class TempMazeCreate : MonoBehaviour
             {
                 if (tiles[y, x].Type == TileType.StartPoint)
                 {
+                    tiles[y, x].TileShap = 4;
+                    SetEndPointRotateValue(y, x);
                     row += "S ";
                 }
                 else if (tiles[y, x].Type == TileType.EndPoint)
                 {
+                    tiles[y, x].TileShap = 4;
+                    SetEndPointRotateValue(y, x);
                     row += "E ";
                 }
                 else if (tiles[y, x].Type == TileType.Path)
@@ -206,11 +221,100 @@ public class TempMazeCreate : MonoBehaviour
                 {
                     row += "# ";
                 }
+
+                ChangedTileSprite(y, x);
+                RotationTileSprite(y, x);
             }
             mazeRepresentation += row + "\n";
         }
 
+        
         Debug.Log(mazeRepresentation);
+    }
+
+    private void SetEndPointRotateValue(int y, int x)
+    {
+        foreach(var Dic in pathList)
+        {
+            Vector2Int rotationValue = Vector2Int.zero;
+
+            if (Dic.Value.Contains(new Vector2Int(x,y)))
+            {
+                switch(tiles[y, x].Type)
+                {
+                    case TileType.StartPoint:
+                        rotationValue = Dic.Value[1] - Dic.Value[0];                        
+                        break; 
+                    case TileType.EndPoint:
+                        int lastIndex = Dic.Value.Count - 1;
+                        rotationValue = Dic.Value[lastIndex-1] - Dic.Value[lastIndex];
+                        break;
+                    default:
+                        DebugLogger.Log("잘못된 사용입니다.");
+                        return;
+                }
+
+                if (rotationValue == Vector2Int.up)
+                {
+                    tiles[y, x].TileRotate = 0;
+                }
+                else if (rotationValue == Vector2Int.right)
+                {
+                    tiles[y, x].TileRotate = 3;
+                }
+                else if (rotationValue == Vector2Int.down)
+                {
+                    tiles[y, x].TileRotate = 2;
+                }
+                else if (rotationValue == Vector2Int.left)
+                {
+                    tiles[y, x].TileRotate = 1;
+                }
+            }
+        }
+    }
+
+    // 스프라이트 이미지 변경
+    private void ChangedTileSprite(int y, int x)
+    {
+        switch (tiles[y, x].TileShap)
+        {
+            case 0:
+                tiles[y, x].Image.sprite = straightTile;
+                break;
+            case 1:
+                tiles[y, x].Image.sprite = lTile;
+                break;
+            case 2:
+                tiles[y, x].Image.sprite = tTile;
+                break;
+            case 3:
+                tiles[y, x].Image.sprite = crossTile;
+                break;
+            case 4:
+                tiles[y, x].Image.sprite = closedStraightTile;
+                break;
+        }
+    }
+
+    // 스프라이트 이미지 회전
+    private void RotationTileSprite(int y, int x)
+    {
+        switch (tiles[y, x].TileRotate)
+        {
+            case 0:
+                tiles[y, x].Image.transform.rotation = Quaternion.identity;
+                break;
+            case 1:
+                tiles[y, x].Image.transform.rotation = Quaternion.Euler(0, 0, -RotationAngle);
+                break;
+            case 2:
+                tiles[y, x].Image.transform.rotation = Quaternion.Euler(0, 0, -RotationAngle*2);
+                break;
+            case 3:
+                tiles[y, x].Image.transform.rotation = Quaternion.Euler(0, 0, -RotationAngle*3);
+                break;
+        }
     }
 
     private string GetPathNormal(int x, int y)
@@ -229,38 +333,54 @@ public class TempMazeCreate : MonoBehaviour
             Vector2Int preTile = path[pathIndex - 1];
             Vector2Int nextTile = path[pathIndex + 1];
 
-            Vector2Int preDirection = currentTile - preTile;
+            Vector2Int preDirection = preTile - currentTile;
             Vector2Int nextDirection = nextTile - currentTile;
 
             // 각 타일의 연결 방향을 확인하여 스프라이트 결정
             if ((preDirection == Vector2Int.up && nextDirection == Vector2Int.down) ||
                 (preDirection == Vector2Int.down && nextDirection == Vector2Int.up))
             {
+                tiles[y, x].TileShap = 0;
+                tiles[y, x].TileRotate = 0;
+
+                tiles[y, x].Image.sprite = straightTile;
                 return "│"; // 수직 연결
             }
             else if ((preDirection == Vector2Int.left && nextDirection == Vector2Int.right) ||
                      (preDirection == Vector2Int.right && nextDirection == Vector2Int.left))
             {
+                tiles[y, x].TileShap = 0;
+                tiles[y, x].TileRotate = 1;
+
+                tiles[y, x].Image.sprite = straightTile;
                 return "─"; // 수평 연결
             }
-            else if ((preDirection == Vector2Int.up && nextDirection == Vector2Int.right) ||
-                     (preDirection == Vector2Int.right && nextDirection == Vector2Int.up))
+            else if ((preDirection == Vector2Int.down && nextDirection == Vector2Int.left) ||
+                     (preDirection == Vector2Int.left && nextDirection == Vector2Int.down))
             {
-                return "└"; // 왼쪽 아래 모서리
-            }
-            else if ((preDirection == Vector2Int.up && nextDirection == Vector2Int.left) ||
-                     (preDirection == Vector2Int.left && nextDirection == Vector2Int.up))
-            {
+                tiles[y, x].TileShap = 1;
+                tiles[y, x].TileRotate = 0;
                 return "┘"; // 오른쪽 아래 모서리
             }
             else if ((preDirection == Vector2Int.down && nextDirection == Vector2Int.right) ||
                      (preDirection == Vector2Int.right && nextDirection == Vector2Int.down))
             {
+                tiles[y, x].TileShap = 1;
+                tiles[y, x].TileRotate = 1;
+                return "└"; // 왼쪽 아래 모서리
+            }
+            else if ((preDirection == Vector2Int.up && nextDirection == Vector2Int.right) ||
+                     (preDirection == Vector2Int.right && nextDirection == Vector2Int.up))
+            {
+                tiles[y, x].TileShap = 1;
+                tiles[y, x].TileRotate = 2;
                 return "┌"; // 왼쪽 위 모서리
             }
-            else if ((preDirection == Vector2Int.down && nextDirection == Vector2Int.left) ||
-                     (preDirection == Vector2Int.left && nextDirection == Vector2Int.down))
+            else if ((preDirection == Vector2Int.up && nextDirection == Vector2Int.left) ||
+                     (preDirection == Vector2Int.left && nextDirection == Vector2Int.up))
             {
+                tiles[y, x].TileShap = 1;
+                tiles[y, x].TileRotate = 3;
                 return "┐"; // 오른쪽 위 모서리
             }
         }
