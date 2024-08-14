@@ -1,10 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Plugins/Android/settingsTemplate.gradle.meta
 guid: 7d11e947fc1433843a19a49aa3a7ce09
-========
-guid: b7fe998fb7954d64c8044c8838b14f89
-folderAsset: yes
->>>>>>>> origin/Kanggeon:Assets/02.Script/UI/SetActiveManager.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
