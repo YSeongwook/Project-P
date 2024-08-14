@@ -1,7 +1,6 @@
-using UnityEngine;
 using DG.Tweening;
-using static UnityEditor.Rendering.FilterWindow;
-using TMPro;
+using UnityEngine;
+
 public class ChapterButton : MonoBehaviour
 {
     [SerializeField] private GameObject closeChapterBtn;
