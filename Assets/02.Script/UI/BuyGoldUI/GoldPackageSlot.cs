@@ -2,19 +2,17 @@ using DataStruct;
 using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GoldPackageSlot : MonoBehaviour
 {
-    [FoldoutGroup("Gold Shop UI")][SerializeField] TMP_Text Text_PriceERC;
-    [FoldoutGroup("Gold Shop UI")][SerializeField] TMP_Text Text_PackageName;
-    [FoldoutGroup("Gold Shop UI")][SerializeField] Image Image_PackageIcon;
+    [FoldoutGroup("Gold Shop UI")][SerializeField] private Image imagePackageIcon;
+    [FoldoutGroup("Gold Shop UI")][SerializeField] private TMP_Text textPackageName;
+    [FoldoutGroup("Gold Shop UI")][SerializeField] private TMP_Text textPriceErc;
 
-    private GoldPackageData PackageInfo;
+    private GoldPackageData _packageInfo;
 
     private void Awake()
     {
@@ -40,10 +38,10 @@ public class GoldPackageSlot : MonoBehaviour
     //패키지 정보 초기화
     public void SetPackageInfo(GoldPackageData packageData)
     {
-        PackageInfo = packageData;
+        _packageInfo = packageData;
 
-        Text_PackageName.text = PackageInfo.Name;
-        Text_PriceERC.text = PackageInfo.ERCPrice.ToString();
+        textPackageName.text = _packageInfo.Name;
+        textPriceErc.text = _packageInfo.ERCPrice.ToString();
     }
 
     //구매 창 PopUp On
@@ -62,11 +60,11 @@ public class GoldPackageSlot : MonoBehaviour
     public void BuyGold_ERC()
     {
         //ERC 감소
-        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickGoldBuyButton, PackageInfo);
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickGoldBuyButton, _packageInfo);
         // ERC 코인 소비 코드 전송
 
         //골드 획득
-        EventManager<GoldEvent>.TriggerEvent(GoldEvent.OnGetGold, PackageInfo.GiveGold);
+        EventManager<GoldEvent>.TriggerEvent(GoldEvent.OnGetGold, _packageInfo.GiveGold);
 
         //골드 상점 닫기
         //EventManager<UIEvents>.TriggerEvent(UIEvents.GoldStoreExit);

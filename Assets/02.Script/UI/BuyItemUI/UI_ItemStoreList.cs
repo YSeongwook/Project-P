@@ -1,33 +1,30 @@
-using EnumTypes;
+using System.Collections.Generic;
 using DataStruct;
+using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Sirenix.Reflection.Editor;
 
 public class UI_ItemStoreList : MonoBehaviour
-{
-    [FoldoutGroup("Item Shop List")]
-    [SerializeField] GameObject ItemSlotPrefab;
+{ 
+    [FoldoutGroup("Item Shop List")] [SerializeField] private GameObject itemSlotPrefab;
 
-    private RectTransform rectTransform;
-    private GridLayoutGroup gridLayoutGroup;
-    private float WidthValue;
-    private Dictionary<int, ItemData> ItemDataDictionary;
+    private RectTransform _rectTransform;
+    private GridLayoutGroup _gridLayoutGroup;
+    private float _widthValue;
+    private Dictionary<int, ItemData> _itemDataDictionary;
 
-    private float CellHeight;
+    private float _cellHeight;
 
     private void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
-        gridLayoutGroup = GetComponent<GridLayoutGroup>();
-        WidthValue = rectTransform.rect.width;
-        CellHeight = gridLayoutGroup.cellSize.y + gridLayoutGroup.spacing.y;
+        _rectTransform = GetComponent<RectTransform>();
+        _gridLayoutGroup = GetComponent<GridLayoutGroup>();
+        _widthValue = _rectTransform.rect.width;
+        _cellHeight = _gridLayoutGroup.cellSize.y + _gridLayoutGroup.spacing.y;
 
-        AddEvenet();
+        AddEvent();
     }
 
     private void OnDestroy()
@@ -35,7 +32,7 @@ public class UI_ItemStoreList : MonoBehaviour
         RemoveEvent();
     }
 
-    private void AddEvenet()
+    private void AddEvent()
     {
         EventManager<UIEvents>.StartListening(UIEvents.OnCreateItemSlot, CreateItemSlot);
     }
@@ -54,18 +51,17 @@ public class UI_ItemStoreList : MonoBehaviour
     // 상점 아이템 List 나열
     private void CreateItemSlot()
     {
-        ItemDataDictionary = DataManager.Instance.GetItemInfoDatas();
+        _itemDataDictionary = DataManager.Instance.GetItemInfoDatas();
 
-        float Count = 0;//rectTransform.rect.height;
-        foreach (var itemData in ItemDataDictionary.Values)
+        float count = 0; // rectTransform.rect.height;
+        foreach (var itemData in _itemDataDictionary.Values)
         {
-            Count++;
-            GameObject itemSlot = Instantiate(ItemSlotPrefab, this.transform);
+            count++;
+            GameObject itemSlot = Instantiate(itemSlotPrefab, this.transform);
             Item_Basic itemSlotData = itemSlot.GetComponent<Item_Basic>();
             itemSlotData.SetItemInfo(itemData);
         }
 
-        rectTransform.sizeDelta = new Vector2(WidthValue, Count * CellHeight);
+        _rectTransform.sizeDelta = new Vector2(_widthValue, count * _cellHeight);
     }
-
 }

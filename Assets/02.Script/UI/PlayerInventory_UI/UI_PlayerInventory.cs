@@ -1,30 +1,26 @@
-using EnumTypes;
 using DataStruct;
+using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
-{
-    [FoldoutGroup("Player Gold UI")][SerializeField] private TMP_Text GoldPrice;    // 골드 UI 표시
-    [FoldoutGroup("Player Gold UI")][SerializeField] private TMP_Text ERCPrice;     // ERC UI 표시
+{ 
+    [FoldoutGroup("Player Gold UI")] [SerializeField] private TMP_Text goldPrice; // 골드 UI 표시
+    [FoldoutGroup("Player Gold UI")] [SerializeField] private TMP_Text ercPrice; // ERC UI 표시
+    [FoldoutGroup("Payment UI")] [SerializeField] private GameObject paymentPopup;
 
-    [FoldoutGroup("Payment UI")][SerializeField] private GameObject PaymentPopup;
+    public Canvas Canvas { get; private set; }
 
-    public Canvas canvas { get; private set; }
-
-    private float GoldValue;    // Player가 가지고 있는 Gold의 갯수
-    private float ERCValue;     // Player가 가지고 있는 ERC의 갯수
+    private float _goldValue; // Player가 가지고 있는 Gold의 갯수
+    private float _ercValue; // Player가 가지고 있는 ERC의 갯수
 
     protected new void Awake()
     {
         base.Awake();
 
-        canvas = GetComponentInParent<Canvas>();
+        Canvas = GetComponentInParent<Canvas>();
 
         AddEvents();
     }
@@ -51,11 +47,11 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
     }
 
     //Gold와 ERC 초기화
-    private void ReadPlayerCapital(float Gold, float ERC)
+    private void ReadPlayerCapital(float gold, float erc)
     {
         //디버그용
-        GoldValue = Gold;
-        ERCValue = ERC;
+        _goldValue = gold;
+        _ercValue = erc;
 
         UpdateUIText();
     }
@@ -63,25 +59,25 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
     // Player 자원 UI 업데이트
     private void UpdateUIText()
     {
-        GoldPrice.text = GoldValue.ToString();
-        ERCPrice.text = ERCValue.ToString();
+        goldPrice.text = _goldValue.ToString();
+        ercPrice.text = _ercValue.ToString();
     }
 
     // 아이템 구매 - 골드 (기본)
     private void BuyItem_Gold(ItemData itemInfo, float Count)
     {
-        if (GoldValue < itemInfo.GoldPrice * Count)
+        if (_goldValue < itemInfo.GoldPrice * Count)
         {
             // 팝업 창 등장
             EventManager<UIEvents>.TriggerEvent(UIEvents.GoldStorePopup);
         }
         else
         {
-            GoldValue -= itemInfo.GoldPrice * Count;
+            _goldValue -= itemInfo.GoldPrice * Count;
             // Player Inventory View Model에 반영
-            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, GoldValue);
+            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, _goldValue);
             EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerItemListChanged, itemInfo, Count);
-            
+
             // 구매 완료 Message 출력
             EventManager<DataEvents>.TriggerEvent(DataEvents.OnPaymentSuccessful, true);
         }
@@ -92,7 +88,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
     //아이템 구매 - ERC (Gold가 구매 가격보다 적으면)
     private void BuyItem_ERC(GoldPackageData itemInfo)
     {
-        if (ERCValue < itemInfo.ERCPrice)
+        if (_ercValue < itemInfo.ERCPrice)
         {
             DebugLogger.Log("금액이 부족합니다.");
 
@@ -103,9 +99,9 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         }
         else
         {
-            ERCValue -= itemInfo.ERCPrice;
+            _ercValue -= itemInfo.ERCPrice;
             // Player Inventory View Model에 반영
-            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerERCChanged, ERCValue);
+            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerERCChanged, _ercValue);
 
             //계산 완료 PopUp On 
             EventManager<DataEvents>.TriggerEvent(DataEvents.OnPaymentSuccessful, true);
@@ -118,7 +114,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
     //골드 획득
     private void GetGold(float getGold)
     {
-        GoldValue += getGold;
+        _goldValue += getGold;
 
         UpdateUIText();
     }

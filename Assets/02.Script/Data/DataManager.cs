@@ -1,14 +1,10 @@
-using EnumTypes;
-using DataStruct;
-using EventLibrary;
-using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Linq;
-using UnityEngine;
-using System.Xml.Serialization;
-using Unity.VisualScripting;
-using DG.Tweening;
 using System.IO;
+using System.Xml.Linq;
+using DataStruct;
+using EnumTypes;
+using EventLibrary;
+using UnityEngine;
 
 public enum DataType
 {
@@ -233,5 +229,4 @@ public class DataManager : Singleton<DataManager>
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnCreateGoldPackageSlot);
         EventManager<DataEvents>.TriggerEvent(DataEvents.OnUserInventoryLoad);
     }
-
 }

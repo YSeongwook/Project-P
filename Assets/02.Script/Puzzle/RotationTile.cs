@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class RotationTile : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private float rotationDuration = 0.5f; // 회전에 걸리는 시간
-    
+
     private const float RotationAngle = 90f;
     private bool _isRotating = false; // 현재 회전중인지 확인하는 플래그 변수
     private Quaternion _targetRotation;
@@ -17,8 +17,9 @@ public class RotationTile : MonoBehaviour, IPointerClickHandler
     private void Start()
     {
         _targetRotation = transform.rotation;
+        UpdateEntrances(); // 초기 회전에 따른 입구 업데이트
     }
-    
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (_isRotating) return; // 이미 회전 중인 타일의 경우 다시 클릭해도 회전 되지 않는다.
@@ -46,6 +47,8 @@ public class RotationTile : MonoBehaviour, IPointerClickHandler
 
         transform.rotation = endRotation;
         _isRotating = false;
+
+        UpdateEntrances(); // 회전 후 입구 업데이트
     }
 
     // 현재 회전 상태에 따라 입구 업데이트
@@ -58,21 +61,29 @@ public class RotationTile : MonoBehaviour, IPointerClickHandler
             updatedEntrances.Add(updatedEntrance);
         }
         Entrances = updatedEntrances;
+
+        // 디버깅: 갱신된 입구 좌표 출력
+        foreach (var entrance in Entrances)
+        {
+            Debug.Log($"Updated Entrance: {entrance}");
+        }
     }
 
+    // 입구를 90도 회전시키는 메서드 (반시계 방향)
     private Vector2Int RotateEntrance(Vector2Int entrance)
     {
         switch (entrance)
         {
-            case Vector2Int v when v == Vector2Int.up:
-                return Vector2Int.right;
-            case Vector2Int v when v == Vector2Int.right:
-                return Vector2Int.down;
-            case Vector2Int v when v == Vector2Int.down:
-                return Vector2Int.left;
-            case Vector2Int v when v == Vector2Int.left:
-                return Vector2Int.up;
+            case Vector2Int v when v == new Vector2Int(1, 0): // 하단 중앙
+                return new Vector2Int(0, 1); // 좌측 중앙
+            case Vector2Int v when v == new Vector2Int(0, 1): // 좌측 중앙
+                return new Vector2Int(1, 2); // 상단 중앙
+            case Vector2Int v when v == new Vector2Int(1, 2): // 상단 중앙
+                return new Vector2Int(2, 1); // 우측 중앙
+            case Vector2Int v when v == new Vector2Int(2, 1): // 우측 중앙
+                return new Vector2Int(1, 0); // 하단 중앙
             default:
+                Debug.LogWarning("Unexpected entrance value: " + entrance);
                 return entrance;
         }
     }

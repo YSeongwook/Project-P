@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7825668613472703374}
   - component: {fileID: 2591254240677886732}
   - component: {fileID: 8534198052969809844}
-  - component: {fileID: 1286628213543705401}
+  - component: {fileID: 742802435396427132}
   m_Layer: 5
   m_Name: Image_Tile
   m_TagString: Untagged
@@ -36,10 +36,10 @@ RectTransform:
   m_Father: {fileID: 3073735631348752825}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 154, y: 154}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2871903099911691767
 CanvasRenderer:
@@ -108,7 +108,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1493912242, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
+  m_Sprite: {fileID: 33532268, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -118,7 +118,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1286628213543705401
+--- !u!114 &742802435396427132
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,7 +132,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationDuration: 0.5
   Entrances:
-  - {x: 0, y: -1}
+  - {x: 1, y: 2}
+  - {x: 2, y: 1}
+  - {x: 1, y: 0}
 --- !u!1 &4886918754351498150
 GameObject:
   m_ObjectHideFlags: 0
@@ -145,7 +147,7 @@ GameObject:
   - component: {fileID: 3821797297697421456}
   - component: {fileID: 6223173682906204453}
   m_Layer: 5
-  m_Name: End Tile2
+  m_Name: T Tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,10 +1,6 @@
 using DataStruct;
 using EnumTypes;
 using EventLibrary;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public static class PlayerViewModelExtenstion
 {
@@ -25,6 +21,7 @@ public static class PlayerViewModelExtenstion
         vm.PlayerGold = gold;
     }
     #endregion
+    
     #region Player ERC
     public static void RegisterPlayerERCChanged(this PlayerViewModel vm, bool isRegister)
     {
@@ -42,6 +39,7 @@ public static class PlayerViewModelExtenstion
         vm.PlayerERC = ERC;
     }
     #endregion
+    
     #region Player Item Inventory
     public static void RegisterPlayerItemListChanged(this PlayerViewModel vm, bool isRegister)
     {
