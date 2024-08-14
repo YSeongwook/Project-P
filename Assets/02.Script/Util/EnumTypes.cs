@@ -41,17 +41,39 @@ namespace EnumTypes
     {
         OnClickSignInGoogle,
         OnClickStart,
-        OnClickBuyItem,
         OnClickItemBuyButton,
-        OnClickChangeBuyItemCount
+        OnClickGoldBuyButton,
+        OnClickChangeBuyItemCount,
+        OnClickEnableItemBuyPopup,
+        OnClickEnableGoldBuyPopup,
+        OnClickGoldBuyExit,
+        OnCreateItemSlot,
+        OnCreateGoldPackageSlot,
+        GetPlayerInventoryResources,
+        GoldStorePopup,
+        GoldStoreExit
     }
 
     public enum DataEvents
     {
-        OnUserDataSave,
-        OnUserDataLoad,
-        OnUserDataReset,
+        OnUserInventoryLoad,
+        OnUserInventorySave,
+        OnItemDataLoad,
         HeroCollectionUpdated,
+        OnPaymentSuccessful,
+        MVVMChangedGold,
+        MVVMChangedERC,
+        MVVMChangedInventoryItemDictionary,
+        PlayerGoldChanged,
+        PlayerERCChanged,
+        PlayerItemListChanged
+    }
+
+    public enum GoldEvent
+    {
+        OnGetGold,
+        OnUseERC,
+        OnGetERC
     }
 
     public enum GoogleEvents

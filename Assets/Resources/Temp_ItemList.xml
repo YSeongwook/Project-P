@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Temp_ItemList>
+  <dataCategory>
+    <data ItemID="I1001" Name="Item1" Description="아이템1" GoldPrice="1000" ERCPrice="0.5" Image="aaa" />
+    <data ItemID="I1002" Name="Item2" Description="아이템2" GoldPrice="2000" ERCPrice="0.8" Image="bbb" />
+    <data ItemID="I1003" Name="Item3" Description="아이템3" GoldPrice="3000" ERCPrice="1.1" Image="ccc" />
+    <data ItemID="I1004" Name="Item4" Description="아이템4" GoldPrice="4000" ERCPrice="1.4" Image="ddd" />
+    <data ItemID="I1005" Name="Item5" Description="아이템5" GoldPrice="5000" ERCPrice="1.7" Image="eee" />
+    <data ItemID="I1006" Name="Item6" Description="아이템6" GoldPrice="5500" ERCPrice="1.7" Image="fff" />
+    <data ItemID="I1007" Name="Item7" Description="아이템7" GoldPrice="5600" ERCPrice="1.7" Image="ggg" />
+  </dataCategory>
+</Temp_ItemList>
