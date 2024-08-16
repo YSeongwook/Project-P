@@ -31,7 +31,7 @@ public class StageManager : Singleton<StageManager>
         for (int i = 0; i < stageCount; i++)
         {
             stages[i] = Instantiate(stagePrefab, contentTransform);
-            customGridLayOut.AddElement(stages[i]);
+            customGridLayOut.AddElement();
             Transform childTransform = stages[i].transform.Find("Text_StageCountTitle");
             TextMeshProUGUI stageText = childTransform.GetComponent<TextMeshProUGUI>();
             if (stageText != null)
@@ -46,7 +46,7 @@ public class StageManager : Singleton<StageManager>
         switch (chapter)
         {
             case 1:
-                return 18;
+                return 20;
             case 2:
                 return 7;
             case 3:
