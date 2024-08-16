@@ -10,6 +10,8 @@ class GlobalApplication : Application() {
         // 다른 초기화 코드들
 
         // Kakao SDK 초기화
-        KakaoSdk.init(this, "d1a626dc8072fc0b0212ad14488d5e77")
+        KakaoSdk.init(this, "7978192c1c943eebb4eca36b35800e29")
+        var keyHash = Utility.getKeyHash(this)
+        println("UnityLog :  $keyHash")
     }
 }

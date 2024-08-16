@@ -15,5 +15,20 @@
             </intent-filter>
             <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
         </activity>
+
+<activity 
+    android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+    android:exported="true">
+    <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        
+        <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
+        <data android:host="oauth"
+                android:scheme="kakaod1a626dc8072fc0b0212ad14488d5e77" />
+    </intent-filter>
+</activity>
+
     </application>
 </manifest>
