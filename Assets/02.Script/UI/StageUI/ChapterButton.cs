@@ -12,7 +12,7 @@ public class ChapterButton : MonoBehaviour
 
     public void OnClickCloseChapterButton()
     {
-        gameObject.transform.DOLocalMove(new Vector3(1341, 0, 0), 1f).SetEase(Ease.InOutQuad, 0.5f, 0.3f);
+        gameObject.transform.DOLocalMove(new Vector3(1315, 0, 0), 1f).SetEase(Ease.InOutQuad, 0.5f, 0.3f);
         closeChapterBtn.SetActive(false);
     }
 
