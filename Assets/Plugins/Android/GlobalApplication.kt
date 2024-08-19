@@ -11,5 +11,7 @@ class GlobalApplication : Application() {
 
         // Kakao SDK 초기화
         KakaoSdk.init(this, "d1a626dc8072fc0b0212ad14488d5e77")
+        //var keyHash = Utility.getKeyHash(this)
+        //println("UnityLog :  $keyHash")
     }
 }

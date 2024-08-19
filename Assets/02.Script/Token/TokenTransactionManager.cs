@@ -19,135 +19,85 @@ public class TokenTransactionManager : MonoBehaviour
     // 지갑을 생성하는 메서드
     public void CreateWallet()
     {
-        StartCoroutine(CreateWalletRequest());
+        StartCoroutine(SendRequest(_createWallet, "POST", new { uid }, OnWalletCreated));
     }
 
     // 토큰을 생성하는 메서드
     public void CreateToken()
     {
-        StartCoroutine(CreateTokenRequest());
+        StartCoroutine(SendRequest(_createToken, "POST", new { uid, value }, OnTokenCreated));
     }
 
     // 토큰 잔액을 조회하는 메서드
     public void GetTokenBalance()
     {
-        StartCoroutine(GetTokenBalanceRequest());
+        StartCoroutine(SendRequest(_getWallet, "GET", null, OnTokenBalanceRetrieved));
     }
 
     // 토큰을 삭제하는 메서드
     public void DeleteToken()
     {
-        StartCoroutine(DeleteTokenRequest());
+        StartCoroutine(SendRequest(_deleteToken, "Delete", new { uid, value }, OnTokenDeleted));
     }
 
-    // 지갑 생성 요청을 처리하는 코루틴
-    private IEnumerator CreateWalletRequest()
+    // 서버 요청을 처리하는 코루틴
+    private IEnumerator SendRequest(string endpoint, string method, object jsonData, System.Action<string> onSuccess)
     {
-        // JSON 데이터 생성 (Newtonsoft.Json 사용)
-        string jsonData = JsonConvert.SerializeObject(new { uid });
+        string url = $"{apiUrl}{endpoint}";
+        UnityWebRequest www;
 
-        Debug.Log($"전송된 JSON 데이터: {jsonData}");  // JSON 데이터 확인
-
-        using (UnityWebRequest www = new UnityWebRequest($"{apiUrl}{_createWallet}", "POST"))
+        if (method == "GET")
         {
-            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
-            www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            www.downloadHandler = new DownloadHandlerBuffer();
+            www = UnityWebRequest.Get(url);
+        }
+        else
+        {
+            string json = jsonData != null ? JsonConvert.SerializeObject(jsonData) : "";
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
+
+            www = new UnityWebRequest(url, method)
+            {
+                uploadHandler = new UploadHandlerRaw(bodyRaw),
+                downloadHandler = new DownloadHandlerBuffer()
+            };
             www.SetRequestHeader("Content-Type", "application/json");
+        }
 
-            yield return www.SendWebRequest();
+        DebugLogger.Log($"Sending {method} request to {url} with data: {jsonData}");
 
-            Debug.Log($"HTTP 상태 코드: {www.responseCode}");  // 상태 코드 확인
+        yield return www.SendWebRequest();
 
-            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
-            {
-                Debug.Log($"지갑 생성 실패: {www.error}");
-            }
-            else
-            {
-                Debug.Log("지갑 생성 성공!");
-                Debug.Log($"서버 응답: {www.downloadHandler.text}");
-            }
+        DebugLogger.Log($"HTTP 상태 코드: {www.responseCode}");  // 상태 코드 확인
+
+        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+        {
+            DebugLogger.LogError($"요청 실패: {www.error}");
+        }
+        else
+        {
+            DebugLogger.Log($"서버 응답: {www.downloadHandler.text}");
+            onSuccess?.Invoke(www.downloadHandler.text);
         }
     }
 
-    // 토큰 생성 요청을 처리하는 코루틴
-    private IEnumerator CreateTokenRequest()
+    // 성공 시 콜백 메서드들
+    private void OnWalletCreated(string response)
     {
-        // JSON 데이터 생성 (Newtonsoft.Json 사용)
-        string jsonData = JsonConvert.SerializeObject(new { uid, value });
-
-        Debug.Log($"전송된 JSON 데이터: {jsonData}");  // JSON 데이터 확인
-
-        using (UnityWebRequest www = new UnityWebRequest($"{apiUrl}{_createToken}", "POST"))
-        {
-            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
-            www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            www.downloadHandler = new DownloadHandlerBuffer();
-            www.SetRequestHeader("Content-Type", "application/json");
-
-            yield return www.SendWebRequest();
-
-            Debug.Log($"HTTP 상태 코드: {www.responseCode}");  // 상태 코드 확인
-
-            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
-            {
-                Debug.Log($"토큰 생성 실패: {www.error}");
-            }
-            else
-            {
-                Debug.Log("토큰 생성 성공!");
-                Debug.Log($"서버 응답: {www.downloadHandler.text}");
-            }
-        }
+        DebugLogger.Log("지갑 생성 성공!");
     }
 
-    // 토큰 삭제(사용) 요청을 처리하는 코루틴
-    private IEnumerator DeleteTokenRequest()
+    private void OnTokenCreated(string response)
     {
-        // JSON 데이터 생성 (Newtonsoft.Json 사용)
-        string jsonData = JsonConvert.SerializeObject(new { uid, value });
-
-        Debug.Log($"전송된 JSON 데이터: {jsonData}");  // JSON 데이터 확인
-
-        using (UnityWebRequest www = new UnityWebRequest($"{apiUrl}{_deleteToken}", "POST"))
-        {
-            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
-            www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            www.downloadHandler = new DownloadHandlerBuffer();
-            www.SetRequestHeader("Content-Type", "application/json");
-
-            yield return www.SendWebRequest();
-
-            Debug.Log($"HTTP 상태 코드: {www.responseCode}");  // 상태 코드 확인
-
-            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
-            {
-                Debug.Log($"토큰 삭제 실패: {www.error}");
-            }
-            else
-            {
-                Debug.Log("토큰 삭제 성공!");
-                Debug.Log($"서버 응답: {www.downloadHandler.text}");
-            }
-        }
+        DebugLogger.Log("토큰 생성 성공!");
     }
 
-    // 토큰 잔액 조회 요청을 처리하는 코루틴
-    private IEnumerator GetTokenBalanceRequest()
+    private void OnTokenBalanceRetrieved(string response)
     {
-        using (UnityWebRequest www = UnityWebRequest.Get($"{apiUrl}{_getWallet}"))
-        {
-            yield return www.SendWebRequest();
+        DebugLogger.Log($"현재 토큰 잔액: {response}");
+    }
 
-            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
-            {
-                Debug.Log($"토큰 잔액 조회 실패: {www.error}");
-            }
-            else
-            {
-                Debug.Log($"현재 토큰 잔액: {www.downloadHandler.text}");
-            }
-        }
+    private void OnTokenDeleted(string response)
+    {
+        DebugLogger.Log("토큰 삭제 성공!");
     }
 }
