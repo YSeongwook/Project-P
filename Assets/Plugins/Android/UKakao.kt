@@ -63,7 +63,7 @@ class UKakao {
         }
     }
 
-fun GetFriendsList() {
+    fun GetFriendsList() {
         // 카카오톡 친구 목록 가져오기 (기본)
         TalkApiClient.instance.friends { friends, error ->
             if (error != null) {
@@ -81,6 +81,7 @@ fun GetFriendsList() {
 
                     val friendsListString = friends.elements?.joinToString("\n") ?: "[]"
                     Log.i("UnityLog", "카카오톡 친구 목록 가져오기 성공 \n$friendsListString")
+                    UnityPlayer.UnitySendMessage("KakaoSystem", "OnGetFriendsListResult", "시발")
                     UnityPlayer.UnitySendMessage("KakaoSystem", "OnGetFriendsListResult", friendsListString)
                 }
             }
