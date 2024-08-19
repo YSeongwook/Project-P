@@ -63,7 +63,7 @@ class UKakao {
         }
     }
 
-    fun GetFriendsList() {
+fun GetFriendsList() {
         // 카카오톡 친구 목록 가져오기 (기본)
         TalkApiClient.instance.friends { friends, error ->
             if (error != null) {
@@ -71,12 +71,17 @@ class UKakao {
             }
             else if (friends != null) {
                 Log.i("UnityLog", "Total Count: ${friends.totalCount}, Favorite Count: ${friends.favoriteCount}")
-                
+
                 if (friends?.elements.isNullOrEmpty()) {
                     Log.i("UnityLog", "카카오톡 친구 목록이 비어 있습니다.")
+                    // 빈 목록에 대한 처리
+                    UnityPlayer.UnitySendMessage("KakaoSystem", "OnGetFriendsListResult", "[]")
                 }else{
                     //Log.i("UnityLog", "카카오톡 친구 목록 가져오기 성공 \n${friends.elements?.joinToString("\n")}")
-                    //Log.i("UnityLog", "카카오톡 친구 목록 가져오기 성공 \n${friends.elements?.toString()}")
+
+                    val friendsListString = friends.elements?.joinToString("\n") ?: "[]"
+                    Log.i("UnityLog", "카카오톡 친구 목록 가져오기 성공 \n$friendsListString")
+                    UnityPlayer.UnitySendMessage("KakaoSystem", "OnGetFriendsListResult", friendsListString)
                 }
             }
         }
