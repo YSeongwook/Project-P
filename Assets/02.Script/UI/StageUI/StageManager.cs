@@ -6,9 +6,9 @@ using UnityEngine.UIElements;
 
 public class StageManager : Singleton<StageManager>
 {
-    [SerializeField] private CustomGridLayOut customGridLayOut;
     [SerializeField] private GameObject stagePrefab;
     [SerializeField] private Transform contentTransform;
+    [SerializeField] private DynamicObjectSelector objectSelector;
 
     private GameObject[] stages;
 
@@ -27,18 +27,23 @@ public class StageManager : Singleton<StageManager>
         }
 
         stages = new GameObject[stageCount];
+        List<RectTransform> itemRects = new List<RectTransform>(); // RectTransform을 저장할 리스트
 
         for (int i = 0; i < stageCount; i++)
         {
             stages[i] = Instantiate(stagePrefab, contentTransform);
-            customGridLayOut.AddElement();
             Transform childTransform = stages[i].transform.Find("Text_StageCountTitle");
             TextMeshProUGUI stageText = childTransform.GetComponent<TextMeshProUGUI>();
             if (stageText != null)
             {
                 stageText.text = (i + 1).ToString();
             }
+            // 생성된 스테이지의 RectTransform을 리스트에 추가
+            itemRects.Add(stages[i].GetComponent<RectTransform>());
         }
+
+        // DynamicObjectSelector에 리스트 전달
+        objectSelector.SetUpItems(itemRects);
     }
 
     private int GetStageCountForChapter(int chapter)
@@ -48,7 +53,7 @@ public class StageManager : Singleton<StageManager>
             case 1:
                 return 20;
             case 2:
-                return 7;
+                return 15;
             case 3:
                 return 7;
             default:
