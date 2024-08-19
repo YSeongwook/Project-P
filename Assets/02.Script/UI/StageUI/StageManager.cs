@@ -9,6 +9,8 @@ public class StageManager : Singleton<StageManager>
     [SerializeField] private GameObject stagePrefab;
     [SerializeField] private Transform contentTransform;
     [SerializeField] private DynamicObjectSelector objectSelector;
+    [SerializeField] private GameObject MainGameUI;
+    [SerializeField] private GameObject GameLobbyUI;
 
     private GameObject[] stages;
 
@@ -44,6 +46,32 @@ public class StageManager : Singleton<StageManager>
 
         // DynamicObjectSelector에 리스트 전달
         objectSelector.SetUpItems(itemRects);
+    }
+
+    public void OnClickChapter1()
+    {
+        SetUpStages(1);
+    }
+
+    public void OnClickChapter2()
+    {
+        SetUpStages(2);
+    }
+
+    public void OnClickChapter3()
+    {
+        SetUpStages(3);
+    }
+
+    public void OnClickChapter4()
+    {
+        SetUpStages(4);
+    }
+
+    public void OnClickChapterCanvas()
+    {
+        MainGameUI.SetActive(true);
+        GameLobbyUI.SetActive(false);
     }
 
     private int GetStageCountForChapter(int chapter)
