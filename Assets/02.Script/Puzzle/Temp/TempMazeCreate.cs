@@ -25,7 +25,7 @@ public class TempMazeCreate : MonoBehaviour
     [FoldoutGroup("Maze Setting")]
     [SerializeField] List<MazeSetting> mazeSettings;
 
-    public struct Tile
+    private struct Tile
     {
         public Transform Transform;
         public Image Image;
