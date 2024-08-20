@@ -116,6 +116,7 @@ public class DataManager : Singleton<DataManager>
             playerInven.PlayerID = int.Parse(data.Attribute(nameof(playerInven.PlayerID)).Value.Substring(1));
             playerInven.Gold = float.Parse(data.Attribute(nameof(playerInven.Gold)).Value);
             playerInven.ERC = float.Parse(data.Attribute(nameof(playerInven.ERC)).Value);
+            playerInven.TicketCount = int.Parse(data.Attribute(nameof(playerInven.TicketCount)).Value);
 
             string playerInventoryItemList = data.Attribute(nameof(playerInven.ItemList)).Value;
             playerInven.ItemList = ParseItemList(playerInventoryItemList);

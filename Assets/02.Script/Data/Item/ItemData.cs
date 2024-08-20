@@ -27,6 +27,7 @@ namespace DataStruct
         public int PlayerID;
         public float Gold;
         public float ERC;
+        public int TicketCount;
         public Dictionary<ItemData, int> ItemList;
     }
 }

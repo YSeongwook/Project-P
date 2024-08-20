@@ -41,6 +41,7 @@ namespace EnumTypes
     {
         OnClickSignInGoogle,
         OnClickStart,
+        OnClickUseTicket,
         OnClickItemBuyButton,
         OnClickGoldBuyButton,
         OnClickChangeBuyItemCount,
@@ -61,9 +62,11 @@ namespace EnumTypes
         OnItemDataLoad,
         HeroCollectionUpdated,
         OnPaymentSuccessful,
+        MVVMChangedGameTicket,
         MVVMChangedGold,
         MVVMChangedERC,
         MVVMChangedInventoryItemDictionary,
+        PlayerTicketCountChanged,
         PlayerGoldChanged,
         PlayerERCChanged,
         PlayerItemListChanged

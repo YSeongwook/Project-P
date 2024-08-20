@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TreeEditor;
 
 public class DynamicObjectSelector : MonoBehaviour
 {
@@ -10,6 +11,18 @@ public class DynamicObjectSelector : MonoBehaviour
 
     private List<RectTransform> itemRects = new List<RectTransform>();
     private RectTransform lastSelectedObject;
+
+    private Transform Panel;
+
+    private void Awake()
+    {
+        Panel = transform.parent;
+    }
+
+    private void Start()
+    {
+        Panel.gameObject.SetActive(false);
+    }
 
     public void SetUpItems(List<RectTransform> items)
     {

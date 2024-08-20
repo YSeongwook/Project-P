@@ -4,6 +4,18 @@ using DataStruct;
 
 public class PlayerViewModel
 {
+    private int tickets;
+    public int GameTickets 
+    {
+        get { return tickets; }
+        set
+        {
+            if(tickets == value) return;
+            tickets = value;
+            OnPropertyChanged(nameof(GameTickets));
+        }
+    }
+
     private float gold;
     public float PlayerGold
     {

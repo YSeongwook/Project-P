@@ -9,14 +9,14 @@ public class StageManager : Singleton<StageManager>
     [SerializeField] private GameObject stagePrefab;
     [SerializeField] private Transform contentTransform;
     [SerializeField] private DynamicObjectSelector objectSelector;
-    [SerializeField] private GameObject MainGameUI;
-    [SerializeField] private GameObject GameLobbyUI;
+    //[SerializeField] private GameObject MainGameUI;
+    //[SerializeField] private GameObject GameLobbyUI;
 
     private GameObject[] stages;
 
     private void Start()
     {
-        SetUpStages(1);
+        SetUpStages(1);        
     }
 
    public void SetUpStages(int chapter)
@@ -68,11 +68,11 @@ public class StageManager : Singleton<StageManager>
         SetUpStages(4);
     }
 
-    public void OnClickChapterCanvas()
-    {
-        MainGameUI.SetActive(true);
-        GameLobbyUI.SetActive(false);
-    }
+    //public void OnClickChapterCanvas()
+    //{
+    //    MainGameUI.SetActive(true);
+    //    GameLobbyUI.SetActive(false);
+    //}
 
     private int GetStageCountForChapter(int chapter)
     {

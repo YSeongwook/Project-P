@@ -4,6 +4,24 @@ using EventLibrary;
 
 public static class PlayerViewModelExtenstion
 {
+    #region Player Tickets
+    public static void RegisterPlayerGameTicketsCountChanged(this PlayerViewModel vm, bool isRegister)
+    {
+        if (isRegister) EventManager<DataEvents>.StartListening<int>(DataEvents.MVVMChangedGameTicket, vm.OnResponsePlayerGameTicketCountChangedEvent);
+        else EventManager<DataEvents>.StopListening<int>(DataEvents.MVVMChangedGameTicket, vm.OnResponsePlayerGameTicketCountChangedEvent);
+    }
+
+    public static void RequestPlayerGameTicketCountChanged(this PlayerViewModel vm, int ticketCount)
+    {
+        EventManager<DataEvents>.TriggerEvent(DataEvents.MVVMChangedGameTicket, ticketCount);
+    }
+
+    public static void OnResponsePlayerGameTicketCountChangedEvent(this PlayerViewModel vm, int ticketCount)
+    {
+        vm.GameTickets = ticketCount;
+    }
+    #endregion
+
     #region Player Gold
     public static void RegisterPlayerGoldChanged(this PlayerViewModel vm, bool isRegister)
     {

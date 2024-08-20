@@ -2,19 +2,31 @@ using DataStruct;
 using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
-{ 
+{
+    [FoldoutGroup("Player Ticket UI")][SerializeField] private TMP_Text gameTickets;
+    [FoldoutGroup("Player Ticket UI")][SerializeField] private TMP_Text timer;
+
     [FoldoutGroup("Player Gold UI")] [SerializeField] private TMP_Text goldPrice; // 골드 UI 표시
     [FoldoutGroup("Player Gold UI")] [SerializeField] private TMP_Text ercPrice; // ERC UI 표시
     [FoldoutGroup("Payment UI")] [SerializeField] private GameObject paymentPopup;
 
     public Canvas Canvas { get; private set; }
 
+    private int _ticketCount; // Player가 가지고 있는 티겟
     private float _goldValue; // Player가 가지고 있는 Gold의 갯수
     private float _ercValue; // Player가 가지고 있는 ERC의 갯수
+
+    // 임의로 지정한 티켓의 최대 갯수
+    private const int TicketMaxCount = 5;
+    private const int MaxTimer = 300;
+
+    private int ticketTimer = MaxTimer;
 
     protected new void Awake()
     {
@@ -24,15 +36,30 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
 
         AddEvents();
     }
+    private void Start()
+    {
+        StartCoroutine(StartRechargeTicket());
+    }
 
     private void OnDestroy()
     {
+        StopAllCoroutines();
         RemoveEvents();
+    }
+
+    // 테스트용
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(2))
+        {
+            EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
+        }
     }
 
     private void AddEvents()
     {
-        EventManager<UIEvents>.StartListening<float, float>(UIEvents.GetPlayerInventoryResources, ReadPlayerCapital);
+        EventManager<UIEvents>.StartListening<int, float, float>(UIEvents.GetPlayerInventoryResources, ReadPlayerCapital);
+        EventManager<UIEvents>.StartListening(UIEvents.OnClickUseTicket, UseTicket);
         EventManager<UIEvents>.StartListening<ItemData, float>(UIEvents.OnClickItemBuyButton, BuyItem_Gold);
         EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyItem_ERC);
         EventManager<GoldEvent>.StartListening<float>(GoldEvent.OnGetGold, GetGold);
@@ -40,16 +67,18 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
 
     private void RemoveEvents()
     {
-        EventManager<UIEvents>.StopListening<float, float>(UIEvents.GetPlayerInventoryResources, ReadPlayerCapital);
+        EventManager<UIEvents>.StopListening<int, float, float>(UIEvents.GetPlayerInventoryResources, ReadPlayerCapital);
+        EventManager<UIEvents>.StopListening(UIEvents.OnClickUseTicket, UseTicket);
         EventManager<UIEvents>.StopListening<ItemData, float>(UIEvents.OnClickItemBuyButton, BuyItem_Gold);
         EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyItem_ERC);
         EventManager<GoldEvent>.StopListening<float>(GoldEvent.OnGetGold, GetGold);
     }
 
     //Gold와 ERC 초기화
-    private void ReadPlayerCapital(float gold, float erc)
+    private void ReadPlayerCapital(int ticketCount,float gold, float erc)
     {
         //디버그용
+        _ticketCount = ticketCount;
         _goldValue = gold;
         _ercValue = erc;
 
@@ -59,8 +88,84 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
     // Player 자원 UI 업데이트
     private void UpdateUIText()
     {
-        goldPrice.text = _goldValue.ToString();
-        ercPrice.text = _ercValue.ToString();
+        goldPrice.text = UpdateNumberMeasured(_goldValue);
+        ercPrice.text = UpdateNumberMeasured(_ercValue);
+        gameTickets.text = UpdateNumberMeasured((float)_ticketCount);
+    }
+
+    // 숫자 단위 도입
+    private string UpdateNumberMeasured(float Value)
+    {
+        if (Value < 1000)
+        {
+            return Value.ToString(); // 1000 미만의 값은 단위 없이 그대로 반환
+        }
+
+        string[] units = { "", "K", "M", "B", "T", "P", "E" }; // Kilo, Mega, Billion, Trillion, Peta, Exa 등
+        int unitIndex = 0;
+        double scaledValue = Value;
+
+        while (scaledValue >= 1000 && unitIndex < units.Length - 1)
+        {
+            scaledValue /= 1000;
+            unitIndex++;
+        }
+
+        return scaledValue.ToString("0.##") + units[unitIndex];
+    }
+
+    // 입장 티겟 구매
+    private void UseTicket()
+    {
+        if(_ticketCount <= 0)
+        {
+            EventManager<DataEvents>.TriggerEvent(DataEvents.OnPaymentSuccessful, false);
+            return;
+        }
+
+        _ticketCount = Mathf.Clamp(_ticketCount - 1, 0, TicketMaxCount);
+        // Player Inventory View Model에 반영
+        EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerTicketCountChanged, _ticketCount);
+
+        UpdateUIText();
+
+        // 게임 UI 등장
+    }
+
+    IEnumerator StartRechargeTicket()
+    {
+        while(true)
+        {
+            yield return new WaitForSecondsRealtime(1f);
+
+            if (_ticketCount >= TicketMaxCount) 
+            {
+                timer.text = "0:00";
+                continue;
+            }
+
+            ticketTimer = Mathf.Clamp(ticketTimer - 1, 0, MaxTimer);
+            if(ticketTimer <= 0)
+            {
+                RechargeGameTicket();
+                gameTickets.text = _ticketCount.ToString();
+                ticketTimer = MaxTimer;
+            }
+
+            // 분:초 형식으로 변환하여 표시
+            int minutes = ticketTimer / 60;
+            int seconds = ticketTimer % 60;
+            timer.text = string.Format("{0}:{1:D2}", minutes, seconds);
+        }       
+    } 
+
+    // 게임 티켓 충전
+    private void RechargeGameTicket()
+    {
+        _ticketCount = Mathf.Clamp(_ticketCount+1, 0, TicketMaxCount);
+        EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerTicketCountChanged, _ticketCount);
+
+        // AWS의 MySql과 통신
     }
 
     // 아이템 구매 - 골드 (기본)

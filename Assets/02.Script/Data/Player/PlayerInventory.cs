@@ -21,6 +21,7 @@ public class PlayerInventory : Singleton<PlayerInventory>
         {
             PlayerViewModel = new PlayerViewModel();
             PlayerViewModel.PropertyChanged += OnPropertyChanged;
+            PlayerViewModel.RegisterPlayerGameTicketsCountChanged(true);
             PlayerViewModel.RegisterPlayerGoldChanged(true);
             PlayerViewModel.RegisterPlayerERCChanged(true);
             PlayerViewModel.RegisterPlayerItemListChanged(true);
@@ -36,6 +37,7 @@ public class PlayerInventory : Singleton<PlayerInventory>
             PlayerViewModel.RegisterPlayerItemListChanged(false);
             PlayerViewModel.RegisterPlayerGoldChanged(false);
             PlayerViewModel.RegisterPlayerERCChanged(false);
+            PlayerViewModel.RegisterPlayerGameTicketsCountChanged(false);
             PlayerViewModel.PropertyChanged -= OnPropertyChanged;
             PlayerViewModel = null;
         }
@@ -46,6 +48,7 @@ public class PlayerInventory : Singleton<PlayerInventory>
     private void AddEvents()
     {
         EventManager<DataEvents>.StartListening(DataEvents.OnUserInventoryLoad, SetPlayerInventory);
+        EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerTicketCountChanged, PlayerTicketCountChanged);
         EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
         EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
         EventManager<DataEvents>.StartListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
@@ -54,6 +57,7 @@ public class PlayerInventory : Singleton<PlayerInventory>
     private void RemoveEvents()
     {
         EventManager<DataEvents>.StopListening(DataEvents.OnUserInventoryLoad, SetPlayerInventory);
+        EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerTicketCountChanged, PlayerTicketCountChanged);
         EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
         EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
         EventManager<DataEvents>.StopListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
@@ -77,7 +81,7 @@ public class PlayerInventory : Singleton<PlayerInventory>
 
         // Player UI 반영
         EventManager<UIEvents>.TriggerEvent(UIEvents.GetPlayerInventoryResources, 
-            PlayerViewModel.PlayerGold, PlayerViewModel.PlayerERC);
+            PlayerViewModel.GameTickets, PlayerViewModel.PlayerGold, PlayerViewModel.PlayerERC);
         
         // Player Inventory Data XML로 Save
         EventManager<DataEvents>.TriggerEvent(DataEvents.OnUserInventorySave, _playerInventory);
@@ -90,12 +94,18 @@ public class PlayerInventory : Singleton<PlayerInventory>
         if (playerInvenData == null || !playerInvenData.ContainsKey(tempPlayerId)) return;
 
         _playerInventory = playerInvenData[tempPlayerId];
+        PlayerViewModel.RequestPlayerGameTicketCountChanged(_playerInventory.TicketCount);
         PlayerViewModel.RequestPlayerGoldChanged(_playerInventory.Gold);
         PlayerViewModel.RequestPlayerERCChanged(_playerInventory.ERC);
         foreach (var data in _playerInventory.ItemList)
         {
             PlayerViewModel.RequestPlayerItemListChanged(data.Key, data.Value);
         }
+    }
+
+    private void PlayerTicketCountChanged(int ticketCount)
+    {
+        PlayerViewModel.RequestPlayerGameTicketCountChanged(ticketCount);
     }
 
     private void PlayerGoldChanged(float gold)
