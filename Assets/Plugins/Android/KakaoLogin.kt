@@ -9,21 +9,35 @@ import com.kakao.sdk.user.UserApiClient
 import com.kakao.sdk.talk.TalkApiClient
 import com.unity3d.player.UnityPlayer
 
-class UKakao {
+class KakaoLogin {
     val context = UnityPlayer.currentActivity
+
+    fun checkKakaoLoginStatus() {
+        val accessToken = TokenManagerProvider.instance.manager.getToken()?.accessToken
+
+        if (accessToken.isNullOrEmpty()) {
+            // 토큰이 없거나 유효하지 않은 경우, 로그인 버튼 활성화
+        } else {
+            // 유효한 토큰이 있는 경우, 로그인 버튼 비활성화
+            UnityPlayer.UnitySendMessage("KakaoLoginManager", "OffLoginBtn")
+        }
+    }
+
     fun KakaoLogin() {
         // 로그인 공통 callback 구성
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
             if (error != null) {
                 //Log.e(TAG, "로그인 실패", error)
-                println("로그인 실패 : $error")
+                //println("로그인 실패 : $error")
+                Log.e("UnityLog", "로그인 실패 ${error}", error)
             }
             else if (token != null) {
                 //Log.i(TAG, "로그인 성공 ${token.accessToken}")
-                println("로그인 성공 ${token.accessToken}")
+                //println("로그인 성공 ${token.accessToken}")
+                Log.e("UnityLog", "로그인 성공 ${token.accessToken}", error)
             }
         }
-
+        
         // 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
             UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
@@ -59,6 +73,7 @@ class UKakao {
                         "\n이메일: ${user.kakaoAccount?.email}" +
                         "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
                         "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
+
             }
         }
     }
