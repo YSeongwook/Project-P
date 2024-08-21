@@ -15,7 +15,7 @@ public class UI_GoldStoreList : MonoBehaviour
     private RectTransform _rectTransform;
     private GridLayoutGroup _gridLayoutGroup;
 
-    private Dictionary<int, GoldPackageData> _goldPackageDataDictionary;
+    private Dictionary<string, GoldPackageData> _goldPackageDataDictionary;
 
     private float _widthValue;
     private float _cellHeight;

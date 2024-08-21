@@ -4,22 +4,25 @@ using System.Xml.Linq;
 using DataStruct;
 using EnumTypes;
 using EventLibrary;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public enum DataType
 {
     Item,
     GoldPackage,
-    PlayerInven
+    PlayerInven,
+    TileMap
 }
 
 public class DataManager : Singleton<DataManager>
 {
-
     #region LoadData
-    public Dictionary<int, ItemData> LoadedItemDataList { get; private set; }
-    public Dictionary<int, GoldPackageData> LoadedGoldPackageDataList { get; private set; }
-    public Dictionary<int, Inventory> LoadedPlayerInventoryList { get; private set; }
+    public Dictionary<string, ItemData> LoadedItemDataList { get; private set; }
+    public Dictionary<string, GoldPackageData> LoadedGoldPackageDataList { get; private set; }
+    public Dictionary<string, PlayerInfo> LoadedPlayerInventoryList { get; private set; }
+
+    public Dictionary<string, List<Tile>> LoadedTileMapList { get; private set; } = new Dictionary<string, List<Tile>>();
 
     private Dictionary<DataType, TextAsset> textAssetDic = new Dictionary<DataType, TextAsset>();
 
@@ -32,12 +35,12 @@ public class DataManager : Singleton<DataManager>
 
     private void ReadDataOnAwake()
     {
-        ReadItemData(DataType.Item);
-        ReadGoldPackageData(DataType.GoldPackage);
-        ReadPlayerInventory(DataType.PlayerInven);
+        ReadDatas(DataType.Item);
+        ReadDatas(DataType.GoldPackage);
+        ReadDatas(DataType.PlayerInven);
     }
 
-    private void ReadPlayerInventory(DataType dataType)
+    private void ReadDatas(DataType dataType)
     {
         var textAsset = textAssetDic[dataType];
         if (textAsset == null) return;
@@ -45,39 +48,57 @@ public class DataManager : Singleton<DataManager>
         XDocument xmlAsset = XDocument.Parse(textAsset.text);
         if (xmlAsset == null) return;
 
-        FileType_PlayerInventoryData(xmlAsset);
+        switch (dataType)
+        {
+            case DataType.Item:
+                FileType_ItemData(xmlAsset);
+                break;
+            case DataType.GoldPackage:
+                FileType_GoldPackageData(xmlAsset);
+                break;
+            case DataType.PlayerInven:
+                FileType_PlayerInventoryData(xmlAsset);
+                break;
+        }        
     }
 
-    private void ReadItemData(DataType dataType)
+    // 타일맵 읽어오기
+    private void ReadTileMapData(string fileName)
     {
-        var textAsset = textAssetDic[dataType];
-        if (textAsset == null) return;
+        string filePath = Path.Combine("C:/Download/TileMap", fileName + ".json");
 
-        XDocument xmlAsset = XDocument.Parse(textAsset.text);
-        if (xmlAsset == null) return;
+        if(File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath);
 
-        FileType_ItemData(xmlAsset);
+            List<Tile> tileData = JsonConvert.DeserializeObject<List<Tile>>(json);
+
+            if (LoadedTileMapList.ContainsKey(fileName))
+            {
+                LoadedTileMapList[fileName] = tileData;
+            }
+            else LoadedTileMapList.Add(fileName, tileData);
+        }
+        else
+        {
+            Debug.Log($"잘못된 파일 이름입니다. : {fileName}");
+            return;
+        }
     }
 
-    private void ReadGoldPackageData(DataType dataType)
+    private void ResetReadTileMapData()
     {
-        var textAsset = textAssetDic[dataType];
-        if (textAsset == null) return;
-
-        XDocument xmlAsset = XDocument.Parse(textAsset.text);
-        if (xmlAsset == null) return;
-
-        FileType_GoldPackageData(xmlAsset);
+        LoadedTileMapList.Clear();
     }
 
     private void FileType_ItemData(XDocument xmlAsset)
     {
-        LoadedItemDataList = new Dictionary<int, ItemData>();
+        LoadedItemDataList = new Dictionary<string, ItemData>();
 
         foreach (var data in xmlAsset.Descendants("data"))
         {
             ItemData item = new ItemData();
-            item.ItemID = int.Parse(data.Attribute(nameof(item.ItemID)).Value.Substring(1));
+            item.ItemID = data.Attribute(nameof(item.ItemID)).Value;
             item.Name = data.Attribute(nameof(item.Name)).Value;
             item.Description = data.Attribute(nameof(item.Description)).Value;
             item.GoldPrice = float.Parse(data.Attribute(nameof(item.GoldPrice)).Value);
@@ -90,12 +111,12 @@ public class DataManager : Singleton<DataManager>
 
     private void FileType_GoldPackageData(XDocument xmlAsset)
     {
-        LoadedGoldPackageDataList = new Dictionary<int, GoldPackageData>();
+        LoadedGoldPackageDataList = new Dictionary<string, GoldPackageData>();
 
         foreach (var data in xmlAsset.Descendants("data"))
         {
             GoldPackageData item = new GoldPackageData();
-            item.PackageID = int.Parse(data.Attribute(nameof(item.PackageID)).Value.Substring(1));
+            item.PackageID = data.Attribute(nameof(item.PackageID)).Value;
             item.Name = data.Attribute(nameof(item.Name)).Value;
             item.Description = data.Attribute(nameof(item.Description)).Value;
             item.ERCPrice = float.Parse(data.Attribute(nameof(item.ERCPrice)).Value);
@@ -108,20 +129,22 @@ public class DataManager : Singleton<DataManager>
 
     private void FileType_PlayerInventoryData(XDocument xmlAsset)
     {
-        LoadedPlayerInventoryList = new Dictionary<int, Inventory>();
+        LoadedPlayerInventoryList = new Dictionary<string, PlayerInfo>();
 
         foreach (var data in xmlAsset.Descendants("data"))
         {
-            Inventory playerInven = new Inventory();
-            playerInven.PlayerID = int.Parse(data.Attribute(nameof(playerInven.PlayerID)).Value.Substring(1));
-            playerInven.Gold = float.Parse(data.Attribute(nameof(playerInven.Gold)).Value);
-            playerInven.ERC = float.Parse(data.Attribute(nameof(playerInven.ERC)).Value);
-            playerInven.TicketCount = int.Parse(data.Attribute(nameof(playerInven.TicketCount)).Value);
+            PlayerInfo playerInfo = new PlayerInfo();
+            playerInfo.PlayerID = data.Attribute(nameof(playerInfo.PlayerID)).Value;
+            playerInfo.Gold = float.Parse(data.Attribute(nameof(playerInfo.Gold)).Value);
+            playerInfo.ERC = float.Parse(data.Attribute(nameof(playerInfo.ERC)).Value);
+            playerInfo.TicketCount = int.Parse(data.Attribute(nameof(playerInfo.TicketCount)).Value);
+            playerInfo.CurrentChapter = data.Attribute(nameof(playerInfo.CurrentChapter)).Value;
+            playerInfo.CurrentStage = data.Attribute(nameof(playerInfo.CurrentStage)).Value;
 
-            string playerInventoryItemList = data.Attribute(nameof(playerInven.ItemList)).Value;
-            playerInven.ItemList = ParseItemList(playerInventoryItemList);
+            string playerInventoryItemList = data.Attribute(nameof(playerInfo.ItemList)).Value;
+            playerInfo.ItemList = ParseItemList(playerInventoryItemList);
 
-            LoadedPlayerInventoryList.Add(playerInven.PlayerID, playerInven);
+            LoadedPlayerInventoryList.Add(playerInfo.PlayerID, playerInfo);
         }
     }
 
@@ -135,7 +158,7 @@ public class DataManager : Singleton<DataManager>
         foreach (var item in items)
         {
             var parts = item.Split(':');
-            int itemID = int.Parse(parts[0].Substring(1));
+            string itemID = parts[0];
             int quantity = int.Parse(parts[1]);
 
             ItemData itemData = new ItemData { ItemID = itemID };
@@ -150,7 +173,7 @@ public class DataManager : Singleton<DataManager>
     #region SaveData
     //파일을 저장할 위치 지정
 
-    private void SaveInventoryData(Inventory inventory)
+    private void SaveInventoryData(PlayerInfo inventory)
     {
         var textAsset = textAssetDic[DataType.PlayerInven];
         if (textAsset == null) return;
@@ -188,25 +211,31 @@ public class DataManager : Singleton<DataManager>
     }
     #endregion
 
-    public Dictionary<int, ItemData> GetItemInfoDatas()
+    public Dictionary<string, ItemData> GetItemInfoDatas()
     {
         return LoadedItemDataList;
     }
 
-    public Dictionary<int, GoldPackageData> GetGoldPackageDatas()
+    public Dictionary<string, GoldPackageData> GetGoldPackageDatas()
     {
         return LoadedGoldPackageDataList;
     }
 
-    public Dictionary<int, Inventory> GetPlayerInventoryDatas()
+    public Dictionary<string, PlayerInfo> GetPlayerInventoryDatas()
     {
         return LoadedPlayerInventoryList;
     }
 
-    public ItemData GetItemData(int itemID)
+    public ItemData GetItemData(string itemID)
     {
         if (LoadedItemDataList.ContainsKey(itemID)) return LoadedItemDataList[itemID];
         else return default;
+    }
+
+    public List<Tile> GetPuzzleTileMap(string fileName)
+    {
+        if(LoadedTileMapList.ContainsKey(fileName)) return LoadedTileMapList[fileName];
+        else return null;
     }
 
     protected new void Awake()
@@ -216,18 +245,22 @@ public class DataManager : Singleton<DataManager>
         LoadFile();
         ReadDataOnAwake();
 
-        EventManager<DataEvents>.StartListening<Inventory>(DataEvents.OnUserInventorySave, SaveInventoryData);
+        EventManager<DataEvents>.StartListening<PlayerInfo>(DataEvents.OnUserInventorySave, SaveInventoryData);
+        EventManager<DataEvents>.StartListening<string>(DataEvents.LoadThisChapterTileList, ReadTileMapData);
+        EventManager<DataEvents>.StartListening(DataEvents.ResetChapterTileList, ResetReadTileMapData);
     }
 
     private void OnDestroy()
     {
-        EventManager<DataEvents>.StopListening<Inventory>(DataEvents.OnUserInventorySave, SaveInventoryData);
+        EventManager<DataEvents>.StopListening<PlayerInfo>(DataEvents.OnUserInventorySave, SaveInventoryData);
+        EventManager<DataEvents>.StopListening<string>(DataEvents.LoadThisChapterTileList, ReadTileMapData);
+        EventManager<DataEvents>.StopListening(DataEvents.ResetChapterTileList, ResetReadTileMapData);
     }
 
     private void Start()
     {
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnCreateItemSlot);
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnCreateGoldPackageSlot);
-        EventManager<DataEvents>.TriggerEvent(DataEvents.OnUserInventoryLoad);
+        EventManager<DataEvents>.TriggerEvent(DataEvents.OnUserInformationLoad);
     }
 }

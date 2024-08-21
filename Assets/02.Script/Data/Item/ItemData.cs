@@ -4,7 +4,7 @@ namespace DataStruct
 {
     public struct ItemData
     {
-        public int ItemID;
+        public string ItemID;
         public string Name;
         public string Description;
         public float GoldPrice;
@@ -14,7 +14,7 @@ namespace DataStruct
 
     public struct GoldPackageData
     {
-        public int PackageID;
+        public string PackageID;
         public string Name;
         public string Description;
         public float ERCPrice;
@@ -22,12 +22,14 @@ namespace DataStruct
         public string Image;
     }
 
-    public struct Inventory
+    public struct PlayerInfo
     {
-        public int PlayerID;
+        public string PlayerID;
         public float Gold;
         public float ERC;
         public int TicketCount;
         public Dictionary<ItemData, int> ItemList;
+        public string CurrentChapter;
+        public string CurrentStage;
     }
 }

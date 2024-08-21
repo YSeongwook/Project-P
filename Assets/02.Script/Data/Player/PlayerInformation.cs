@@ -5,13 +5,15 @@ using EventLibrary;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class PlayerInventory : Singleton<PlayerInventory>
+public class PlayerInformation : Singleton<PlayerInformation>
 {
     public PlayerViewModel PlayerViewModel { get; private set; }
 
-    [SerializeField] private int tempPlayerId;
+    [SerializeField] private string tempPlayerId;
     
-    private Inventory _playerInventory;
+    private PlayerInfo _playerInfo;
+    //private string PlayerCurrentChapter { get { return _playerInfo.CurrentChapter; } }
+    //private string PlayerCurrentStage { get { return _playerInfo.CurrentStage; } }
 
     protected new void Awake()
     {
@@ -47,7 +49,7 @@ public class PlayerInventory : Singleton<PlayerInventory>
 
     private void AddEvents()
     {
-        EventManager<DataEvents>.StartListening(DataEvents.OnUserInventoryLoad, SetPlayerInventory);
+        EventManager<DataEvents>.StartListening(DataEvents.OnUserInformationLoad, SetPlayerData);
         EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerTicketCountChanged, PlayerTicketCountChanged);
         EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
         EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
@@ -56,7 +58,7 @@ public class PlayerInventory : Singleton<PlayerInventory>
 
     private void RemoveEvents()
     {
-        EventManager<DataEvents>.StopListening(DataEvents.OnUserInventoryLoad, SetPlayerInventory);
+        EventManager<DataEvents>.StopListening(DataEvents.OnUserInformationLoad, SetPlayerData);
         EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerTicketCountChanged, PlayerTicketCountChanged);
         EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
         EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
@@ -69,13 +71,13 @@ public class PlayerInventory : Singleton<PlayerInventory>
         {
             case nameof(PlayerViewModel.PlayerERC):
                 //코인 삭제
-                _playerInventory.ERC = PlayerViewModel.PlayerERC;
+                _playerInfo.ERC = PlayerViewModel.PlayerERC;
                 break;
             case nameof(PlayerViewModel.PlayerGold):
-                _playerInventory.Gold = PlayerViewModel.PlayerGold;
+                _playerInfo.Gold = PlayerViewModel.PlayerGold;
                 break;
             case nameof(PlayerViewModel.PlayerInventory):
-                _playerInventory.ItemList = PlayerViewModel.PlayerInventory;
+                _playerInfo.ItemList = PlayerViewModel.PlayerInventory;
                 break;
         }
 
@@ -84,19 +86,28 @@ public class PlayerInventory : Singleton<PlayerInventory>
             PlayerViewModel.GameTickets, PlayerViewModel.PlayerGold, PlayerViewModel.PlayerERC);
         
         // Player Inventory Data XML로 Save
-        EventManager<DataEvents>.TriggerEvent(DataEvents.OnUserInventorySave, _playerInventory);
+        EventManager<DataEvents>.TriggerEvent(DataEvents.OnUserInventorySave, _playerInfo);
     }
 
-    //플레이어의 인벤토리 초기화
-    private void SetPlayerInventory()
+    //플레이어의 데이터 초기화
+    private void SetPlayerData()
     {
         var playerInvenData = DataManager.Instance.GetPlayerInventoryDatas();
         if (playerInvenData == null || !playerInvenData.ContainsKey(tempPlayerId)) return;
 
-        _playerInventory = playerInvenData[tempPlayerId];
+        _playerInfo = playerInvenData[tempPlayerId];
+        SetPlayerInventory(_playerInfo);
+
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnEnableChapterMoveButton, _playerInfo.CurrentChapter);
+    }
+
+    // 플레이어 자원 데이터 초기화
+    private void SetPlayerInventory(PlayerInfo _playerInventory)
+    {
         PlayerViewModel.RequestPlayerGameTicketCountChanged(_playerInventory.TicketCount);
         PlayerViewModel.RequestPlayerGoldChanged(_playerInventory.Gold);
         PlayerViewModel.RequestPlayerERCChanged(_playerInventory.ERC);
+
         foreach (var data in _playerInventory.ItemList)
         {
             PlayerViewModel.RequestPlayerItemListChanged(data.Key, data.Value);

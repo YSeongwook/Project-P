@@ -13,7 +13,7 @@ public class UI_ItemStoreList : MonoBehaviour
     private RectTransform _rectTransform;
     private GridLayoutGroup _gridLayoutGroup;
     private float _widthValue;
-    private Dictionary<int, ItemData> _itemDataDictionary;
+    private Dictionary<string, ItemData> _itemDataDictionary;
 
     private float _cellHeight;
 

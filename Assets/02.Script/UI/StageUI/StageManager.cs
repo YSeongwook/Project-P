@@ -1,3 +1,5 @@
+using EnumTypes;
+using EventLibrary;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -14,15 +16,20 @@ public class StageManager : Singleton<StageManager>
 
     private GameObject[] stages;
 
-    private void Start()
+    protected new void Awake()
     {
-        SetUpStages(1);        
+        base.Awake();
+
+        EventManager<UIEvents>.StartListening<int, int>(UIEvents.CreateStageButton, SetUpStages);      
     }
 
-   public void SetUpStages(int chapter)
+    private void OnDestroy()
     {
-        int stageCount = GetStageCountForChapter(chapter);
+        EventManager<UIEvents>.StopListening<int, int>(UIEvents.CreateStageButton, SetUpStages);
+    }
 
+    private void SetUpStages(int chapter, int stageCount)
+    {
         foreach (Transform child in contentTransform)
         {
             Destroy(child.gameObject);
@@ -34,6 +41,7 @@ public class StageManager : Singleton<StageManager>
         for (int i = 0; i < stageCount; i++)
         {
             stages[i] = Instantiate(stagePrefab, contentTransform);
+            stages[i].GetComponent<Stage>().SetStageNumber(chapter, i+1);
             Transform childTransform = stages[i].transform.Find("Text_StageCountTitle");
             TextMeshProUGUI stageText = childTransform.GetComponent<TextMeshProUGUI>();
             if (stageText != null)
@@ -46,46 +54,5 @@ public class StageManager : Singleton<StageManager>
 
         // DynamicObjectSelector에 리스트 전달
         objectSelector.SetUpItems(itemRects);
-    }
-
-    public void OnClickChapter1()
-    {
-        SetUpStages(1);
-    }
-
-    public void OnClickChapter2()
-    {
-        SetUpStages(2);
-    }
-
-    public void OnClickChapter3()
-    {
-        SetUpStages(3);
-    }
-
-    public void OnClickChapter4()
-    {
-        SetUpStages(4);
-    }
-
-    //public void OnClickChapterCanvas()
-    //{
-    //    MainGameUI.SetActive(true);
-    //    GameLobbyUI.SetActive(false);
-    //}
-
-    private int GetStageCountForChapter(int chapter)
-    {
-        switch (chapter)
-        {
-            case 1:
-                return 20;
-            case 2:
-                return 15;
-            case 3:
-                return 7;
-            default:
-                return 7;
-        }
     }
 }

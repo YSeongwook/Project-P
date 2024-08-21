@@ -52,12 +52,15 @@ namespace EnumTypes
         OnCreateGoldPackageSlot,
         GetPlayerInventoryResources,
         GoldStorePopup,
-        GoldStoreExit
+        GoldStoreExit,
+        OnClickGameStage,
+        OnEnableChapterMoveButton,
+        CreateStageButton,
     }
 
     public enum DataEvents
     {
-        OnUserInventoryLoad,
+        OnUserInformationLoad,
         OnUserInventorySave,
         OnItemDataLoad,
         HeroCollectionUpdated,
@@ -69,7 +72,11 @@ namespace EnumTypes
         PlayerTicketCountChanged,
         PlayerGoldChanged,
         PlayerERCChanged,
-        PlayerItemListChanged
+        PlayerItemListChanged,
+        PlayerOpenStageInfo,
+        LoadThisChapterTileList,
+        ResetChapterTileList,
+        SelectStage,
     }
 
     public enum GoldEvent

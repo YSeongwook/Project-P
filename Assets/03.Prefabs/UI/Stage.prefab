@@ -68,7 +68,7 @@ MonoBehaviour:
   m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5af157b3961f90a469afc4ddf711c084, type: 2}
-  m_sharedMaterial: {fileID: -2021376388158403214, guid: 5af157b3961f90a469afc4ddf711c084, type: 2}
+  m_sharedMaterial: {fileID: 1166976122515779963, guid: 5af157b3961f90a469afc4ddf711c084, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 5724437416441603433}
   - component: {fileID: 6712826077535690387}
   - component: {fileID: 1983309609834070049}
+  - component: {fileID: 1105099368560557538}
   m_Layer: 5
   m_Name: Stage
   m_TagString: Untagged
@@ -255,3 +256,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1105099368560557538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4677688019828989521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c5d8d711fa2eae4ca69e7c46aab73ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StageNumber: 0

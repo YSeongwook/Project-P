@@ -47,15 +47,6 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         RemoveEvents();
     }
 
-    // 테스트용
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(2))
-        {
-            EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
-        }
-    }
-
     private void AddEvents()
     {
         EventManager<UIEvents>.StartListening<int, float, float>(UIEvents.GetPlayerInventoryResources, ReadPlayerCapital);
