@@ -117,7 +117,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Road_cross
+      name: Road_Cross
       rect:
         serializedVersion: 2
         x: 186
@@ -180,28 +180,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Road_end
-      rect:
-        serializedVersion: 2
-        x: 12
-        y: 84
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9e9ecdee8582cc94b8dc2b47606bb90f
-      internalID: -1955178436
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Road_corner
+      name: Road_L
       rect:
         serializedVersion: 2
         x: 90
@@ -222,11 +201,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_end2
+      name: Road_End
       rect:
         serializedVersion: 2
-        x: 97
-        y: 85
+        x: 96
+        y: 73
         width: 64
         height: 64
       alignment: 0
@@ -242,6 +221,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Roads_Start
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 84
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ed0c18a3669ad848a2a90f1837473c9
+      internalID: 1066858676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -253,12 +253,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      Road_Cross: -1446428360
+      Road_End: -1493912242
+      Road_L: 1210937206
       Road_Straight: -2062186635
       Road_T: 33532268
-      Road_corner: 1210937206
-      Road_cross: -1446428360
       Road_end: -1955178436
-      Roads_end2: -1493912242
+      Roads_Start: 1066858676
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

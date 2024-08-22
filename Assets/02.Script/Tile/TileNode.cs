@@ -1,3 +1,5 @@
+using EnumTypes;
+using EventLibrary;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditorInternal;
@@ -42,7 +44,7 @@ public struct Tile
 
 public class TileNode : MonoBehaviour
 {
-    private Tile CorrectTileInfo;   // 정답 확인용 Tile
+    public Tile CorrectTileInfo { get; private set; }   // 정답 확인용 Tile
     private Tile _tile;             // Player에게 조작되는 Tile
 
     public Tile GetTileInfo {  get { return _tile; } }
@@ -55,14 +57,16 @@ public class TileNode : MonoBehaviour
     private RectTransform _imageGimmickRectTransform;
     private Outline _backgroundOutline;
 
+
     public bool isCorrect { get; private set; }
 
     private void Awake()
     {
         _background = transform.GetChild(0).GetComponent<Image>();
-        _backgroundOutline = transform.GetChild(0).GetComponent<Outline>();
         _imageRoad = transform.GetChild(1).GetComponent<Image>();
         _imageGimmick = transform.GetChild(2).GetComponent<Image>();
+
+        _backgroundOutline = transform.GetChild(0).GetComponent<Outline>();
         _rectTransform = GetComponent<RectTransform>();
 
         _imageRoadRectTransform = _imageRoad.GetComponent<RectTransform>();
@@ -78,10 +82,8 @@ public class TileNode : MonoBehaviour
         _imageGimmickRectTransform.sizeDelta = _rectTransform.sizeDelta - new Vector2(10, 10);
 
         _backgroundOutline.enabled = false;
-
-        //_background.enabled = false;
-        //_imageRoad.enabled = false;
-        //_imageGimmick.enabled = false;
+        _imageGimmick.enabled = false;
+        isCorrect = false;
     }
 
     // 타일 정보 삽입
@@ -89,6 +91,15 @@ public class TileNode : MonoBehaviour
     {
         _tile = tile;
         CorrectTileInfo = tile;
+    }
+
+    // 타일 이미지 변경
+    public void SetTilImage(Sprite Road)
+    {
+        _imageRoad.sprite = Road;
+
+        // 임시 테스트용
+        //RotationTile(_tile.RotateValue);
 
         RandomTileRotate();
     }
@@ -99,7 +110,7 @@ public class TileNode : MonoBehaviour
         int randomRotateValue = Random.Range(0, 4);
         _tile.RotateValue = randomRotateValue;
 
-        RotationTile(randomRotateValue);
+        RotationTile(randomRotateValue, false);
     }
 
     // 회전 명령 실행
@@ -107,25 +118,44 @@ public class TileNode : MonoBehaviour
     {
         _tile.RotateValue = (_tile.RotateValue + 1) % 4;
 
-        RotationTile(_tile.RotateValue);        
+        RotationTile(_tile.RotateValue, true);        
     }
 
     // 타일 회전
-    private void RotationTile(int rotateValue)
+    private void RotationTile(int rotateValue, bool isCheckAble)
     {
         float rotationAngle = rotateValue * -90f;
 
         _imageRoadRectTransform.rotation = Quaternion.Euler(0, 0, rotationAngle);
         _imageGimmickRectTransform.rotation = Quaternion.Euler(0, 0, rotationAngle);
 
-        //정답 rotation과 비교
-        IsCorrectRotate();
+        if (isCheckAble)
+        {
+            //정답 rotation과 비교
+            CheckAnswer();
+        }
+            
     }
 
-    // 정답인지 판별
-    private void IsCorrectRotate()
+    private void CheckAnswer()
     {
-        isCorrect = _tile.Type == TileType.Road && 
-            _tile.RotateValue == CorrectTileInfo.RotateValue? true : false;
+        int CalculatedValue = 1;
+        switch (_tile.RoadShape)
+        {
+            case RoadShape.Straight:
+                CalculatedValue = 2;
+                break;
+            case RoadShape.Cross:
+                CalculatedValue = 1;
+                break;
+            default:
+                CalculatedValue = 4;
+                break;
+        }
+
+        isCorrect = (_tile.RotateValue % CalculatedValue) == (CorrectTileInfo.RotateValue % CalculatedValue);
+
+        // MapGenerator의 CheckAnswer 이벤트 실행
+        EventManager<DataEvents>.TriggerEvent(DataEvents.CheckAnswer);
     }
 }

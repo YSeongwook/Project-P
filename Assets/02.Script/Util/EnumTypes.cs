@@ -77,6 +77,7 @@ namespace EnumTypes
         LoadThisChapterTileList,
         ResetChapterTileList,
         SelectStage,
+        CheckAnswer,
     }
 
     public enum GoldEvent
