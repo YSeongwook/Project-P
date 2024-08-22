@@ -118,7 +118,8 @@ public class TileNode : MonoBehaviour
     {
         _tile.RotateValue = (_tile.RotateValue + 1) % 4;
 
-        RotationTile(_tile.RotateValue, true);        
+        RotationTile(_tile.RotateValue, true);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn, 1);
     }
 
     // 타일 회전

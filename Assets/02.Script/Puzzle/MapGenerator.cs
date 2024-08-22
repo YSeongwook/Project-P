@@ -3,14 +3,18 @@ using EventLibrary;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class MapGenerator : MonoBehaviour
 {
-    [FoldoutGroup("UI")][SerializeField] private GameObject _MainMenuUI;
-    [FoldoutGroup("UI")][SerializeField] private GameObject _PlayerGoldUI;
+    [FoldoutGroup("Canvas")][SerializeField] private GameObject _MainMenuUI;
+    [FoldoutGroup("Canvas")][SerializeField] private GameObject _PlayerGoldUI;
+
+    [FoldoutGroup("UI")]
+    [SerializeField] private TMP_Text _limitCountTextUI;
 
     [FoldoutGroup("Tile")][SerializeField] private GameObject _tileNode;
     [FoldoutGroup("Tile")][SerializeField] private float _tileSize;
@@ -24,6 +28,7 @@ public class MapGenerator : MonoBehaviour
     private List<Tile> tileList = new List<Tile>();
     private RectTransform rectTransform;
     private GridLayoutGroup grid;
+    private int LimitCount;
 
     private void Awake()
     {
@@ -33,6 +38,7 @@ public class MapGenerator : MonoBehaviour
 
         EventManager<DataEvents>.StartListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StartListening(DataEvents.CheckAnswer, CheckAnswer);
+        EventManager<StageEvent>.StartListening<int>(StageEvent.UseTurn, UpdateChangedLimitCoutUI);
     }
 
     private void Start()
@@ -44,6 +50,7 @@ public class MapGenerator : MonoBehaviour
     {
         EventManager<DataEvents>.StopListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StopListening(DataEvents.CheckAnswer, CheckAnswer);
+        EventManager<StageEvent>.StopListening<int>(StageEvent.UseTurn, UpdateChangedLimitCoutUI);
     }
 
     //스테이지 열기
@@ -92,9 +99,18 @@ public class MapGenerator : MonoBehaviour
         }
 
         // 제한 횟수 수치 이벤트로 넘기기
-
+        var tileMapTable = DataManager.Instance.GetTileMapTable($"M{chapter}{stage.ToString("000")}");
+        LimitCount = tileMapTable.LimitCount;
+        UpdateChangedLimitCoutUI(0);
 
         // 플레이어의 보유 아이템 이벤트로 넘기기
+    }
+
+    // 제한 횟수 UI 동기화
+    private void UpdateChangedLimitCoutUI(int ChangelimitCount)
+    {
+        LimitCount = Mathf.Clamp(LimitCount - ChangelimitCount, 0, 999);
+        _limitCountTextUI.text = $"{LimitCount}";
     }
 
     private void DestoryAllTile()
@@ -129,17 +145,16 @@ public class MapGenerator : MonoBehaviour
 
             int check = childTileNode.isCorrect ? 1 : 0;
 
-            if (check == 0)
-            {
-                Debug.Log($"{childTileNode.GetTileInfo.RoadShape} => {childTileNode.GetTileInfo.RotateValue} : {childTileNode.CorrectTileInfo.RotateValue}");
-            }
             checking *= check;
         }
 
         Check = checking == 1;
 
+        // 정답이면 
+
     }
 
+    // 디버거
     private bool Check;
     private void Update()
     {

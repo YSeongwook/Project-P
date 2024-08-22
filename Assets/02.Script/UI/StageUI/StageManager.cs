@@ -1,3 +1,4 @@
+using DataStruct;
 using EnumTypes;
 using EventLibrary;
 using System.Collections;
@@ -11,8 +12,6 @@ public class StageManager : Singleton<StageManager>
     [SerializeField] private GameObject stagePrefab;
     [SerializeField] private Transform contentTransform;
     [SerializeField] private DynamicObjectSelector objectSelector;
-    //[SerializeField] private GameObject MainGameUI;
-    //[SerializeField] private GameObject GameLobbyUI;
 
     private GameObject[] stages;
 

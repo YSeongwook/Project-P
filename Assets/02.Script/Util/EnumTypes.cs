@@ -87,6 +87,11 @@ namespace EnumTypes
         OnGetERC
     }
 
+    public enum StageEvent
+    {
+        UseTurn
+    }
+
     public enum GoogleEvents
     {
         GPGSSignIn,

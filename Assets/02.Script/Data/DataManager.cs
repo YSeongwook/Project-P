@@ -21,6 +21,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<string, ItemData> LoadedItemDataList { get; private set; }
     public Dictionary<string, GoldPackageData> LoadedGoldPackageDataList { get; private set; }
     public Dictionary<string, PlayerInfo> LoadedPlayerInventoryList { get; private set; }
+    public Dictionary<string, StageGameMapInfoTable> LoadedTileMapTable { get; private set; }
 
     public Dictionary<string, List<Tile>> LoadedTileMapList { get; private set; } = new Dictionary<string, List<Tile>>();
 
@@ -35,6 +36,7 @@ public class DataManager : Singleton<DataManager>
 
     private void ReadDataOnAwake()
     {
+        ReadTileMapTableData();
         ReadDatas(DataType.Item);
         ReadDatas(DataType.GoldPackage);
         ReadDatas(DataType.PlayerInven);
@@ -59,7 +61,7 @@ public class DataManager : Singleton<DataManager>
             case DataType.PlayerInven:
                 FileType_PlayerInventoryData(xmlAsset);
                 break;
-        }        
+        }
     }
 
     // 타일맵 읽어오기
@@ -67,7 +69,7 @@ public class DataManager : Singleton<DataManager>
     {
         string filePath = Path.Combine("C:/Download/TileMap", fileName + ".json");
 
-        if(File.Exists(filePath))
+        if (File.Exists(filePath))
         {
             string json = File.ReadAllText(filePath);
 
@@ -84,6 +86,22 @@ public class DataManager : Singleton<DataManager>
             Debug.Log($"잘못된 파일 이름입니다. : {fileName}");
             return;
         }
+    }
+
+    // 타일맵 테이블 데이터 로드
+    private void ReadTileMapTableData()
+    {
+        string filePath = Path.Combine("C:/Download/TileMap", "LimitCountTable.json");
+
+        if (!File.Exists(filePath))
+        {
+            Debug.Log("파일이 존재하지 않습니다.");
+            return;
+        }
+
+        string json = File.ReadAllText(filePath);
+
+        LoadedTileMapTable = JsonConvert.DeserializeObject<Dictionary<string, StageGameMapInfoTable>>(json);
     }
 
     private void ResetReadTileMapData()
@@ -184,7 +202,7 @@ public class DataManager : Singleton<DataManager>
                                         .Element("dataCategory")
                                         .Element("data");
 
-        if(dataElement != null)
+        if (dataElement != null)
         {
             dataElement.SetAttributeValue("PlayerID", $"{inventory.PlayerID}");
             dataElement.SetAttributeValue("Gold", inventory.Gold);
@@ -224,6 +242,14 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<string, PlayerInfo> GetPlayerInventoryDatas()
     {
         return LoadedPlayerInventoryList;
+    }
+
+    public StageGameMapInfoTable GetTileMapTable(string mapID)
+    {
+        if (LoadedTileMapTable.ContainsKey(mapID))
+            return LoadedTileMapTable[mapID];
+        else 
+            return default;
     }
 
     public ItemData GetItemData(string itemID)

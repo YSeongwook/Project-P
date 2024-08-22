@@ -1,3 +1,4 @@
+using DataStruct;
 using EnumTypes;
 using EventLibrary;
 using System.Collections;
@@ -37,7 +38,10 @@ public class Chapter : MonoBehaviour
 
         for(int i=1; i<= _maxStageCount ; i++)
         {
-            string fileName = $"{_chapter}-{i}";
+            string mapID = $"M{_chapter}{i.ToString("000")}";
+            var tableData = DataManager.Instance.GetTileMapTable(mapID);
+            if (tableData.FileName == null) continue;
+            string fileName = tableData.FileName;
             EventManager<DataEvents>.TriggerEvent(DataEvents.LoadThisChapterTileList, fileName);
         }
 

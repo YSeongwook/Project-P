@@ -32,4 +32,12 @@ namespace DataStruct
         public string CurrentChapter;
         public string CurrentStage;
     }
+
+
+    public struct StageGameMapInfoTable
+    {
+        public string MapID;
+        public string FileName;
+        public int LimitCount;
+    }
 }
