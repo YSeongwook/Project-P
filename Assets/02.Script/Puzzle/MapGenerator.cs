@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class MapGenerator : MonoBehaviour
@@ -12,7 +13,7 @@ public class MapGenerator : MonoBehaviour
     [FoldoutGroup("UI")][SerializeField] private GameObject _PlayerGoldUI;
 
     [FoldoutGroup("Tile")][SerializeField] private GameObject _tileNode;
-    [FoldoutGroup("Tile")][SerializeField] private float _tileSize = 120;
+    [FoldoutGroup("Tile")][SerializeField] private float _tileSize;
 
     [FoldoutGroup("Tile Sprite")]
     [SerializeField] private List<Sprite> RoadList;
@@ -22,11 +23,13 @@ public class MapGenerator : MonoBehaviour
     private Canvas canvas;
     private List<Tile> tileList = new List<Tile>();
     private RectTransform rectTransform;
+    private GridLayoutGroup grid;
 
     private void Awake()
     {
         canvas = GetComponentInParent<Canvas>();
         rectTransform = GetComponent<RectTransform>();
+        grid = GetComponent<GridLayoutGroup>(); 
 
         EventManager<DataEvents>.StartListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StartListening(DataEvents.CheckAnswer, CheckAnswer);
@@ -49,8 +52,8 @@ public class MapGenerator : MonoBehaviour
         DestoryAllTile();
 
         string fileName = $"{chapter}-{stage}";
-        tileList = DataManager.Instance.GetPuzzleTileMap(fileName);
-        if(tileList == null )
+        tileList = new List<Tile>(DataManager.Instance.GetPuzzleTileMap(fileName));
+        if (tileList == null )
         {
             DebugLogger.Log("생성되어 있는 미로가 존재하지 않습니다.");
             return;
@@ -63,12 +66,18 @@ public class MapGenerator : MonoBehaviour
         // 캔버스 활성화
         canvas.enabled =true;
 
+        //맵 사이즈 결정
+        DetectTileSize(tileList.Count);
+        //셀 사이즈 결정
+        grid.cellSize = new Vector2(_tileSize, _tileSize);
+
         // tileList의 제곱근 길이만큼 RectTransform 크기 설정
         float sizeValue = Mathf.Sqrt(tileList.Count) * _tileSize;
         rectTransform.sizeDelta = new Vector2(sizeValue, sizeValue);
 
+
         // tileList의 길이만큼 TileNode 생성
-        foreach(var tile in tileList)
+        foreach (var tile in tileList)
         {
             var newTile = Instantiate(_tileNode, transform);
             var tileNode = newTile.GetComponent<TileNode>();
@@ -136,5 +145,28 @@ public class MapGenerator : MonoBehaviour
     {
         if (Check) 
             Debug.Log("정답");
+    }
+
+    // 리스트 수에 맞추어 Tile의 크기 설정
+    private void DetectTileSize(int listCount)
+    {
+        switch(Mathf.Sqrt(listCount))
+        {
+            case 3:
+                _tileSize = 320;
+                break;
+            case 4:
+                _tileSize = 270;
+                break;
+            case 5:
+                _tileSize = 220;
+                break;
+            case 6:
+                _tileSize = 170;
+                break;
+            case 7:
+                _tileSize = 120;
+                break;
+        }
     }
 }

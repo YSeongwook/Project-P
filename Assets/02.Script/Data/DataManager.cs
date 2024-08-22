@@ -186,7 +186,7 @@ public class DataManager : Singleton<DataManager>
 
         if(dataElement != null)
         {
-            dataElement.SetAttributeValue("PlayerID", $"P{inventory.PlayerID}");
+            dataElement.SetAttributeValue("PlayerID", $"{inventory.PlayerID}");
             dataElement.SetAttributeValue("Gold", inventory.Gold);
             dataElement.SetAttributeValue("ERC", inventory.ERC);
             dataElement.SetAttributeValue("ItemList", SerializeItemList(inventory.ItemList));

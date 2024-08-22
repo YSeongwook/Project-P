@@ -1276,7 +1276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0efd0084e2556a049b9fdbca6d490ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Spacing: {x: 0, y: -30}
+  Spacing: {x: 0, y: -40}
   background: {fileID: 261154228}
 --- !u!114 &1100063187 stripped
 MonoBehaviour:
@@ -2484,9 +2484,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1236074588}
   - {fileID: 1722225425}
   - {fileID: 2051988909}
+  - {fileID: 1236074588}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2741,6 +2741,10 @@ PrefabInstance:
       propertyPath: _maxStageCount
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 2869156591510760520, guid: fe76595db4f282e4fb41c01d62544d1d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -72
+      objectReference: {fileID: 0}
     - target: {fileID: 3313233635178011560, guid: fe76595db4f282e4fb41c01d62544d1d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2955,6 +2959,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7991854333406906297, guid: fe76595db4f282e4fb41c01d62544d1d, type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7991854333406906297, guid: fe76595db4f282e4fb41c01d62544d1d, type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8522906425687996762, guid: fe76595db4f282e4fb41c01d62544d1d, type: 3}

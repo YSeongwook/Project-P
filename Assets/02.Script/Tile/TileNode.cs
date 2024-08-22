@@ -76,10 +76,10 @@ public class TileNode : MonoBehaviour
     private void Start()
     {
         RectTransform imageBackGroundRectTransform = _background.GetComponent<RectTransform>();
-        imageBackGroundRectTransform.sizeDelta = new Vector2(120, 120);
+        //imageBackGroundRectTransform.sizeDelta = _rectTransform.sizeDelta;
 
-        _imageRoadRectTransform.sizeDelta = new Vector2(120, 120);
-        _imageGimmickRectTransform.sizeDelta = _rectTransform.sizeDelta - new Vector2(10, 10);
+       // _imageRoadRectTransform.sizeDelta = _rectTransform.sizeDelta;
+       // _imageGimmickRectTransform.sizeDelta = _rectTransform.sizeDelta - new Vector2(10, 10);
 
         _backgroundOutline.enabled = false;
         _imageGimmick.enabled = false;
