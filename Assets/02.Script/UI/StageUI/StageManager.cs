@@ -37,9 +37,15 @@ public class StageManager : Singleton<StageManager>
         for (int i = 0; i < stageCount; i++)
         {
             stages[i] = Instantiate(stagePrefab, contentTransform);
-            stages[i].GetComponent<Stage>().SetStageNumber(chapter, i+1);
-            Transform childTransform = stages[i].transform.Find("Text_StageCountTitle");
-            TextMeshProUGUI stageText = childTransform.GetComponent<TextMeshProUGUI>();
+            var stage = stages[i].GetComponent<Stage>();
+            if(stage == null) continue;
+
+            stage.SetStageNumber(chapter, i+1);
+            int playerChapter = PlayerInformation.Instance.GetPlayerCurrentChapter();
+            int playerStage = PlayerInformation.Instance.GetPlayerCurrentStage();
+            bool buttonActive = playerChapter >= chapter && playerStage >= i + 1;
+            stage.ButtonActivate(buttonActive);
+            TextMeshProUGUI stageText = stages[i].GetComponentInChildren<TextMeshProUGUI>();
             if (stageText != null)
             {
                 stageText.text = (i + 1).ToString();
