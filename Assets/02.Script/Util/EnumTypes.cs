@@ -89,7 +89,8 @@ namespace EnumTypes
 
     public enum StageEvent
     {
-        UseTurn
+        UseTurn,
+        ButtonActivate,
     }
 
     public enum GoogleEvents

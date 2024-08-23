@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -140,26 +139,27 @@ public class MapGenerator : MonoBehaviour
         {
             var childTileNode = child.GetComponent<TileNode>();
             if (childTileNode == null) continue;
-            if (childTileNode.GetTileInfo.Type == TileType.None) 
-                continue;
+            if (childTileNode.GetTileInfo.Type == TileType.None) continue;
 
+            if(!childTileNode.isCorrect)
+                DebugLogger.Log($"{child.GetComponent<RectTransform>().position} : {childTileNode.isCorrect}");
             int check = childTileNode.isCorrect ? 1 : 0;
 
             checking *= check;
         }
 
-        Check = checking == 1;
-
         // 정답이면 
+        if (checking == 1)
+        {
+            DebugLogger.Log("정답");
+            return;
+        }
 
-    }
-
-    // 디버거
-    private bool Check;
-    private void Update()
-    {
-        if (Check) 
-            Debug.Log("정답");
+        // 게임 실패
+        if(LimitCount <= 0)
+        {
+            DebugLogger.Log("클리어 실패");
+        }
     }
 
     // 리스트 수에 맞추어 Tile의 크기 설정

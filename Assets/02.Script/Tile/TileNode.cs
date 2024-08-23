@@ -130,15 +130,11 @@ public class TileNode : MonoBehaviour
         _imageRoadRectTransform.rotation = Quaternion.Euler(0, 0, rotationAngle);
         _imageGimmickRectTransform.rotation = Quaternion.Euler(0, 0, rotationAngle);
 
-        if (isCheckAble)
-        {
-            //정답 rotation과 비교
-            CheckAnswer();
-        }
-            
+        //정답 rotation과 비교
+        CheckAnswer(isCheckAble);
     }
 
-    private void CheckAnswer()
+    private void CheckAnswer(bool isCheckAble)
     {
         int CalculatedValue = 1;
         switch (_tile.RoadShape)
@@ -156,7 +152,12 @@ public class TileNode : MonoBehaviour
 
         isCorrect = (_tile.RotateValue % CalculatedValue) == (CorrectTileInfo.RotateValue % CalculatedValue);
 
-        // MapGenerator의 CheckAnswer 이벤트 실행
-        EventManager<DataEvents>.TriggerEvent(DataEvents.CheckAnswer);
+        _background.enabled = !isCorrect;
+
+        if (isCheckAble)
+        {
+            // MapGenerator의 CheckAnswer 이벤트 실행
+            EventManager<DataEvents>.TriggerEvent(DataEvents.CheckAnswer);
+        }
     }
 }
