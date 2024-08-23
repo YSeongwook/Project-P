@@ -1,23 +1,22 @@
+using System.Collections.Generic;
 using EnumTypes;
 using EventLibrary;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ChapterColliection : MonoBehaviour
+public class ChapterCollection : MonoBehaviour
 {
-    private List<Chapter> chapters = new List<Chapter>();
+    private List<Chapter> _chapters = new List<Chapter>();
 
     private void Awake()
     {
-        chapters.Clear();
+        _chapters.Clear();
 
         foreach (Transform child in transform)
         {
             var childChapter =  child.GetComponent<Chapter>();
             if(childChapter == null) continue;
 
-            chapters.Add(childChapter);
+            _chapters.Add(childChapter);
         }
 
         EventManager<UIEvents>.StartListening<string>(UIEvents.OnEnableChapterMoveButton, SetChapterButtonActive);
@@ -31,7 +30,7 @@ public class ChapterColliection : MonoBehaviour
     private void SetChapterButtonActive(string openChapter)
     {
         int _openChapter = int.Parse(openChapter);
-        foreach (Chapter chapter in chapters)
+        foreach (Chapter chapter in _chapters)
         {
             chapter.DeactivateButton(_openChapter);
         }
