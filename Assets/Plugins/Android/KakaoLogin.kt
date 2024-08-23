@@ -2,27 +2,44 @@ package com.unity3d.player
 
 import android.util.Log
 
+import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.common.model.KakaoSdkError
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.sdk.talk.TalkApiClient
 import com.unity3d.player.UnityPlayer
 
 class KakaoLogin {
     val context = UnityPlayer.currentActivity
-
+    
     fun checkKakaoLoginStatus() {
-        val accessToken = TokenManagerProvider.instance.manager.getToken()?.accessToken
-
-        if (accessToken.isNullOrEmpty()) {
-            // 토큰이 없거나 유효하지 않은 경우, 로그인 버튼 활성화
-        } else {
-            // 유효한 토큰이 있는 경우, 로그인 버튼 비활성화
-            UnityPlayer.UnitySendMessage("KakaoLoginManager", "OffLoginBtn")
+        if (AuthApiClient.instance.hasToken())
+        {
+            UnityPlayer.UnitySendMessage("AlertMsg", "OnAlertMsg", "로그인 완료")
+            UserApiClient.instance.accessTokenInfo { _, error ->
+                if (error != null) {
+                    if (error is KakaoSdkError && error.isInvalidTokenError() == true) {
+                        //로그인 필요
+                        
+                    }
+                    else {
+                        //기타 에러
+                    }
+                }
+                else {
+                    //토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
+                }
+            }
+        }
+        else 
+        {
+            //로그인 필요
+            UnityPlayer.UnitySendMessage("KakaoLoginManager", "OnLoginBtn", "")
         }
     }
-
+    
     fun KakaoLogin() {
         // 로그인 공통 callback 구성
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
@@ -54,6 +71,10 @@ class KakaoLogin {
                     UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
                 }else if (token != null){
                     Log.i("UnityLog", "카카오톡 로그인 성공 ${token.accessToken}")
+                    UnityPlayer.UnitySendMessage("KakaoLoginManager", "OffLoginBtn", "")
+                    UnityPlayer.UnitySendMessage("AlertMsg", "OnAlertMsg", "로그인 완료")
+                    //UnityPlayer.UnitySendMessage("MySqlManager", "FirstLoginSuccess", "")
+                    GetUserData()
                 }
             }
         } else {
@@ -73,7 +94,13 @@ class KakaoLogin {
                         "\n이메일: ${user.kakaoAccount?.email}" +
                         "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
                         "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
-
+                
+                UnityPlayer.UnitySendMessage("MySqlManager", "GetUserData",
+                    "회원번호/${user.id}" + "||" +
+                    "이메일/${user.kakaoAccount?.email}" + "||" +
+                    "닉네임/${user.kakaoAccount?.profile?.nickname}" + "||" +
+                    "프로필사진/${user.kakaoAccount?.profile?.thumbnailImageUrl}"
+                )
             }
         }
     }
