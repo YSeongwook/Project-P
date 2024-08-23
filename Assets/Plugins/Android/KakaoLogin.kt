@@ -96,10 +96,10 @@ class KakaoLogin {
                         "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
                 
                 UnityPlayer.UnitySendMessage("MySqlManager", "GetUserData",
-                    "회원번호/${user.id}" + "||" +
-                    "이메일/${user.kakaoAccount?.email}" + "||" +
-                    "닉네임/${user.kakaoAccount?.profile?.nickname}" + "||" +
-                    "프로필사진/${user.kakaoAccount?.profile?.thumbnailImageUrl}"
+                    "${user.id}" + "||" +
+                    "${user.kakaoAccount?.email}" + "||" +
+                    "${user.kakaoAccount?.profile?.nickname}" + "||" +
+                    "${user.kakaoAccount?.profile?.thumbnailImageUrl}"
                 )
             }
         }
