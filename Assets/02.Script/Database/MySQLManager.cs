@@ -1,15 +1,8 @@
 using System;
 using System.Data;
-using System.Reflection;
 using MySql.Data.MySqlClient;
-using Unity.VisualScripting;
-using UnityEditor.Search;
 using UnityEngine;
-using UnityEngine.Profiling;
 using UnityEngine.UI;
-using UnityEngine.Windows;
-using WebSocketSharp;
-using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class MySQLManager : Singleton<MySQLManager>
 {
@@ -71,6 +64,33 @@ public class MySQLManager : Singleton<MySQLManager>
                         //    values += ", @GuestPassword";
                         //}
                         break;
+                    case "Assets": // Kakao = 회원번호||이메일||닉네임||프로필사진URL
+                        if (!string.IsNullOrEmpty(strArr[0]))
+                        {
+                            query += "MemberID";
+                            values += "@MemberID";
+                        }
+                        if (!string.IsNullOrEmpty(strArr[1]))
+                        {
+                            query += ", Gold";
+                            values += ", @Gold";
+                        }
+                        if (!string.IsNullOrEmpty(strArr[2]))
+                        {
+                            query += ", HeartTime";
+                            values += ", @HeartTime";
+                        }
+                        if (!string.IsNullOrEmpty(strArr[3]))
+                        {
+                            query += ", ItemCount";
+                            values += ", @ItemCount";
+                        }
+                        //if (!string.IsNullOrEmpty(strArr[4]))
+                        //{
+                        //    query += ", GuestPassword";
+                        //    values += ", @GuestPassword";
+                        //}
+                        break;
                     default:
                         Debug.LogError("Invalid query type provided.");
                         return;
@@ -114,24 +134,58 @@ public class MySQLManager : Singleton<MySQLManager>
         }
     }
 
-    public void ReadData()
+    public void ReadData(string str)
     {
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
             try
             {
+                //str = "MemberInfo||3666640951";
+
+                // 체크용
+                //textCheck.text += $"{str}\n";
+
+                // strArr[0]은 테이블명 strArr[1]은 회원번호 고정
+                string[] strArr = str.Split("||");
+
+                string query = string.Empty;
+
                 conn.Open();
-                string query = "SELECT * FROM test";
+
+                switch (strArr[0])
+                {
+                    case "MemberInfo": // Kakao = 회원번호||이메일||닉네임||프로필사진URL
+                        query = $"SELECT * FROM {strArr[0]} WHERE MemberID = {strArr[1]}";
+                        // 체크용
+                        // textCheck.text += $"{query}\n";
+                        break;
+                    default:
+                        Debug.LogError("Invalid query type provided.");
+                        return;
+                }
+
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 MySqlDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    string name = reader["name"].ToString();
-                    //int age = Convert.ToInt32(reader["Age"]);
-                    //Debug.Log("name: " + name);
-                    //text.text = $"SELECT * FROM test \n name: {name}";
-                    //Debug.Log("Name: " + name + ", Age: " + age);
+                    switch (strArr[0])
+                    {
+                        case "MemberInfo": // Kakao = 회원번호||이메일||닉네임||프로필사진URL
+                            string MemberID = reader["MemberID"].ToString();
+                            string Email = reader["Email"].ToString();
+                            string Nickname = reader["Nickname"].ToString();
+                            string ProfileURL = reader["ProfileURL"].ToString();
+
+                            // 체크용
+                            //textCheck.text += $"{MemberID}\n{Email}\n{Nickname}\n{ProfileURL}";
+
+                            InputDataAtDictionary("MemberInfo", $"{MemberID}||{Email}||{Nickname}||{ProfileURL}");
+                            break;
+                        default:
+                            Debug.LogError("Invalid query type provided.");
+                            return;
+                    }
                 }
             }
             catch (Exception ex)
@@ -142,10 +196,11 @@ public class MySQLManager : Singleton<MySQLManager>
     }
 
     // Kotlin에서 넘겨받은 카카오톡 유저 데이터
-    public void GetUserData(string userData)
+    public void GetAndSetUserData(string userData)
     {
         //userData = "3666640951||dls625@hanmail.net||.||https://img1.kakaocdn.net/thumb/R110x110.q70/?fname=https://t1.kakaocdn.net/account_images/default_profile.jpeg";
 
+        InsertData("MemberInfo", userData);
         InsertData("MemberInfo", userData);
     }
 
@@ -160,10 +215,12 @@ public class MySQLManager : Singleton<MySQLManager>
                 DBDataManager.Instance.UserData.Add("Email", strArr[1]);
                 DBDataManager.Instance.UserData.Add("Nickname", strArr[2]);
                 DBDataManager.Instance.UserData.Add("ProfileURL", strArr[3]);
+                //DBDataManager.Instance.ShowDicDataCheck("UserData");
                 break;
             default:
                 Debug.LogError("Invalid query type provided.");
                 return;
         }
+
     }
 }

@@ -18,6 +18,19 @@ class KakaoLogin {
         if (AuthApiClient.instance.hasToken())
         {
             UnityPlayer.UnitySendMessage("AlertMsg", "OnAlertMsg", "로그인 완료")
+
+            // 로그인 데이터 중 테이블명/회원번호만 넘겨서 데이터 저장하기.
+            UserApiClient.instance.me { user, error ->
+                if (error != null) {
+                    Log.e("UnityLog", "사용자 정보 요청 실패", error)
+                }
+                else if (user != null) {
+                    UnityPlayer.UnitySendMessage("MySqlManager", "ReadData",
+                        "MemberInfo||${user.id}"
+                    )
+                }
+            }
+            
             UserApiClient.instance.accessTokenInfo { _, error ->
                 if (error != null) {
                     if (error is KakaoSdkError && error.isInvalidTokenError() == true) {
