@@ -133,7 +133,7 @@ public class PlayerInformation : Singleton<PlayerInformation>
     {
         PlayerViewModel.RequestPlayerItemListChanged(item, count);
     }
-    
+
     public int GetPlayerCurrentChapter()
     {
         return int.Parse(_playerInfo.CurrentChapter);
