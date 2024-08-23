@@ -81,7 +81,6 @@ class UKakao {
 
                     val friendsListString = friends.elements?.joinToString("\n") ?: "[]"
                     Log.i("UnityLog", "카카오톡 친구 목록 가져오기 성공 \n$friendsListString")
-                    UnityPlayer.UnitySendMessage("KakaoSystem", "OnGetFriendsListResult", "시발")
                     UnityPlayer.UnitySendMessage("KakaoSystem", "OnGetFriendsListResult", friendsListString)
                 }
             }
