@@ -1,8 +1,5 @@
 using EnumTypes;
 using EventLibrary;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -57,8 +54,7 @@ public class TileNode : MonoBehaviour
     private RectTransform _imageGimmickRectTransform;
     private Outline _backgroundOutline;
 
-
-    public bool isCorrect { get; private set; }
+    public bool IsCorrect { get; private set; }
 
     private void Awake()
     {
@@ -83,7 +79,7 @@ public class TileNode : MonoBehaviour
 
         _backgroundOutline.enabled = false;
         _imageGimmick.enabled = false;
-        isCorrect = false;
+        IsCorrect = false;
     }
 
     // 타일 정보 삽입
@@ -119,7 +115,7 @@ public class TileNode : MonoBehaviour
         _tile.RotateValue = (_tile.RotateValue + 1) % 4;
 
         RotationTile(_tile.RotateValue, true);
-        EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn, 1);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
     }
 
     // 타일 회전
@@ -140,21 +136,21 @@ public class TileNode : MonoBehaviour
 
     private void CheckAnswer()
     {
-        int CalculatedValue = 1;
+        int calculatedValue = 1;
         switch (_tile.RoadShape)
         {
             case RoadShape.Straight:
-                CalculatedValue = 2;
+                calculatedValue = 2;
                 break;
             case RoadShape.Cross:
-                CalculatedValue = 1;
+                calculatedValue = 1;
                 break;
             default:
-                CalculatedValue = 4;
+                calculatedValue = 4;
                 break;
         }
 
-        isCorrect = (_tile.RotateValue % CalculatedValue) == (CorrectTileInfo.RotateValue % CalculatedValue);
+        IsCorrect = (_tile.RotateValue % calculatedValue) == (CorrectTileInfo.RotateValue % calculatedValue);
 
         // MapGenerator의 CheckAnswer 이벤트 실행
         EventManager<DataEvents>.TriggerEvent(DataEvents.CheckAnswer);

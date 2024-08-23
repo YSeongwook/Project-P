@@ -1270,6 +1270,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6133763193692717404}
   - component: {fileID: 7713571068433881338}
+  - component: {fileID: 3649394613326302759}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -1326,6 +1327,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 1
+--- !u!114 &3649394613326302759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2883847621424100897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2f52de42b58a3d46aed9b586d1ba714, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3154799936088787128
 GameObject:
   m_ObjectHideFlags: 0
@@ -2177,7 +2190,7 @@ GameObject:
   - component: {fileID: 811873820029792573}
   - component: {fileID: 5921363809332031020}
   m_Layer: 5
-  m_Name: Scroll View
+  m_Name: Scroll View_Stage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

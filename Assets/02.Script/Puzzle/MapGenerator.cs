@@ -58,14 +58,12 @@ public class MapGenerator : MonoBehaviour
     {
         EventManager<DataEvents>.StartListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StartListening(DataEvents.CheckAnswer, CheckAnswer);
-        EventManager<StageEvent>.StartListening<int>(StageEvent.UseTurn, UpdateChangedLimitCoutUI);
     }
 
     private void RemoveEvents()
     {
         EventManager<DataEvents>.StopListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StopListening(DataEvents.CheckAnswer, CheckAnswer);
-        EventManager<StageEvent>.StopListening<int>(StageEvent.UseTurn, UpdateChangedLimitCoutUI);
     }
 
     //스테이지 열기
@@ -115,16 +113,9 @@ public class MapGenerator : MonoBehaviour
         // 제한 횟수 수치 이벤트로 넘기기
         var tileMapTable = DataManager.Instance.GetTileMapTable($"M{chapter}{stage.ToString("000")}");
         _limitCount = tileMapTable.LimitCount;
-        UpdateChangedLimitCoutUI(0);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.StartStage, _limitCount);
 
         // 플레이어의 보유 아이템 이벤트로 넘기기
-    }
-
-    // 제한 횟수 UI 동기화
-    private void UpdateChangedLimitCoutUI(int changeLimitCount)
-    {
-        _limitCount = Mathf.Clamp(_limitCount - changeLimitCount, 0, 999);
-        _limitCountTextUI.text = $"{_limitCount}";
     }
 
     private void DestroyAllTile()
@@ -156,7 +147,7 @@ public class MapGenerator : MonoBehaviour
             if (childTileNode == null) continue;
             if (childTileNode.GetTileInfo.Type == TileType.None) continue;
 
-            int check = childTileNode.isCorrect ? 1 : 0;
+            int check = childTileNode.IsCorrect ? 1 : 0;
 
             checking *= check;
         }
