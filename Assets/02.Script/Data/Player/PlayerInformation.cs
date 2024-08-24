@@ -27,6 +27,8 @@ public class PlayerInformation : Singleton<PlayerInformation>
             PlayerViewModel.RegisterPlayerGoldChanged(true);
             PlayerViewModel.RegisterPlayerERCChanged(true);
             PlayerViewModel.RegisterPlayerItemListChanged(true);
+            PlayerViewModel.RegisterPlayerCurrentChapterChanged(true);
+            PlayerViewModel.RegisterPlayerCurrentStageChanged(true);
         }
 
         AddEvents();
@@ -36,6 +38,8 @@ public class PlayerInformation : Singleton<PlayerInformation>
     {
         if (PlayerViewModel != null)
         {
+            PlayerViewModel.RegisterPlayerCurrentStageChanged(false);
+            PlayerViewModel.RegisterPlayerCurrentChapterChanged(false);
             PlayerViewModel.RegisterPlayerItemListChanged(false);
             PlayerViewModel.RegisterPlayerGoldChanged(false);
             PlayerViewModel.RegisterPlayerERCChanged(false);
@@ -117,6 +121,8 @@ public class PlayerInformation : Singleton<PlayerInformation>
         PlayerViewModel.RequestPlayerGameTicketCountChanged(_playerInventory.TicketCount);
         PlayerViewModel.RequestPlayerGoldChanged(_playerInventory.Gold);
         PlayerViewModel.RequestPlayerERCChanged(_playerInventory.ERC);
+        PlayerViewModel.RequestPlayerCurrentChapterChanged(int.Parse(_playerInventory.CurrentChapter));
+        PlayerViewModel.RequestPlayerCurrentStageChanged(int.Parse(_playerInventory.CurrentStage));
 
         foreach (var data in _playerInventory.ItemList)
         {
@@ -151,7 +157,7 @@ public class PlayerInformation : Singleton<PlayerInformation>
 
     private void PlayerCurrentStageChanged(int stage)
     {
-        PlayerViewModel.RequestPlayerStageChapterChanged(stage);
+        PlayerViewModel.RequestPlayerCurrentStageChanged(stage);
     }
 
     public int GetPlayerCurrentChapter()

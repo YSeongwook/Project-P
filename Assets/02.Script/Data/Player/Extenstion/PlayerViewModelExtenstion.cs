@@ -77,13 +77,13 @@ public static class PlayerViewModelExtenstion
     #endregion
 
     #region Player Current Stage
-    public static void RegisterPlayerStageChapterChanged(this PlayerViewModel vm, bool isRegister)
+    public static void RegisterPlayerCurrentStageChanged(this PlayerViewModel vm, bool isRegister)
     {
         if (isRegister) EventManager<DataEvents>.StartListening<int>(DataEvents.MVVMChangedCurrentStage, vm.OnResponsePlayerStageChapterChangedEvent);
         else EventManager<DataEvents>.StopListening<int>(DataEvents.MVVMChangedCurrentStage, vm.OnResponsePlayerStageChapterChangedEvent);
     }
 
-    public static void RequestPlayerStageChapterChanged(this PlayerViewModel vm, int stage)
+    public static void RequestPlayerCurrentStageChanged(this PlayerViewModel vm, int stage)
     {
         EventManager<DataEvents>.TriggerEvent(DataEvents.MVVMChangedCurrentStage, stage);
     }

@@ -3593,8 +3593,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc5c2aa77e3704640aa30cdd3244305e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _MainMenuUI: {fileID: 4015816504427118676}
-  _PlayerGoldUI: {fileID: 7028084695842556900}
+  _MainMenuUI: {fileID: 4015816504427118683}
+  _PlayerGoldUI: {fileID: 7028084695842556903}
   _missionSuccess: {fileID: 2115973058}
   _missionFail: {fileID: 1531137855}
   _tileNode: {fileID: 4711707603068042305, guid: cc3608afdb4ec634fba79f8850ce3f43, type: 3}
@@ -4493,6 +4493,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8597347031399816703, guid: fe76595db4f282e4fb41c01d62544d1d, type: 3}
   m_PrefabInstance: {fileID: 4015816504427118673}
   m_PrefabAsset: {fileID: 0}
+--- !u!223 &4015816504427118683 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 6297706004668344968, guid: fe76595db4f282e4fb41c01d62544d1d, type: 3}
+  m_PrefabInstance: {fileID: 4015816504427118673}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5782587816243687579 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5921363809332031020, guid: fe76595db4f282e4fb41c01d62544d1d, type: 3}
@@ -4889,6 +4894,11 @@ PrefabInstance:
 --- !u!1 &7028084695842556900 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7028084694378726072, guid: 0fda9e78a1056824b9353dca6d42d611, type: 3}
+  m_PrefabInstance: {fileID: 7028084695842556899}
+  m_PrefabAsset: {fileID: 0}
+--- !u!223 &7028084695842556903 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 7028084694378726077, guid: 0fda9e78a1056824b9353dca6d42d611, type: 3}
   m_PrefabInstance: {fileID: 7028084695842556899}
   m_PrefabAsset: {fileID: 0}
 --- !u!224 &7857441243739896767 stripped

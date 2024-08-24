@@ -10,8 +10,8 @@ using UnityEngine.UI;
 
 public class MapGenerator : MonoBehaviour
 {
-    [FoldoutGroup("Canvas")][SerializeField] private GameObject _MainMenuUI;
-    [FoldoutGroup("Canvas")][SerializeField] private GameObject _PlayerGoldUI;
+    [FoldoutGroup("Canvas")][SerializeField] private Canvas _MainMenuUI;
+    [FoldoutGroup("Canvas")][SerializeField] private Canvas _PlayerGoldUI;
     [FoldoutGroup("Canvas")][SerializeField] private GameObject _missionSuccess;
     [FoldoutGroup("Canvas")][SerializeField] private GameObject _missionFail;
 
@@ -92,8 +92,8 @@ public class MapGenerator : MonoBehaviour
         currentStage = stage;
 
         // UI들 비활성화
-        _MainMenuUI.SetActive(false);
-        _PlayerGoldUI.SetActive(false);
+        _MainMenuUI.enabled = false;
+        _PlayerGoldUI.enabled = false;
 
         // 캔버스 활성화
         _canvas.enabled =true;
@@ -107,21 +107,29 @@ public class MapGenerator : MonoBehaviour
         float sizeValue = Mathf.Sqrt(_tileList.Count) * _tileSize;
         _rectTransform.sizeDelta = new Vector2(sizeValue, sizeValue);
 
-        // tileList의 길이만큼 TileNode 생성
-        foreach (var tile in _tileList)
+        // 만약 랜덤으로 생성한 오브젝트가 정답과 동일하면 다시 랜덤
+        bool isLoop = true;
+        while (isLoop)
         {
-            var newTile = Instantiate(_tileNode, transform);
-            var tileNode = newTile.GetComponent<TileNode>();
-            if(tileNode == null ) continue;
-            tileNode.SetTileNodeData(tile);
-            int shapeRotation = (int)tile.RoadShape;
-            if(shapeRotation <= 0)
+            // tileList의 길이만큼 TileNode 생성
+            foreach (var tile in _tileList)
             {
-                shapeRotation = Random.Range(1, 5);
-            }
-            tileNode.SetTilImage(RoadList[shapeRotation - 1]);
+                var newTile = Instantiate(_tileNode, transform);
+                var tileNode = newTile.GetComponent<TileNode>();
+                if (tileNode == null) continue;
+                tileNode.SetTileNodeData(tile);
+                int shapeRotation = (int)tile.RoadShape;
+                if (shapeRotation <= 0)
+                {
+                    //shapeRotation = Random.Range(1, 5);
+                    continue;
+                }
+                tileNode.SetTilImage(RoadList[shapeRotation - 1]);
 
-            EventManager<StageEvent>.TriggerEvent(StageEvent.SetTileGrid, tileNode);
+                EventManager<StageEvent>.TriggerEvent(StageEvent.SetTileGrid, tileNode);
+            }
+
+            isLoop = IsCorrectAnswer();
         }
 
         // 제한 횟수 수치 이벤트로 넘기기
@@ -131,6 +139,8 @@ public class MapGenerator : MonoBehaviour
 
         // 플레이어의 보유 아이템 이벤트로 넘기기
     }
+
+
 
     // 다시하기 버튼 클릭
     public void OnClickReplay()
@@ -146,8 +156,8 @@ public class MapGenerator : MonoBehaviour
         _missionFail.SetActive(false);
         _missionSuccess.SetActive(false);
         _canvas.enabled = false;
-        _MainMenuUI.SetActive(true);
-        _PlayerGoldUI.SetActive(true);
+        _MainMenuUI.enabled = true;
+        _PlayerGoldUI.enabled = true;
 
         // Chapter 변화
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnEnableChapterMoveButton, currentChapter);
@@ -174,12 +184,9 @@ public class MapGenerator : MonoBehaviour
         _tileList.Clear();   // 모든 타일이 삭제되면 저장하고 있던 리스트 초기화
     }
 
-    // 정답 확인
-    private void CheckAnswer()
+    private bool IsCorrectAnswer()
     {
         int checking = 1;
-
-        EventManager<StageEvent>.TriggerEvent(StageEvent.ResetTileGrid);
 
         foreach (Transform child in transform)
         {
@@ -192,18 +199,26 @@ public class MapGenerator : MonoBehaviour
             checking *= check;
         }
 
-        _check = checking == 1;
+        return checking == 1;
+    }
+
+    // 정답 확인
+    private void CheckAnswer()
+    {
+        EventManager<StageEvent>.TriggerEvent(StageEvent.ResetTileGrid);
+
+        _check = IsCorrectAnswer();
 
         // 정답이면
-        if(_check)
+        if (_check)
         {
             // 플레이어 골드 증가
             var playerGold = PlayerInformation.Instance.PlayerViewModel.PlayerGold;
             int plusGold = currentChapter * 50;
-            PlayerInformation.Instance.PlayerViewModel.RequestPlayerGoldChanged(playerGold + plusGold);
+            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, playerGold + plusGold);
 
             // 플레이어 해금 챕터 및 스테이지 증가
-            EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage);
+            EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage, currentChapter, currentStage);
 
             // 정답 UI 등장
             _missionSuccess.SetActive(true);
@@ -219,7 +234,7 @@ public class MapGenerator : MonoBehaviour
         }
 
     }
-    
+        
     // 리스트 수에 맞추어 Tile의 크기 설정
     private void DetectTileSize(int listCount)
     {

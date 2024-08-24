@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Temp_PlayerInventory>
   <dataCategory>
-    <data PlayerID="P1001" Gold="87200" ERC="10000" TicketCount="5" ItemList="{IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII1001:2,IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII1002:1,IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII1004:5}" CurrentChapter="1" CurrentStage="1" />
+    <data PlayerID="P1001" Gold="88600" ERC="10000" TicketCount="5" ItemList="{I1001:2,I1002:1,I1004:5}" CurrentChapter="1" CurrentStage="2" />
   </dataCategory>
 </Temp_PlayerInventory>

@@ -223,7 +223,7 @@ public class DataManager : Singleton<DataManager>
 
         foreach (var item in itemList)
         {
-            string itemString = $"I{item.Key.ItemID}:{item.Value}";
+            string itemString = $"{item.Key.ItemID}:{item.Value}";
             items.Add(itemString);
         }
 
