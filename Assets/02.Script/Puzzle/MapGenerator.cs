@@ -49,11 +49,6 @@ public class MapGenerator : MonoBehaviour
     {
         _canvas.enabled = false;
     }
-    
-    private void Update()
-    {
-        if (_check) DebugLogger.Log("정답");
-    }
 
     private void OnDestroy()
     {
@@ -83,6 +78,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
 
         DestroyAllTile();
+        _check = false;
 
         string fileName = $"{chapter}-{stage}";
         _tileList = new List<Tile>(DataManager.Instance.GetPuzzleTileMap(fileName));
@@ -149,8 +145,14 @@ public class MapGenerator : MonoBehaviour
         // UI 변화
         _missionFail.SetActive(false);
         _missionSuccess.SetActive(false);
+        _canvas.enabled = false;
         _MainMenuUI.SetActive(true);
         _PlayerGoldUI.SetActive(true);
+
+        // Chapter 변화
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnEnableChapterMoveButton, currentChapter);
+        // Stage 변화
+
     }
 
     // 타일 리셋
@@ -195,9 +197,6 @@ public class MapGenerator : MonoBehaviour
         // 정답이면
         if(_check)
         {
-            // 메인 게임 UI 닫기
-            _canvas.enabled = false;
-
             // 플레이어 골드 증가
             var playerGold = PlayerInformation.Instance.PlayerViewModel.PlayerGold;
             int plusGold = currentChapter * 50;
@@ -214,9 +213,6 @@ public class MapGenerator : MonoBehaviour
         
         if(_limitCount <= 0)
         {
-            // 메인 게임 UI 닫기
-            _canvas.enabled = false;
-
             // 실패 UI 등장
             _missionFail.SetActive(true);
             DebugLogger.Log("실패");

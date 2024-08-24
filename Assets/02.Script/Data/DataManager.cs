@@ -191,7 +191,7 @@ public class DataManager : Singleton<DataManager>
     #region SaveData
     //파일을 저장할 위치 지정
 
-    private void SaveInventoryData(PlayerInfo inventory)
+    private void SavePlayerInfoData(PlayerInfo inventory)
     {
         var textAsset = textAssetDic[DataType.PlayerInven];
         if (textAsset == null) return;
@@ -207,6 +207,8 @@ public class DataManager : Singleton<DataManager>
             dataElement.SetAttributeValue("PlayerID", $"{inventory.PlayerID}");
             dataElement.SetAttributeValue("Gold", inventory.Gold);
             dataElement.SetAttributeValue("ERC", inventory.ERC);
+            dataElement.SetAttributeValue("CurrentChapter", inventory.CurrentChapter);
+            dataElement.SetAttributeValue("CurrentStage", inventory.CurrentStage);
             dataElement.SetAttributeValue("ItemList", SerializeItemList(inventory.ItemList));
         }
 
@@ -271,14 +273,14 @@ public class DataManager : Singleton<DataManager>
         LoadFile();
         ReadDataOnAwake();
 
-        EventManager<DataEvents>.StartListening<PlayerInfo>(DataEvents.OnUserInventorySave, SaveInventoryData);
+        EventManager<DataEvents>.StartListening<PlayerInfo>(DataEvents.OnUserInventorySave, SavePlayerInfoData);
         EventManager<DataEvents>.StartListening<string>(DataEvents.LoadThisChapterTileList, ReadTileMapData);
         EventManager<DataEvents>.StartListening(DataEvents.ResetChapterTileList, ResetReadTileMapData);
     }
 
     private void OnDestroy()
     {
-        EventManager<DataEvents>.StopListening<PlayerInfo>(DataEvents.OnUserInventorySave, SaveInventoryData);
+        EventManager<DataEvents>.StopListening<PlayerInfo>(DataEvents.OnUserInventorySave, SavePlayerInfoData);
         EventManager<DataEvents>.StopListening<string>(DataEvents.LoadThisChapterTileList, ReadTileMapData);
         EventManager<DataEvents>.StopListening(DataEvents.ResetChapterTileList, ResetReadTileMapData);
     }

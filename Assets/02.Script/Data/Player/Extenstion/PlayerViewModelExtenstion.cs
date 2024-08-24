@@ -73,7 +73,6 @@ public static class PlayerViewModelExtenstion
     public static void OnResponsePlayerCurrentChapterChangedEvent(this PlayerViewModel vm, int chapter)
     {
         vm.CurrentChapter = chapter;
-        // 서버 통신
     }
     #endregion
 

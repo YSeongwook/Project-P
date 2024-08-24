@@ -83,6 +83,12 @@ public class PlayerInformation : Singleton<PlayerInformation>
             case nameof(PlayerViewModel.PlayerInventory):
                 _playerInfo.ItemList = PlayerViewModel.PlayerInventory;
                 break;
+            case nameof(PlayerViewModel.CurrentChapter):
+                _playerInfo.CurrentChapter = PlayerViewModel.CurrentChapter.ToString();
+                break;
+            case nameof(PlayerViewModel.CurrentStage):
+                _playerInfo.CurrentStage = PlayerViewModel.CurrentStage.ToString();
+                break;
         }
 
         // Player UI 반영
