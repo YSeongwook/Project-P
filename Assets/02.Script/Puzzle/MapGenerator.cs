@@ -11,9 +11,6 @@ public class MapGenerator : MonoBehaviour
     [FoldoutGroup("Canvas")][SerializeField] private GameObject _MainMenuUI;
     [FoldoutGroup("Canvas")][SerializeField] private GameObject _PlayerGoldUI;
 
-    [FoldoutGroup("UI")]
-    [SerializeField] private TMP_Text _limitCountTextUI;
-
     [FoldoutGroup("Tile")][SerializeField] private GameObject _tileNode;
     [FoldoutGroup("Tile")][SerializeField] private float _tileSize;
 
@@ -30,11 +27,14 @@ public class MapGenerator : MonoBehaviour
     
     private bool _check; // 정답 체크 변수
 
+    private Temp temp; // 디버거
+
     private void Awake()
     {
         _canvas = GetComponentInParent<Canvas>();
         _rectTransform = GetComponent<RectTransform>();
         _grid = GetComponent<GridLayoutGroup>();
+        temp = new Temp();
 
         AddEvents();
     }
@@ -58,12 +58,16 @@ public class MapGenerator : MonoBehaviour
     {
         EventManager<DataEvents>.StartListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StartListening(DataEvents.CheckAnswer, CheckAnswer);
+        EventManager<DataEvents>.StartListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
+        temp.SetTileGrid(true);
     }
 
     private void RemoveEvents()
     {
         EventManager<DataEvents>.StopListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StopListening(DataEvents.CheckAnswer, CheckAnswer);
+        EventManager<DataEvents>.StopListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
+        temp.SetTileGrid(false);
     }
 
     //스테이지 열기
@@ -155,8 +159,18 @@ public class MapGenerator : MonoBehaviour
         _check = checking == 1;
 
         // 정답이면
-        if(_check) DebugLogger.Log("클리어");
-        else DebugLogger.Log("실패");
+        if(_check)
+        {
+            DebugLogger.Log("클리어");
+            // 정답 UI 등장
+            return;
+        }
+        
+        if(_limitCount <= 0)
+        {
+            DebugLogger.Log("실패");
+            // 실패 UI 등장
+        }
 
     }
     
@@ -181,5 +195,10 @@ public class MapGenerator : MonoBehaviour
                 _tileSize = 120;
                 break;
         }
+    }
+
+    private void SetTileMapPositionGrid(RectTransform transform, TileNode tileNode)
+    {
+        EventManager<StageEvent>.TriggerEvent(StageEvent.SetTileGrid, transform, tileNode);
     }
 }

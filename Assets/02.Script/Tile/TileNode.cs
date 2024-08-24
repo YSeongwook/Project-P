@@ -79,7 +79,8 @@ public class TileNode : MonoBehaviour
 
         _backgroundOutline.enabled = false;
         _imageGimmick.enabled = false;
-        IsCorrect = false;
+
+        EventManager<DataEvents>.TriggerEvent(DataEvents.SetTileGrid, _rectTransform, this);
     }
 
     // 타일 정보 삽입
@@ -87,6 +88,8 @@ public class TileNode : MonoBehaviour
     {
         _tile = tile;
         CorrectTileInfo = tile;
+
+        IsCorrect = false;
     }
 
     // 타일 이미지 변경
@@ -148,7 +151,7 @@ public class TileNode : MonoBehaviour
 
         IsCorrect = (_tile.RotateValue % calculatedValue) == (CorrectTileInfo.RotateValue % calculatedValue);
 
-        _background.enabled = !isCorrect;
+        _background.enabled = !IsCorrect;
 
         if (isCheckAble)
         {

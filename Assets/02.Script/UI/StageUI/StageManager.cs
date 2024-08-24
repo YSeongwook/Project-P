@@ -45,7 +45,7 @@ public class StageManager : Singleton<StageManager>
             int playerStage = PlayerInformation.Instance.GetPlayerCurrentStage();
             bool buttonActive = playerChapter >= chapter && playerStage >= i + 1;
             stage.ButtonActivate(buttonActive);
-            TextMeshProUGUI stageText = stages[i].GetComponentInChildren<TextMeshProUGUI>();
+            TMP_Text stageText = stages[i].GetComponentInChildren<TMP_Text>();
             if (stageText != null)
             {
                 stageText.text = (i + 1).ToString();

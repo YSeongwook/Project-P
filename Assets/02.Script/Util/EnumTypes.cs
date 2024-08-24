@@ -42,6 +42,7 @@ namespace EnumTypes
         ResetChapterTileList,
         SelectStage,
         CheckAnswer,
+        SetTileGrid,
     }
 
     public enum GoldEvent
@@ -54,9 +55,15 @@ namespace EnumTypes
     public enum StageEvent
     {
         StartStage,
+        SetTileGrid,
         UseTurn
     }
     
+    public enum PuzzleEvent
+    {
+        StartClearAnimation,
+    }
+
     public class EnumTypes : MonoBehaviour
     {
     }

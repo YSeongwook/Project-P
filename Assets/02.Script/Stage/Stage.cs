@@ -14,7 +14,7 @@ public class Stage : MonoBehaviour
     private void Awake()
     {
         _btnStage = GetComponent<Button>();
-        _lock = transform.GetChild(1).GetComponent<Image>();
+        _lock = transform.GetChild(0).GetComponent<Image>();
     }
     
     public void SetStageNumber(int chapter, int number)
