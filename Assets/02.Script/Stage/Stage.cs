@@ -25,6 +25,11 @@ public class Stage : MonoBehaviour
 
     public void OnClickStageButton()
     {
+        if(PlayerInformation.Instance.PlayerViewModel.GameTickets <= 0)
+        {
+            DebugLogger.Log("티켓의 수가 부족합니다.");
+            return;
+        }
         EventManager<DataEvents>.TriggerEvent(DataEvents.SelectStage, this._chapter,stageNumber);
     }     
 

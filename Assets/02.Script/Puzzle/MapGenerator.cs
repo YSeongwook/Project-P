@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using EnumTypes;
 using EventLibrary;
+using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 using Sirenix.OdinInspector;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +12,8 @@ public class MapGenerator : MonoBehaviour
 {
     [FoldoutGroup("Canvas")][SerializeField] private GameObject _MainMenuUI;
     [FoldoutGroup("Canvas")][SerializeField] private GameObject _PlayerGoldUI;
+    [FoldoutGroup("Canvas")][SerializeField] private GameObject _missionSuccess;
+    [FoldoutGroup("Canvas")][SerializeField] private GameObject _missionFail;
 
     [FoldoutGroup("Tile")][SerializeField] private GameObject _tileNode;
     [FoldoutGroup("Tile")][SerializeField] private float _tileSize;
@@ -26,15 +30,17 @@ public class MapGenerator : MonoBehaviour
     private int _limitCount;
     
     private bool _check; // 정답 체크 변수
+    private int currentChapter;
+    private int currentStage;
 
-    private Temp temp; // 디버거
+    private Temp2 temp; // 디버거
 
     private void Awake()
     {
         _canvas = GetComponentInParent<Canvas>();
         _rectTransform = GetComponent<RectTransform>();
         _grid = GetComponent<GridLayoutGroup>();
-        temp = new Temp();
+        temp = new Temp2();
 
         AddEvents();
     }
@@ -59,7 +65,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StartListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StartListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StartListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
-        temp.SetTileGrid(true);
+        temp.SetTileGridEvent(true);
     }
 
     private void RemoveEvents()
@@ -67,12 +73,15 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StopListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StopListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StopListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
-        temp.SetTileGrid(false);
+        temp.SetTileGridEvent(false);
     }
 
     //스테이지 열기
     private void OpenNewStage(int chapter, int stage)
     {
+        // 입장권 티켓 감소
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
+
         DestroyAllTile();
 
         string fileName = $"{chapter}-{stage}";
@@ -82,6 +91,9 @@ public class MapGenerator : MonoBehaviour
             DebugLogger.Log("생성되어 있는 미로가 존재하지 않습니다.");
             return;
         }
+
+        currentChapter = chapter;
+        currentStage = stage;
 
         // UI들 비활성화
         _MainMenuUI.SetActive(false);
@@ -112,6 +124,8 @@ public class MapGenerator : MonoBehaviour
                 shapeRotation = Random.Range(1, 5);
             }
             tileNode.SetTilImage(RoadList[shapeRotation - 1]);
+
+            EventManager<StageEvent>.TriggerEvent(StageEvent.SetTileGrid, tileNode);
         }
 
         // 제한 횟수 수치 이벤트로 넘기기
@@ -122,6 +136,24 @@ public class MapGenerator : MonoBehaviour
         // 플레이어의 보유 아이템 이벤트로 넘기기
     }
 
+    // 다시하기 버튼 클릭
+    public void OnClickReplay()
+    {
+        _missionFail.SetActive(false);
+        OpenNewStage(currentChapter, currentStage);
+    }
+
+    // 메인 UI로 돌아가기
+    public void OnClickClose()
+    {
+        // UI 변화
+        _missionFail.SetActive(false);
+        _missionSuccess.SetActive(false);
+        _MainMenuUI.SetActive(true);
+        _PlayerGoldUI.SetActive(true);
+    }
+
+    // 타일 리셋
     private void DestroyAllTile()
     {
         int childCount = transform.childCount;
@@ -145,7 +177,9 @@ public class MapGenerator : MonoBehaviour
     {
         int checking = 1;
 
-        foreach(Transform child in transform)
+        EventManager<StageEvent>.TriggerEvent(StageEvent.ResetTileGrid);
+
+        foreach (Transform child in transform)
         {
             var childTileNode = child.GetComponent<TileNode>();
             if (childTileNode == null) continue;
@@ -161,15 +195,31 @@ public class MapGenerator : MonoBehaviour
         // 정답이면
         if(_check)
         {
-            DebugLogger.Log("클리어");
+            // 메인 게임 UI 닫기
+            _canvas.enabled = false;
+
+            // 플레이어 골드 증가
+            var playerGold = PlayerInformation.Instance.PlayerViewModel.PlayerGold;
+            int plusGold = currentChapter * 50;
+            PlayerInformation.Instance.PlayerViewModel.RequestPlayerGoldChanged(playerGold + plusGold);
+
+            // 플레이어 해금 챕터 및 스테이지 증가
+            EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage);
+
             // 정답 UI 등장
+            _missionSuccess.SetActive(true);
+            DebugLogger.Log("클리어");
             return;
         }
         
         if(_limitCount <= 0)
         {
-            DebugLogger.Log("실패");
+            // 메인 게임 UI 닫기
+            _canvas.enabled = false;
+
             // 실패 UI 등장
+            _missionFail.SetActive(true);
+            DebugLogger.Log("실패");
         }
 
     }

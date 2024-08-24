@@ -4,24 +4,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Temp
+public class Temp2
 {
+    List<TileNode> _correctAnswerTileTransform = new List<TileNode>();
     private Dictionary<Vector2, TileNode> _tileGrid = new Dictionary<Vector2, TileNode>();
 
-    public void SetTileGrid(bool isRegister)
+    public void SetTileGridEvent(bool isRegister)
     {
-        if(isRegister) EventManager<StageEvent>.StartListening<RectTransform, TileNode>(StageEvent.SetTileGrid, SetTileGrid);
-        else EventManager<StageEvent>.StopListening<RectTransform, TileNode>(StageEvent.SetTileGrid, SetTileGrid);
+        if (isRegister) AddEvnet();
+        else RemoveEvent();
     }
 
-    private void SetTileGrid(RectTransform rectTransform, TileNode tileNode)
+    private void AddEvnet()
     {
+        EventManager<StageEvent>.StartListening(StageEvent.ResetTileGrid, ResetTIleGrid);
+        EventManager<StageEvent>.StartListening<TileNode>(StageEvent.SetTileGrid, SetTileList);
+    }
+
+    private void RemoveEvent()
+    {
+        EventManager<StageEvent>.StopListening(StageEvent.ResetTileGrid, ResetTIleGrid);
+        EventManager<StageEvent>.StopListening<TileNode>(StageEvent.SetTileGrid, SetTileList);
+    }
+
+    private void ResetTIleGrid()
+    {
+        _correctAnswerTileTransform.Clear();
         _tileGrid.Clear();
+    }
 
-        Vector2 pos = rectTransform.anchoredPosition;
-        _tileGrid.Add(pos, tileNode);
+    private void SetTileList(TileNode tileNode)
+    {
+        _correctAnswerTileTransform.Add(tileNode);
+    }
 
-        DebugLogger.Log($"{pos} : {tileNode.GetTileInfo.RoadShape}");
+    private void SetTileGrid()
+    {
+
     }
 
     private bool IsConnected(Vector2Int current, Vector2Int neighbor)
@@ -137,5 +156,4 @@ public class Temp
 
         return connections;
     }
-
 }

@@ -54,6 +54,8 @@ public class PlayerInformation : Singleton<PlayerInformation>
         EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
         EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
         EventManager<DataEvents>.StartListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
+        EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerCurrentChapterChanged, PlayerCurrentChapterChanged);
+        EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerCurrentStageChanged, PlayerCurrentStageChanged);
     }
 
     private void RemoveEvents()
@@ -63,6 +65,8 @@ public class PlayerInformation : Singleton<PlayerInformation>
         EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
         EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
         EventManager<DataEvents>.StopListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
+        EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerCurrentChapterChanged, PlayerCurrentChapterChanged);
+        EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerCurrentStageChanged, PlayerCurrentStageChanged);
     }
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -132,6 +136,16 @@ public class PlayerInformation : Singleton<PlayerInformation>
     private void PlayerItemListChanged(ItemData item, int count)
     {
         PlayerViewModel.RequestPlayerItemListChanged(item, count);
+    }
+
+    private void PlayerCurrentChapterChanged(int chapter)
+    {
+        PlayerViewModel.RequestPlayerCurrentChapterChanged(chapter);
+    }
+
+    private void PlayerCurrentStageChanged(int stage)
+    {
+        PlayerViewModel.RequestPlayerStageChapterChanged(stage);
     }
 
     public int GetPlayerCurrentChapter()

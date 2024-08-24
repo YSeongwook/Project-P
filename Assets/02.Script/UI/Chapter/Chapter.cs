@@ -12,6 +12,16 @@ public class Chapter : MonoBehaviour
     [SerializeField] private int _chapter;
     [SerializeField] private int _maxStageCount;
 
+    private void Awake()
+    {
+        EventManager<DataEvents>.StartListening(DataEvents.UpdateCurrentChapterAndStage, ChangedPlayerChpaterAndStage);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager<DataEvents>.StopListening(DataEvents.UpdateCurrentChapterAndStage, ChangedPlayerChpaterAndStage);
+    }
+
     private void Start()
     {
         if(_chapter == 1)
@@ -46,5 +56,26 @@ public class Chapter : MonoBehaviour
         }
 
         EventManager<UIEvents>.TriggerEvent(UIEvents.CreateStageButton, _chapter, _maxStageCount);
+    }
+
+    // 플레이어 챕터 및 스테이지 해금
+    private void ChangedPlayerChpaterAndStage()
+    {
+        // 현재 플레이어의 챕터 및 스테이지 가져오기
+        int chapter = PlayerInformation.Instance.GetPlayerCurrentChapter();
+        int stage = PlayerInformation.Instance.GetPlayerCurrentStage();
+
+        int newChapter = chapter;   
+        var newStage = stage + 1;
+
+        if (newStage >= _maxStageCount)
+        {
+            newChapter = Mathf.Clamp(newChapter+1, 0, 5);
+            newStage = 1;
+        }
+
+        // 증가 반영
+        EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerCurrentChapterChanged, newChapter);
+        EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerCurrentStageChanged, newStage);
     }
 }

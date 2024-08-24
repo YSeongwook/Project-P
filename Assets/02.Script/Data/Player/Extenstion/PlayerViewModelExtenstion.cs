@@ -57,7 +57,45 @@ public static class PlayerViewModelExtenstion
         vm.PlayerERC = ERC;
     }
     #endregion
-    
+
+    #region Player Current Chapter
+    public static void RegisterPlayerCurrentChapterChanged(this PlayerViewModel vm, bool isRegister)
+    {
+        if (isRegister) EventManager<DataEvents>.StartListening<int>(DataEvents.MVVMChangedCurrentChapter, vm.OnResponsePlayerCurrentChapterChangedEvent);
+        else EventManager<DataEvents>.StopListening<int>(DataEvents.MVVMChangedCurrentChapter, vm.OnResponsePlayerCurrentChapterChangedEvent);
+    }
+
+    public static void RequestPlayerCurrentChapterChanged(this PlayerViewModel vm, int chapter)
+    {
+        EventManager<DataEvents>.TriggerEvent(DataEvents.MVVMChangedCurrentChapter, chapter);
+    }
+
+    public static void OnResponsePlayerCurrentChapterChangedEvent(this PlayerViewModel vm, int chapter)
+    {
+        vm.CurrentChapter = chapter;
+        // 서버 통신
+    }
+    #endregion
+
+    #region Player Current Stage
+    public static void RegisterPlayerStageChapterChanged(this PlayerViewModel vm, bool isRegister)
+    {
+        if (isRegister) EventManager<DataEvents>.StartListening<int>(DataEvents.MVVMChangedCurrentStage, vm.OnResponsePlayerStageChapterChangedEvent);
+        else EventManager<DataEvents>.StopListening<int>(DataEvents.MVVMChangedCurrentStage, vm.OnResponsePlayerStageChapterChangedEvent);
+    }
+
+    public static void RequestPlayerStageChapterChanged(this PlayerViewModel vm, int stage)
+    {
+        EventManager<DataEvents>.TriggerEvent(DataEvents.MVVMChangedCurrentStage, stage);
+    }
+
+    public static void OnResponsePlayerStageChapterChangedEvent(this PlayerViewModel vm, int stage)
+    {
+        vm.CurrentStage = stage;
+        // 서버 통신
+    }
+    #endregion
+
     #region Player Item Inventory
     public static void RegisterPlayerItemListChanged(this PlayerViewModel vm, bool isRegister)
     {

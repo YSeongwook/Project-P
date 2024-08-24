@@ -33,10 +33,15 @@ namespace EnumTypes
         MVVMChangedGold,
         MVVMChangedERC,
         MVVMChangedInventoryItemDictionary,
+        MVVMChangedCurrentChapter,
+        MVVMChangedCurrentStage,
         PlayerTicketCountChanged,
         PlayerGoldChanged,
         PlayerERCChanged,
         PlayerItemListChanged,
+        PlayerCurrentChapterChanged,
+        PlayerCurrentStageChanged,
+        UpdateCurrentChapterAndStage,
         PlayerOpenStageInfo,
         LoadThisChapterTileList,
         ResetChapterTileList,
@@ -55,6 +60,7 @@ namespace EnumTypes
     public enum StageEvent
     {
         StartStage,
+        ResetTileGrid,
         SetTileGrid,
         UseTurn
     }
