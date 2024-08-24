@@ -43,7 +43,7 @@ public class StageManager : Singleton<StageManager>
             stage.SetStageNumber(chapter, i+1);
             int playerChapter = PlayerInformation.Instance.GetPlayerCurrentChapter();
             int playerStage = PlayerInformation.Instance.GetPlayerCurrentStage();
-            bool buttonActive = playerChapter >= chapter && playerStage >= i + 1;
+            bool buttonActive = playerChapter > chapter? true : playerStage >= i + 1;
             stage.ButtonActivate(buttonActive);
             TMP_Text stageText = stages[i].GetComponentInChildren<TMP_Text>();
             if (stageText != null)

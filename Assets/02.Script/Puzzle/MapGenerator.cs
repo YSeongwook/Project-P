@@ -158,11 +158,6 @@ public class MapGenerator : MonoBehaviour
         _canvas.enabled = false;
         _MainMenuUI.enabled = true;
         _PlayerGoldUI.enabled = true;
-
-        // Chapter 변화
-        EventManager<UIEvents>.TriggerEvent(UIEvents.OnEnableChapterMoveButton, currentChapter);
-        // Stage 변화
-
     }
 
     // 타일 리셋

@@ -83,7 +83,7 @@ public class Chapter : MonoBehaviour
         EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerCurrentStageChanged, newStage);
 
         // 챕터 UI 반영
-        EventManager<UIEvents>.TriggerEvent(UIEvents.OnEnableChapterMoveButton, _chapter);
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnEnableChapterMoveButton, newChapter.ToString());
         // 스테이지 UI 반영
         EventManager<UIEvents>.TriggerEvent(UIEvents.CreateStageButton, _chapter, _maxStageCount);
 
