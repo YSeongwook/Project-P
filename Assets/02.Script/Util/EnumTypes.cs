@@ -21,6 +21,7 @@ namespace EnumTypes
         OnClickGameStage,
         OnEnableChapterMoveButton,
         CreateStageButton,
+        ChangeScrollViewCenter,
     }
 
     public enum DataEvents

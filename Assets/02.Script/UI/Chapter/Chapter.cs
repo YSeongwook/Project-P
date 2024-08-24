@@ -87,7 +87,9 @@ public class Chapter : MonoBehaviour
         // 스테이지 UI 반영
         EventManager<UIEvents>.TriggerEvent(UIEvents.CreateStageButton, _chapter, _maxStageCount);
 
-        // 스테이지 UI - 해금된 스테이지로 이동
+        // 스테이지 UI - 해금된 스테이지가 화면 가운데에 위치
+        EventManager<UIEvents>.TriggerEvent(UIEvents.ChangeScrollViewCenter, newStage);
+
 
         DebugLogger.Log($"new Stage : {newStage}");
 
