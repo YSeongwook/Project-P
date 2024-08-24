@@ -3599,14 +3599,14 @@ MonoBehaviour:
   _missionFail: {fileID: 1531137855}
   _tileNode: {fileID: 4711707603068042305, guid: cc3608afdb4ec634fba79f8850ce3f43, type: 3}
   _tileSize: 120
-  RoadList:
+  roadList:
   - {fileID: -2062186635, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
   - {fileID: 1210937206, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
   - {fileID: 33532268, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
   - {fileID: -1446428360, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
   - {fileID: 1066858676, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
   - {fileID: -1493912242, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
-  GimmickList: []
+  gimmickList: []
 --- !u!1 &2078018643
 GameObject:
   m_ObjectHideFlags: 0

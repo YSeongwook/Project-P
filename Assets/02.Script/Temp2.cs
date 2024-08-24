@@ -11,17 +11,17 @@ public class Temp2
 
     public void SetTileGridEvent(bool isRegister)
     {
-        if (isRegister) AddEvnet();
-        else RemoveEvent();
+        if (isRegister) AddEvents();
+        else RemoveEvents();
     }
 
-    private void AddEvnet()
+    private void AddEvents()
     {
         EventManager<StageEvent>.StartListening(StageEvent.ResetTileGrid, ResetTIleGrid);
         EventManager<StageEvent>.StartListening<TileNode>(StageEvent.SetTileGrid, SetTileList);
     }
 
-    private void RemoveEvent()
+    private void RemoveEvents()
     {
         EventManager<StageEvent>.StopListening(StageEvent.ResetTileGrid, ResetTIleGrid);
         EventManager<StageEvent>.StopListening<TileNode>(StageEvent.SetTileGrid, SetTileList);

@@ -1,53 +1,36 @@
 using System.Collections.Generic;
 using EnumTypes;
 using EventLibrary;
-using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 using Sirenix.OdinInspector;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MapGenerator : MonoBehaviour
 {
-    [FoldoutGroup("Canvas")][SerializeField] private Canvas _MainMenuUI;
-    [FoldoutGroup("Canvas")][SerializeField] private Canvas _PlayerGoldUI;
-    [FoldoutGroup("Canvas")][SerializeField] private GameObject _missionSuccess;
-    [FoldoutGroup("Canvas")][SerializeField] private GameObject _missionFail;
+    [FoldoutGroup("Tile")] [SerializeField] private GameObject _tileNode;
+    [FoldoutGroup("Tile")] [SerializeField] private float _tileSize;
 
-    [FoldoutGroup("Tile")][SerializeField] private GameObject _tileNode;
-    [FoldoutGroup("Tile")][SerializeField] private float _tileSize;
+    [FoldoutGroup("Tile Sprite")] [SerializeField] private List<Sprite> roadList;
+    [FoldoutGroup("Tile Sprite")] [SerializeField] private List<Sprite> gimmickList;
 
-    [FoldoutGroup("Tile Sprite")]
-    [SerializeField] private List<Sprite> RoadList;
-    [FoldoutGroup("Tile Sprite")]
-    [SerializeField] private List<Sprite> GimmickList;
-
-    private Canvas _canvas;
     private List<Tile> _tileList = new List<Tile>();
     private RectTransform _rectTransform;
     private GridLayoutGroup _grid;
     private int _limitCount;
-    
+
     private bool _check; // 정답 체크 변수
-    private int currentChapter;
-    private int currentStage;
+    private int _currentChapter;
+    private int _currentStage;
 
     private Temp2 temp; // 디버거
 
     private void Awake()
     {
-        _canvas = GetComponentInParent<Canvas>();
         _rectTransform = GetComponent<RectTransform>();
         _grid = GetComponent<GridLayoutGroup>();
         temp = new Temp2();
 
         AddEvents();
-    }
-
-    private void Start()
-    {
-        _canvas.enabled = false;
     }
 
     private void OnDestroy()
@@ -59,7 +42,8 @@ public class MapGenerator : MonoBehaviour
     {
         EventManager<DataEvents>.StartListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StartListening(DataEvents.CheckAnswer, CheckAnswer);
-        EventManager<DataEvents>.StartListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
+        EventManager<DataEvents>.StartListening<RectTransform, TileNode>(DataEvents.SetTileGrid,
+            SetTileMapPositionGrid);
         temp.SetTileGridEvent(true);
     }
 
@@ -74,34 +58,26 @@ public class MapGenerator : MonoBehaviour
     //스테이지 열기
     private void OpenNewStage(int chapter, int stage)
     {
-        // 입장권 티켓 감소
-        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
-
-        DestroyAllTile();
-        _check = false;
-
         string fileName = $"{chapter}-{stage}";
         _tileList = new List<Tile>(DataManager.Instance.GetPuzzleTileMap(fileName));
-        if (_tileList == null )
+        if (_tileList == null)
         {
             DebugLogger.Log("생성되어 있는 미로가 존재하지 않습니다.");
             return;
         }
 
-        currentChapter = chapter;
-        currentStage = stage;
+        DestroyAllTile();
+        _check = false;
 
-        // UI들 비활성화
-        _MainMenuUI.enabled = false;
-        _PlayerGoldUI.enabled = false;
+        _currentChapter = chapter;
+        _currentStage = stage;
 
-        // 캔버스 활성화
-        _canvas.enabled =true;
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket); // 입장권 티켓 감소
+        EventManager<StageEvent>.TriggerEvent(StageEvent.EnterStage);
 
-        //맵 사이즈 결정
-        DetectTileSize(_tileList.Count);
-        //셀 사이즈 결정
-        _grid.cellSize = new Vector2(_tileSize, _tileSize);
+        DetectTileSize(_tileList.Count); // 맵 사이즈 결정
+
+        _grid.cellSize = new Vector2(_tileSize, _tileSize); // 셀 사이즈 결정
 
         // tileList의 제곱근 길이만큼 RectTransform 크기 설정
         float sizeValue = Mathf.Sqrt(_tileList.Count) * _tileSize;
@@ -124,7 +100,8 @@ public class MapGenerator : MonoBehaviour
                     //shapeRotation = Random.Range(1, 5);
                     continue;
                 }
-                tileNode.SetTilImage(RoadList[shapeRotation - 1]);
+
+                tileNode.SetTilImage(roadList[shapeRotation - 1]);
 
                 EventManager<StageEvent>.TriggerEvent(StageEvent.SetTileGrid, tileNode);
             }
@@ -139,27 +116,7 @@ public class MapGenerator : MonoBehaviour
 
         // 플레이어의 보유 아이템 이벤트로 넘기기
     }
-
-
-
-    // 다시하기 버튼 클릭
-    public void OnClickReplay()
-    {
-        _missionFail.SetActive(false);
-        OpenNewStage(currentChapter, currentStage);
-    }
-
-    // 메인 UI로 돌아가기
-    public void OnClickClose()
-    {
-        // UI 변화
-        _missionFail.SetActive(false);
-        _missionSuccess.SetActive(false);
-        _canvas.enabled = false;
-        _MainMenuUI.enabled = true;
-        _PlayerGoldUI.enabled = true;
-    }
-
+    
     // 타일 리셋
     private void DestroyAllTile()
     {
@@ -170,13 +127,13 @@ public class MapGenerator : MonoBehaviour
             return;
         }
 
-        for(int i = childCount-1; i>=0; i--)
+        for (int i = childCount - 1; i >= 0; i--)
         {
             Transform child = transform.GetChild(i);
             Destroy(child.gameObject);
         }
 
-        _tileList.Clear();   // 모든 타일이 삭제되면 저장하고 있던 리스트 초기화
+        _tileList.Clear(); // 모든 타일이 삭제되면 저장하고 있던 리스트 초기화
     }
 
     private bool IsCorrectAnswer()
@@ -204,36 +161,37 @@ public class MapGenerator : MonoBehaviour
 
         _check = IsCorrectAnswer();
 
+        // Todo: 골드 상승량 테이블을 만들고 StageClaer 이벤트 발생 시 플레이어 재화 관련 스크립트에서 테이블의 데이터를 읽어서 재화를 추가하는 방식으로 수정해야함
         // 정답이면
         if (_check)
         {
+            EventManager<StageEvent>.TriggerEvent(StageEvent.StageClear);
+            DebugLogger.Log("스테이지 클리어");
+            
             // 플레이어 골드 증가
             var playerGold = PlayerInformation.Instance.PlayerViewModel.PlayerGold;
-            int plusGold = currentChapter * 50;
+            int plusGold = _currentChapter * 50;
+            
             EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, playerGold + plusGold);
-
+            
             // 플레이어 해금 챕터 및 스테이지 증가
-            EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage, currentChapter, currentStage);
-
-            // 정답 UI 등장
-            _missionSuccess.SetActive(true);
-            DebugLogger.Log("클리어");
+            EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage, _currentChapter, _currentStage);
+            
             return;
         }
-        
-        if(_limitCount <= 0)
+
+        if (_limitCount <= 0)
         {
             // 실패 UI 등장
-            _missionFail.SetActive(true);
-            DebugLogger.Log("실패");
+            EventManager<StageEvent>.TriggerEvent(StageEvent.StageFail);
+            DebugLogger.Log("스테이지 실패");
         }
-
     }
-        
+
     // 리스트 수에 맞추어 Tile의 크기 설정
     private void DetectTileSize(int listCount)
     {
-        switch(Mathf.Sqrt(listCount))
+        switch (Mathf.Sqrt(listCount))
         {
             case 3:
                 _tileSize = 320;
