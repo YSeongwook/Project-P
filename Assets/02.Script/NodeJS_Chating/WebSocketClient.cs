@@ -13,32 +13,32 @@ public class WebSocketClient : MonoBehaviour
     [SerializeField] private InputField InputField_Text;
 
     [Header("MalPongsun")]
-    public GameObject chatContent; // Content ¿ÀºêÁ§Æ®
-    public GameObject chatMessagePrefab; // Ã¤ÆÃ ¸Ş½ÃÁö ÇÁ¸®ÆÕ
+    public GameObject chatContent; // Content ì˜¤ë¸Œì íŠ¸
+    public GameObject chatMessagePrefab; // ì±„íŒ… ë©”ì‹œì§€ í”„ë¦¬íŒ¹
 
     private Queue<Action> mainThreadQueue = new Queue<Action>();
 
     void Start()
     {
-        // WebSocket ¼­¹ö¿¡ ¿¬°á
+        // WebSocket ì„œë²„ì— ì—°ê²°
         ws = new WebSocket("ws://3.38.178.218:8080");
 
-        // ¼­¹ö·ÎºÎÅÍ ¸Ş½ÃÁö¸¦ ¹ŞÀ» ¶§ È£ÃâµÇ´Â ÀÌº¥Æ® ÇÚµé·¯ ¼³Á¤
+        // ì„œë²„ë¡œë¶€í„° ë©”ì‹œì§€ë¥¼ ë°›ì„ ë•Œ í˜¸ì¶œë˜ëŠ” ì´ë²¤íŠ¸ í•¸ë“¤ëŸ¬ ì„¤ì •
         ws.OnMessage += (sender, e) =>
         {
             if (e.IsBinary)
             {
-                // ¹ÙÀÌÆ® µ¥ÀÌÅÍ¸¦ UTF-8 ¹®ÀÚ¿­·Î º¯È¯
+                // ë°”ì´íŠ¸ ë°ì´í„°ë¥¼ UTF-8 ë¬¸ìì—´ë¡œ ë³€í™˜
                 string message = System.Text.Encoding.UTF8.GetString(e.RawData);
                 Debug.Log("Received from server (binary): " + message);
                 //AddChatMessage(message);
 
-                // AddChatMessage È£ÃâÀ» ¸ŞÀÎ ½º·¹µå¿¡¼­ ½ÇÇàÇÏµµ·Ï Å¥¿¡ Ãß°¡
+                // AddChatMessage í˜¸ì¶œì„ ë©”ì¸ ìŠ¤ë ˆë“œì—ì„œ ì‹¤í–‰í•˜ë„ë¡ íì— ì¶”ê°€
                 mainThreadQueue.Enqueue(() => AddChatMessage(message));
             }
             else if (e.IsText)
             {
-                // ÅØ½ºÆ® ¸Ş½ÃÁöÀÏ °æ¿ì (º¸Åë Data¿¡ ÀúÀåµÊ)
+                // í…ìŠ¤íŠ¸ ë©”ì‹œì§€ì¼ ê²½ìš° (ë³´í†µ Dataì— ì €ì¥ë¨)
                 Debug.Log("Received from server (text): " + e.Data);
             }
             else
@@ -47,19 +47,19 @@ public class WebSocketClient : MonoBehaviour
             }
         };
 
-        // ¼­¹ö¿¡ ¿¬°á
+        // ì„œë²„ì— ì—°ê²°
         ws.Connect();
 
-        // ¿¬°á »óÅÂ Ãâ·Â
+        // ì—°ê²° ìƒíƒœ ì¶œë ¥
         Debug.Log("WebSocket State: " + ws.ReadyState.ToString());
 
-        // Å×½ºÆ® ¸Ş½ÃÁö Àü¼Û
-        ws.Send("Hello, Server!");
+        // í…ŒìŠ¤íŠ¸ ë©”ì‹œì§€ ì „ì†¡
+        //ws.Send("Hello, Server!");
     }
 
     void LateUpdate()
     {
-        // Å¥¿¡ ÀúÀåµÈ ÀÛ¾÷À» ¸ŞÀÎ ½º·¹µå¿¡¼­ Ã³¸®
+        // íì— ì €ì¥ëœ ì‘ì—…ì„ ë©”ì¸ ìŠ¤ë ˆë“œì—ì„œ ì²˜ë¦¬
         while (mainThreadQueue.Count > 0)
         {
             var action = mainThreadQueue.Dequeue();
@@ -69,7 +69,7 @@ public class WebSocketClient : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        // ÀÀ¿ë ÇÁ·Î±×·¥ Á¾·á ½Ã WebSocket ¿¬°á ´İ±â
+        // ì‘ìš© í”„ë¡œê·¸ë¨ ì¢…ë£Œ ì‹œ WebSocket ì—°ê²° ë‹«ê¸°
         if (ws != null)
         {
             ws.Close();
@@ -78,7 +78,7 @@ public class WebSocketClient : MonoBehaviour
 
     public void SendMessageToServer(string message)
     {
-        // ¼­¹ö·Î ¸Ş½ÃÁö Àü¼Û
+        // ì„œë²„ë¡œ ë©”ì‹œì§€ ì „ì†¡
         if (ws != null && ws.ReadyState == WebSocketSharp.WebSocketState.Open)
         {
             ws.Send(message);
@@ -89,7 +89,10 @@ public class WebSocketClient : MonoBehaviour
 
     public void SendMessage()
     {
-        string mess = InputField_Text.text;
+        string nickName = DBDataManager.Instance.UserData["Nickname"];
+        //string nickName = "Name";
+
+        string mess = $"{nickName} : {InputField_Text.text}";
 
         if (false == mess.IsNullOrEmpty())
         {
@@ -102,14 +105,14 @@ public class WebSocketClient : MonoBehaviour
 
     public void AddChatMessage(string message)
     {
-        // ÇÁ¸®ÆÕ ÀÎ½ºÅÏ½º »ı¼º
+        // í”„ë¦¬íŒ¹ ì¸ìŠ¤í„´ìŠ¤ ìƒì„±
         GameObject newMessage = Instantiate(chatMessagePrefab, chatContent.transform);
 
-        // ¸Ş½ÃÁö ÅØ½ºÆ® ¼³Á¤
+        // ë©”ì‹œì§€ í…ìŠ¤íŠ¸ ì„¤ì •
         Text messageText = newMessage.GetComponentInChildren<Text>();
         messageText.text = message;
 
-        // ¸Ş½ÃÁö Ãß°¡ ÈÄ ½ºÅ©·ÑÀ» ¾Æ·¡·Î ÀÌµ¿
+        // ë©”ì‹œì§€ ì¶”ê°€ í›„ ìŠ¤í¬ë¡¤ì„ ì•„ë˜ë¡œ ì´ë™
         Canvas.ForceUpdateCanvases();
         ScrollRect scrollRect = chatContent.GetComponentInParent<ScrollRect>();
         scrollRect.verticalNormalizedPosition = 0f;
