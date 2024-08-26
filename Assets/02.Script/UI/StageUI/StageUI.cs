@@ -22,6 +22,11 @@ public class StageUI : MonoBehaviour
         EventManager<StageEvent>.StartListening(StageEvent.UseTurn, DecreaseLimitCount);
     }
 
+    private void Start()
+    {
+        Initialize();
+    }
+
     private void Initialize()
     {
         _limitCount = 0;

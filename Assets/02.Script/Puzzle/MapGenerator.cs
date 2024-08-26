@@ -39,7 +39,7 @@ public class MapGenerator : MonoBehaviour
     {
         _canvas = GetComponentInParent<Canvas>();
         _rectTransform = GetComponent<RectTransform>();
-        _grid = GetComponent<GridLayoutGroup>();
+        _grid = GetComponentInChildren<GridLayoutGroup>();
         temp = new Temp2();
 
         AddEvents();
@@ -118,7 +118,7 @@ public class MapGenerator : MonoBehaviour
             foreach (var tile in _tileList)
             {
                 index++;
-                var newTile = Instantiate(_tileNode, transform);
+                var newTile = Instantiate(_tileNode, _grid.transform);
                 newTile.name = $"TileNode{index}";
                 var tileNode = newTile.GetComponent<TileNode>();
                 if (tileNode == null) continue;
