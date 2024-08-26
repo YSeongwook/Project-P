@@ -61,6 +61,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StartListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StartListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
         EventManager<UIEvents>.StartListening(UIEvents.MissionSuccessPopUp, PopUpMissionSuccess);
+        EventManager<DataEvents>.StartListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
         temp.SetTileGridEvent(true);
     }
 
@@ -70,6 +71,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StopListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StopListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
         EventManager<UIEvents>.StopListening(UIEvents.MissionSuccessPopUp, PopUpMissionSuccess);
+        EventManager<DataEvents>.StopListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
         temp.SetTileGridEvent(false);
     }
 
@@ -269,5 +271,12 @@ public class MapGenerator : MonoBehaviour
     {
         // 정답 UI 등장
         _missionSuccess.SetActive(true);
+    }
+
+    private void DecreaseLimitCount()
+    {
+        _limitCount -= 1;
+
+        DebugLogger.Log(_limitCount);
     }
 }

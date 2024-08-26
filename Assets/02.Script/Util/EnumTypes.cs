@@ -50,6 +50,7 @@ namespace EnumTypes
         SelectStage,
         CheckAnswer,
         SetTileGrid,
+        DecreaseLimitCount,
     }
 
     public enum GoldEvent
