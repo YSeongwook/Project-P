@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using DataStruct;
+using UnityEngine;
 
 public class PlayerViewModel
 {
@@ -37,6 +38,30 @@ public class PlayerViewModel
             if (ERC == value) return;
             ERC = value;
             OnPropertyChanged(nameof(PlayerERC));
+        }
+    }
+
+    private int currentChapter;
+    public int CurrentChapter
+    {
+        get { return currentChapter; }
+        set
+        {
+            if (currentChapter == value) return;
+            currentChapter = value;
+            OnPropertyChanged(nameof(CurrentChapter));
+        }
+    }
+
+    private int currentStage;
+    public int CurrentStage
+    {
+        get { return currentStage; }
+        set
+        {
+            if (currentStage == value) return;
+            currentStage = value;
+            OnPropertyChanged(nameof(CurrentStage));
         }
     }
 

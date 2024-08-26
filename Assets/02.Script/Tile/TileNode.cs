@@ -1,8 +1,5 @@
 using EnumTypes;
 using EventLibrary;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -57,8 +54,7 @@ public class TileNode : MonoBehaviour
     private RectTransform _imageGimmickRectTransform;
     private Outline _backgroundOutline;
 
-
-    public bool isCorrect { get; private set; }
+    public bool IsCorrect { get; private set; }
 
     private void Awake()
     {
@@ -83,7 +79,9 @@ public class TileNode : MonoBehaviour
 
         _backgroundOutline.enabled = false;
         _imageGimmick.enabled = false;
-        isCorrect = false;
+
+        if (_tile.Type == TileType.Road)
+            EventManager<DataEvents>.TriggerEvent(DataEvents.SetTileGrid, this);
     }
 
     // 타일 정보 삽입
@@ -91,6 +89,8 @@ public class TileNode : MonoBehaviour
     {
         _tile = tile;
         CorrectTileInfo = tile;
+
+        IsCorrect = false;
     }
 
     // 타일 이미지 변경
@@ -119,7 +119,7 @@ public class TileNode : MonoBehaviour
         _tile.RotateValue = (_tile.RotateValue + 1) % 4;
 
         RotationTile(_tile.RotateValue, true);
-        EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn, 1);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
     }
 
     // 타일 회전
@@ -130,33 +130,34 @@ public class TileNode : MonoBehaviour
         _imageRoadRectTransform.rotation = Quaternion.Euler(0, 0, rotationAngle);
         _imageGimmickRectTransform.rotation = Quaternion.Euler(0, 0, rotationAngle);
 
-        if (isCheckAble)
-        {
-            //정답 rotation과 비교
-            CheckAnswer();
-        }
-            
+        //정답 rotation과 비교
+        CheckAnswer(isCheckAble);
     }
 
-    private void CheckAnswer()
+    private void CheckAnswer(bool isCheckAble)
     {
-        int CalculatedValue = 1;
+        int calculatedValue = 1;
         switch (_tile.RoadShape)
         {
             case RoadShape.Straight:
-                CalculatedValue = 2;
+                calculatedValue = 2;
                 break;
             case RoadShape.Cross:
-                CalculatedValue = 1;
+                calculatedValue = 1;
                 break;
             default:
-                CalculatedValue = 4;
+                calculatedValue = 4;
                 break;
         }
 
-        isCorrect = (_tile.RotateValue % CalculatedValue) == (CorrectTileInfo.RotateValue % CalculatedValue);
+        IsCorrect = (_tile.RotateValue % calculatedValue) == (CorrectTileInfo.RotateValue % calculatedValue);
 
-        // MapGenerator의 CheckAnswer 이벤트 실행
-        EventManager<DataEvents>.TriggerEvent(DataEvents.CheckAnswer);
+        _background.enabled = !IsCorrect;
+
+        if (isCheckAble)
+        {
+            // MapGenerator의 CheckAnswer 이벤트 실행
+            EventManager<DataEvents>.TriggerEvent(DataEvents.CheckAnswer);
+        }
     }
 }

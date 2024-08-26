@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TreeEditor;
+using System;
+using EventLibrary;
+using EnumTypes;
 
 public class DynamicObjectSelector : MonoBehaviour
 {
@@ -17,6 +20,13 @@ public class DynamicObjectSelector : MonoBehaviour
     private void Awake()
     {
         Panel = transform.parent;
+
+        EventManager<UIEvents>.StartListening<int>(UIEvents.ChangeScrollViewCenter, ScrollToStage);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager<UIEvents>.StopListening<int>(UIEvents.ChangeScrollViewCenter, ScrollToStage);
     }
 
     private void Start()
@@ -82,4 +92,13 @@ public class DynamicObjectSelector : MonoBehaviour
         // 선택된 오브젝트 크기 1.5배로 애니메이션 처리
         selectedObject.DOScale(1.5f, 0.3f).SetEase(Ease.OutBounce);
     }
+
+    private void ScrollToStage(int stage)
+    {
+        var Y_pos = (stage - 1) * 400 * -1;
+        Vector2 newContentPosition = new Vector2(0, Y_pos);
+
+        // 콘텐츠 위치 업데이트
+        scrollRect.content.anchoredPosition = newContentPosition;
+    } 
 }

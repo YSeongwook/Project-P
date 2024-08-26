@@ -3,6 +3,7 @@ using EnumTypes;
 using EventLibrary;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,16 @@ public class Chapter : MonoBehaviour
     [SerializeField] private Button Btn_ChapterMove;
     [SerializeField] private int _chapter;
     [SerializeField] private int _maxStageCount;
+
+    private void Awake()
+    {
+        EventManager<DataEvents>.StartListening<int, int>(DataEvents.UpdateCurrentChapterAndStage, ChangedPlayerChpaterAndStage);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager<DataEvents>.StopListening<int, int>(DataEvents.UpdateCurrentChapterAndStage, ChangedPlayerChpaterAndStage);
+    }
 
     private void Start()
     {
@@ -36,7 +47,7 @@ public class Chapter : MonoBehaviour
         // 챕터 타일 리스트 초기화
         EventManager<DataEvents>.TriggerEvent(DataEvents.ResetChapterTileList);
 
-        for(int i=1; i<= _maxStageCount ; i++)
+        for (int i = 1; i <= _maxStageCount; i++)
         {
             string mapID = $"M{_chapter}{i.ToString("000")}";
             var tableData = DataManager.Instance.GetTileMapTable(mapID);
@@ -46,5 +57,40 @@ public class Chapter : MonoBehaviour
         }
 
         EventManager<UIEvents>.TriggerEvent(UIEvents.CreateStageButton, _chapter, _maxStageCount);
+
+
+        EventManager<UIEvents>.TriggerEvent(UIEvents.ChangeScrollViewCenter, 1);
+    }
+
+    // 플레이어 챕터 및 스테이지 해금
+    private void ChangedPlayerChpaterAndStage(int currentChapter, int currentStage)
+    {
+        // 현재 플레이어의 챕터 및 스테이지 가져오기
+        int chapter = PlayerInformation.Instance.GetPlayerCurrentChapter();
+        int stage = PlayerInformation.Instance.GetPlayerCurrentStage();
+
+        if (_chapter != chapter) return;
+        if (currentChapter < chapter || currentStage < stage) return;
+
+        int newChapter = chapter;   
+        var newStage = stage + 1;
+
+        if (newStage >= _maxStageCount)
+        {
+            newChapter = Mathf.Clamp(newChapter+1, 0, 5);
+            newStage = 1;
+        }
+
+        // 증가 반영
+        EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerCurrentChapterChanged, newChapter);
+        EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerCurrentStageChanged, newStage);
+
+        // 챕터 UI 반영
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnEnableChapterMoveButton, newChapter.ToString());
+        // 스테이지 UI 반영
+        EventManager<UIEvents>.TriggerEvent(UIEvents.CreateStageButton, _chapter, _maxStageCount);
+
+        // 스테이지 UI - 해금된 스테이지가 화면 가운데에 위치
+        EventManager<UIEvents>.TriggerEvent(UIEvents.ChangeScrollViewCenter, newStage);
     }
 }

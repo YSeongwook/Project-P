@@ -27,6 +27,8 @@ public class PlayerInformation : Singleton<PlayerInformation>
             PlayerViewModel.RegisterPlayerGoldChanged(true);
             PlayerViewModel.RegisterPlayerERCChanged(true);
             PlayerViewModel.RegisterPlayerItemListChanged(true);
+            PlayerViewModel.RegisterPlayerCurrentChapterChanged(true);
+            PlayerViewModel.RegisterPlayerCurrentStageChanged(true);
         }
 
         AddEvents();
@@ -36,6 +38,8 @@ public class PlayerInformation : Singleton<PlayerInformation>
     {
         if (PlayerViewModel != null)
         {
+            PlayerViewModel.RegisterPlayerCurrentStageChanged(false);
+            PlayerViewModel.RegisterPlayerCurrentChapterChanged(false);
             PlayerViewModel.RegisterPlayerItemListChanged(false);
             PlayerViewModel.RegisterPlayerGoldChanged(false);
             PlayerViewModel.RegisterPlayerERCChanged(false);
@@ -54,6 +58,8 @@ public class PlayerInformation : Singleton<PlayerInformation>
         EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
         EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
         EventManager<DataEvents>.StartListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
+        EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerCurrentChapterChanged, PlayerCurrentChapterChanged);
+        EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerCurrentStageChanged, PlayerCurrentStageChanged);
     }
 
     private void RemoveEvents()
@@ -63,6 +69,8 @@ public class PlayerInformation : Singleton<PlayerInformation>
         EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
         EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
         EventManager<DataEvents>.StopListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
+        EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerCurrentChapterChanged, PlayerCurrentChapterChanged);
+        EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerCurrentStageChanged, PlayerCurrentStageChanged);
     }
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -78,6 +86,12 @@ public class PlayerInformation : Singleton<PlayerInformation>
                 break;
             case nameof(PlayerViewModel.PlayerInventory):
                 _playerInfo.ItemList = PlayerViewModel.PlayerInventory;
+                break;
+            case nameof(PlayerViewModel.CurrentChapter):
+                _playerInfo.CurrentChapter = PlayerViewModel.CurrentChapter.ToString();
+                break;
+            case nameof(PlayerViewModel.CurrentStage):
+                _playerInfo.CurrentStage = PlayerViewModel.CurrentStage.ToString();
                 break;
         }
 
@@ -107,6 +121,8 @@ public class PlayerInformation : Singleton<PlayerInformation>
         PlayerViewModel.RequestPlayerGameTicketCountChanged(_playerInventory.TicketCount);
         PlayerViewModel.RequestPlayerGoldChanged(_playerInventory.Gold);
         PlayerViewModel.RequestPlayerERCChanged(_playerInventory.ERC);
+        PlayerViewModel.RequestPlayerCurrentChapterChanged(int.Parse(_playerInventory.CurrentChapter));
+        PlayerViewModel.RequestPlayerCurrentStageChanged(int.Parse(_playerInventory.CurrentStage));
 
         foreach (var data in _playerInventory.ItemList)
         {
@@ -132,5 +148,25 @@ public class PlayerInformation : Singleton<PlayerInformation>
     private void PlayerItemListChanged(ItemData item, int count)
     {
         PlayerViewModel.RequestPlayerItemListChanged(item, count);
+    }
+
+    private void PlayerCurrentChapterChanged(int chapter)
+    {
+        PlayerViewModel.RequestPlayerCurrentChapterChanged(chapter);
+    }
+
+    private void PlayerCurrentStageChanged(int stage)
+    {
+        PlayerViewModel.RequestPlayerCurrentStageChanged(stage);
+    }
+
+    public int GetPlayerCurrentChapter()
+    {
+        return int.Parse(_playerInfo.CurrentChapter);
+    }
+
+    public int GetPlayerCurrentStage()
+    {
+        return int.Parse(_playerInfo.CurrentStage);
     }
 }

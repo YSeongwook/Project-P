@@ -2,41 +2,6 @@ using UnityEngine;
 
 namespace EnumTypes
 {
-    public enum PlayerState
-    {
-        Stand,
-        Move,
-        Run,
-        Hold
-    }
-
-    public enum Layers
-    {
-        Default,
-        TransparentFX,
-        IgnoreRaycast,
-        Reserved1,
-        Water,
-        UI,
-        Reserved2,
-        Reserved3,
-        Player,
-        Enemy,
-    }
-
-    public enum HeroEvents
-    {
-        LeaderAttackStarted,
-        LeaderAttackStopped,
-        LeaderDirectionChanged,
-    }
-
-    public enum FormationEvents
-    {
-        OnChangeLeaderMode,
-        SetLeader,
-    }
-
     public enum UIEvents
     {
         OnClickSignInGoogle,
@@ -56,6 +21,8 @@ namespace EnumTypes
         OnClickGameStage,
         OnEnableChapterMoveButton,
         CreateStageButton,
+        ChangeScrollViewCenter,
+        MissionSuccessPopUp,
     }
 
     public enum DataEvents
@@ -63,21 +30,26 @@ namespace EnumTypes
         OnUserInformationLoad,
         OnUserInventorySave,
         OnItemDataLoad,
-        HeroCollectionUpdated,
         OnPaymentSuccessful,
         MVVMChangedGameTicket,
         MVVMChangedGold,
         MVVMChangedERC,
         MVVMChangedInventoryItemDictionary,
+        MVVMChangedCurrentChapter,
+        MVVMChangedCurrentStage,
         PlayerTicketCountChanged,
         PlayerGoldChanged,
         PlayerERCChanged,
         PlayerItemListChanged,
+        PlayerCurrentChapterChanged,
+        PlayerCurrentStageChanged,
+        UpdateCurrentChapterAndStage,
         PlayerOpenStageInfo,
         LoadThisChapterTileList,
         ResetChapterTileList,
         SelectStage,
         CheckAnswer,
+        SetTileGrid,
     }
 
     public enum GoldEvent
@@ -89,23 +61,17 @@ namespace EnumTypes
 
     public enum StageEvent
     {
+        StartStage,
+        ResetTileGrid,
+        SetTileGrid,
         UseTurn
     }
-
-    public enum GoogleEvents
-    {
-        GPGSSignIn,
-        ManualGPGSSignIn,
-    }
-
-    public enum FirebaseEvents
-    {
-        FirebaseInitialized,
-        FirebaseDatabaseInitialized,
-        FirebaseSignIn,
-        EmailSignIn,
-    }
     
+    public enum PuzzleEvent
+    {
+        StartClearAnimation,
+    }
+
     public class EnumTypes : MonoBehaviour
     {
     }

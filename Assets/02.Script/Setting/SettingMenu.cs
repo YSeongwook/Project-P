@@ -1,68 +1,63 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SettingMenu : MonoBehaviour
 {
     [Header("Space Between Menu Item")]
-    [SerializeField] Vector2 Spacing;
+    [SerializeField] private Vector2 spacing;
+    [SerializeField] private Image background;
+    
+    private Button _mainBtn;
+    private SettingMenuItem[] _menuItems;
 
-    [SerializeField] Image background;
-    Button mainBtn;
-    SettingMenuItem[] menuItems;
+    private bool _isExpanded;
+    private Vector2 _mainButtonPosition;
+    private int _itemsCount;
 
-    bool isExpanded = false;
-
-    Vector2 mainButtonPosition;
-    int itemsCount;
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        menuItems = transform.GetComponentsInChildren<SettingMenuItem>();
-        itemsCount = menuItems.Length;
+        _menuItems = transform.GetComponentsInChildren<SettingMenuItem>();
+        _itemsCount = _menuItems.Length;
 
-        mainBtn = transform.GetChild (0).GetComponent<Button>();
-        mainBtn.onClick.AddListener(ToggleMenu);
-        mainBtn.transform.SetAsLastSibling();
+        _mainBtn = transform.GetChild (0).GetComponent<Button>();
+        _mainBtn.onClick.AddListener(ToggleMenu);
+        _mainBtn.transform.SetAsLastSibling();
 
-        mainButtonPosition = mainBtn.transform.position;
+        _mainButtonPosition = _mainBtn.transform.position;
 
         ResetPosition();
+    }
+    
+    private void OnDestroy()
+    {
+        _mainBtn.onClick.RemoveListener(ToggleMenu);
     }
 
     private void ResetPosition()
     {
         background.gameObject.SetActive (false);
-        foreach (SettingMenuItem item in menuItems)
+        foreach (SettingMenuItem item in _menuItems)
         {
-            item.transform.position = mainButtonPosition;
+            item.transform.position = _mainButtonPosition;
             item.gameObject.SetActive(false);
         }
     }
 
-    void ToggleMenu()
+    public void ToggleMenu()
     {
-        isExpanded = !isExpanded;
+        _isExpanded = !_isExpanded;
 
-        if (isExpanded)
+        if (_isExpanded)
         {
             background.gameObject.SetActive(true);
-            for (int i =0; i<itemsCount; i++)
+            for (int i =0; i<_itemsCount; i++)
             {
-                menuItems[i].gameObject.SetActive(true);
-                menuItems[i].transform.position = mainButtonPosition + Spacing * (i + 1);
+                _menuItems[i].gameObject.SetActive(true);
             }
         }
         else
         {
             ResetPosition();
         }
-    }
-
-    private void OnDestroy()
-    {
-        mainBtn.onClick.RemoveListener(ToggleMenu);
     }
 }

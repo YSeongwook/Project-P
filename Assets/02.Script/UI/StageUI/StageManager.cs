@@ -1,11 +1,8 @@
-using DataStruct;
+using System.Collections.Generic;
 using EnumTypes;
 using EventLibrary;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class StageManager : Singleton<StageManager>
 {
@@ -40,9 +37,16 @@ public class StageManager : Singleton<StageManager>
         for (int i = 0; i < stageCount; i++)
         {
             stages[i] = Instantiate(stagePrefab, contentTransform);
-            stages[i].GetComponent<Stage>().SetStageNumber(chapter, i+1);
-            Transform childTransform = stages[i].transform.Find("Text_StageCountTitle");
-            TextMeshProUGUI stageText = childTransform.GetComponent<TextMeshProUGUI>();
+            var stage = stages[i].GetComponent<Stage>();
+            if(stage == null) continue;
+            stage.name = $"Stage{i+1}";
+
+            stage.SetStageNumber(chapter, i+1);
+            int playerChapter = PlayerInformation.Instance.GetPlayerCurrentChapter();
+            int playerStage = PlayerInformation.Instance.GetPlayerCurrentStage();
+            bool buttonActive = playerChapter > chapter? true : playerStage >= i + 1;
+            stage.ButtonActivate(buttonActive);
+            TMP_Text stageText = stages[i].GetComponentInChildren<TMP_Text>();
             if (stageText != null)
             {
                 stageText.text = (i + 1).ToString();
