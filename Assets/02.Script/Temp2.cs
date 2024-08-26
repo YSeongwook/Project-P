@@ -36,10 +36,24 @@ public class Temp2
     private void SetTileList(TileNode tileNode)
     {
         _correctAnswerTileTransform.Add(tileNode);
+
+        SetTileGrid();
     }
 
     private void SetTileGrid()
     {
+        _tileGrid.Clear();
+
+        foreach (var tile in _correctAnswerTileTransform)
+        {
+            if(tile.GetTileInfo.RoadShape == RoadShape.Start)
+            {
+                var rectTransform = tile.GetComponent<RectTransform>();
+                // _tileGrid.Add(tile.transform.position, tile);
+                DebugLogger.Log(rectTransform.anchoredPosition);
+                break;
+            }
+        }
 
     }
 

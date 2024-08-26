@@ -60,6 +60,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StartListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StartListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StartListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
+        EventManager<UIEvents>.StartListening(UIEvents.MissionSuccessPopUp, PopUpMissionSuccess);
         temp.SetTileGridEvent(true);
     }
 
@@ -68,6 +69,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StopListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StopListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StopListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
+        EventManager<UIEvents>.StopListening(UIEvents.MissionSuccessPopUp, PopUpMissionSuccess);
         temp.SetTileGridEvent(false);
     }
 
@@ -129,7 +131,7 @@ public class MapGenerator : MonoBehaviour
                 }
                 tileNode.SetTilImage(RoadList[shapeRotation - 1]);
 
-                EventManager<StageEvent>.TriggerEvent(StageEvent.SetTileGrid, tileNode);
+                
             }
 
             isLoop = IsCorrectAnswer();
@@ -218,8 +220,10 @@ public class MapGenerator : MonoBehaviour
             // 플레이어 해금 챕터 및 스테이지 증가
             EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage, currentChapter, currentStage);
 
-            // 정답 UI 등장
-            _missionSuccess.SetActive(true);
+            // 정답 애니메이션 연출 발생
+
+            // 정답 UI Enable
+            EventManager<UIEvents>.TriggerEvent(UIEvents.MissionSuccessPopUp);
             DebugLogger.Log("클리어");
             return;
         }
@@ -259,5 +263,11 @@ public class MapGenerator : MonoBehaviour
     private void SetTileMapPositionGrid(RectTransform transform, TileNode tileNode)
     {
         EventManager<StageEvent>.TriggerEvent(StageEvent.SetTileGrid, transform, tileNode);
+    }
+
+    private void PopUpMissionSuccess()
+    {
+        // 정답 UI 등장
+        _missionSuccess.SetActive(true);
     }
 }

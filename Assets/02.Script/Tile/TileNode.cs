@@ -80,7 +80,8 @@ public class TileNode : MonoBehaviour
         _backgroundOutline.enabled = false;
         _imageGimmick.enabled = false;
 
-        EventManager<DataEvents>.TriggerEvent(DataEvents.SetTileGrid, _rectTransform, this);
+        if (_tile.Type == TileType.Road)
+            EventManager<DataEvents>.TriggerEvent(DataEvents.SetTileGrid, this);
     }
 
     // 타일 정보 삽입

@@ -33,6 +33,8 @@ public class PuzzleAnimation : MonoBehaviour
             StartCoroutine(PopTileNode(childRectTransform)); // 각 코루틴이 순차적으로 실행되도록 변경
             yield return new WaitForSeconds(delayBetweenAnimations); // 각 타일 애니메이션 사이에 딜레이 추가
         }
+
+        EventManager<UIEvents>.TriggerEvent(UIEvents.MissionSuccessPopUp);
     }
 
     IEnumerator PopTileNode(RectTransform rectTransform)
