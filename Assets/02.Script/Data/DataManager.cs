@@ -67,39 +67,62 @@ public class DataManager : Singleton<DataManager>
     // 타일맵 읽어오기
     private void ReadTileMapData(string fileName)
     {
-        string filePath = Path.Combine("C:/Download/TileMap", fileName + ".json");
+        //string filePath = Path.Combine("C:/Download/TileMap", fileName + ".json");
+        //
+        //if (File.Exists(filePath))
+        //{
+        //    string json = File.ReadAllText(filePath);
+        //
+        //    List<Tile> tileData = JsonConvert.DeserializeObject<List<Tile>>(json);
+        //
+        //    if (LoadedTileMapList.ContainsKey(fileName))
+        //    {
+        //        LoadedTileMapList[fileName] = tileData;
+        //    }
+        //    else LoadedTileMapList.Add(fileName, tileData);
+        //}
+        //else
+        //{
+        //    Debug.Log($"잘못된 파일 이름입니다. : {fileName}");
+        //    return;
+        //}
 
-        if (File.Exists(filePath))
+        switch (fileName)
         {
-            string json = File.ReadAllText(filePath);
-
-            List<Tile> tileData = JsonConvert.DeserializeObject<List<Tile>>(json);
-
-            if (LoadedTileMapList.ContainsKey(fileName))
-            {
-                LoadedTileMapList[fileName] = tileData;
-            }
-            else LoadedTileMapList.Add(fileName, tileData);
-        }
-        else
-        {
-            Debug.Log($"잘못된 파일 이름입니다. : {fileName}");
-            return;
+            case "1-1":
+                string json1 = "[\r\n  {\r\n    \"Type\": 1,\r\n    \"RoadShape\": 5,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 0,\r\n    \"RoadShape\": 0,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 0,\r\n    \"RoadShape\": 0,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 1,\r\n    \"RoadShape\": 1,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 0,\r\n    \"RoadShape\": 0,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 0,\r\n    \"RoadShape\": 0,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 1,\r\n    \"RoadShape\": 6,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 0,\r\n    \"RoadShape\": 0,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 0,\r\n    \"RoadShape\": 0,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  }\r\n]";
+                List<Tile> tileData = JsonConvert.DeserializeObject<List<Tile>>(json1);
+                if (LoadedTileMapList.ContainsKey(fileName))
+                {
+                    LoadedTileMapList[fileName] = tileData;
+                }
+                else LoadedTileMapList.Add(fileName, tileData);
+                break;
+            case "1-2":
+                string json2 = "[\r\n  {\r\n    \"Type\": 1,\r\n    \"RoadShape\": 5,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 0,\r\n    \"RoadShape\": 0,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 0,\r\n    \"RoadShape\": 0,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 1,\r\n    \"RoadShape\": 2,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 1\r\n  },\r\n  {\r\n    \"Type\": 1,\r\n    \"RoadShape\": 6,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 3\r\n  },\r\n  {\r\n    \"Type\": 0,\r\n    \"RoadShape\": 0,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 0,\r\n    \"RoadShape\": 0,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 0,\r\n    \"RoadShape\": 0,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  },\r\n  {\r\n    \"Type\": 0,\r\n    \"RoadShape\": 0,\r\n    \"GimmickShape\": 0,\r\n    \"RotateValue\": 0\r\n  }\r\n]";
+                List<Tile> tileData2 = JsonConvert.DeserializeObject<List<Tile>>(json2);
+                if (LoadedTileMapList.ContainsKey(fileName))
+                {
+                    LoadedTileMapList[fileName] = tileData2;
+                }
+                else LoadedTileMapList.Add(fileName, tileData2);
+                break;
         }
     }
 
     // 타일맵 테이블 데이터 로드
     private void ReadTileMapTableData()
     {
-        string filePath = Path.Combine("C:/Download/TileMap", "LimitCountTable.json");
+        //string filePath = Path.Combine("C:/Download/TileMap", "LimitCountTable.json");
+        //
+        //if (!File.Exists(filePath))
+        //{
+        //    Debug.Log("파일이 존재하지 않습니다.");
+        //    return;
+        //}
 
-        if (!File.Exists(filePath))
-        {
-            Debug.Log("파일이 존재하지 않습니다.");
-            return;
-        }
-
-        string json = File.ReadAllText(filePath);
+        //string json = File.ReadAllText(filePath);
+        string json = "{\r\n  \"M1001\": {\r\n    \"MapID\": \"M1001\",\r\n    \"FileName\": \"1-1\",\r\n    \"LimitCount\": 10\r\n  },\r\n  \"M1002\": {\r\n    \"MapID\": \"M1002\",\r\n    \"FileName\": \"1-2\",\r\n    \"LimitCount\": 10\r\n  }\r\n}";
 
         LoadedTileMapTable = JsonConvert.DeserializeObject<Dictionary<string, StageGameMapInfoTable>>(json);
     }

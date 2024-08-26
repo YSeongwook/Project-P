@@ -12,13 +12,13 @@ public class GuestLogin : MonoBehaviour
     [SerializeField] private AlertFadeOut AlertFadeOut;
     //[SerializeField] private Button GuestLoginBtn;
 
-    // ¸ŞÀÎ ·Î±×ÀÎ È­¸é¿¡ÀÖ´Â ·Î±×ÀÎ¹öÆ°
+    // ë©”ì¸ ë¡œê·¸ì¸ í™”ë©´ì—ìˆëŠ” ë¡œê·¸ì¸ë²„íŠ¼
     public void OnMainGuestLoginBtn()
     {
         BGBtn.gameObject.SetActive(true);
     }
 
-    // ÆĞ³Î È­¸é¿¡ ÀÖ´Â ·Î±×ÀÎ ¹öÆ°
+    // íŒ¨ë„ í™”ë©´ì— ìˆëŠ” ë¡œê·¸ì¸ ë²„íŠ¼
     public void GusetLoginStart()
     {
         string GuestID = IDInputField.text;
