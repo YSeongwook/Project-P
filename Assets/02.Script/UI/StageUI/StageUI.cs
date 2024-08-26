@@ -22,6 +22,11 @@ public class StageUI : MonoBehaviour
         EventManager<StageEvent>.StartListening(StageEvent.UseTurn, DecreaseLimitCount);
     }
 
+    private void Start()
+    {
+        Initialize();
+    }
+
     private void Initialize()
     {
         _limitCount = 0;
@@ -45,6 +50,8 @@ public class StageUI : MonoBehaviour
     {
         _limitCount -= 1;
         limitCountText.text = $"{_limitCount}";
+
+        EventManager<DataEvents>.TriggerEvent(DataEvents.DecreaseLimitCount);
     }
     
     // 다시하기 버튼 클릭

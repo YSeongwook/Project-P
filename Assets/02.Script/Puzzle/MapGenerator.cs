@@ -38,7 +38,7 @@ public class MapGenerator : MonoBehaviour
     {
         _canvas = GetComponentInParent<Canvas>();
         _rectTransform = GetComponent<RectTransform>();
-        _grid = GetComponent<GridLayoutGroup>();
+        _grid = GetComponentInChildren<GridLayoutGroup>();
         temp = new Temp2();
 
         AddEvents();
@@ -60,6 +60,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StartListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StartListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
         EventManager<UIEvents>.StartListening(UIEvents.MissionSuccessPopUp, PopUpMissionSuccess);
+        EventManager<DataEvents>.StartListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
         temp.SetTileGridEvent(true);
     }
 
@@ -69,6 +70,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StopListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StopListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
         EventManager<UIEvents>.StopListening(UIEvents.MissionSuccessPopUp, PopUpMissionSuccess);
+        EventManager<DataEvents>.StopListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
         temp.SetTileGridEvent(false);
     }
 
@@ -117,7 +119,7 @@ public class MapGenerator : MonoBehaviour
             foreach (var tile in _tileList)
             {
                 index++;
-                var newTile = Instantiate(_tileNode, transform);
+                var newTile = Instantiate(_tileNode, _grid.transform);
                 newTile.name = $"TileNode{index}";
                 var tileNode = newTile.GetComponent<TileNode>();
                 if (tileNode == null) continue;
@@ -268,5 +270,12 @@ public class MapGenerator : MonoBehaviour
     {
         // 정답 UI 등장
         _missionSuccess.SetActive(true);
+    }
+
+    private void DecreaseLimitCount()
+    {
+        _limitCount -= 1;
+
+        DebugLogger.Log(_limitCount);
     }
 }

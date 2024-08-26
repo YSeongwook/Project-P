@@ -119,8 +119,6 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerTicketCountChanged, _ticketCount);
 
         UpdateUIText();
-
-        // 게임 UI 등장
     }
 
     IEnumerator StartRechargeTicket()

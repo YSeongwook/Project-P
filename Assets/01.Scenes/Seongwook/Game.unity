@@ -3645,16 +3645,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc5c2aa77e3704640aa30cdd3244305e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _MainMenuUI: {fileID: 0}
+  _PlayerGoldUI: {fileID: 0}
+  _missionSuccess: {fileID: 0}
+  _missionFail: {fileID: 0}
   _tileNode: {fileID: 4711707603068042305, guid: cc3608afdb4ec634fba79f8850ce3f43, type: 3}
   _tileSize: 120
-  roadList:
-  - {fileID: -2062186635, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
-  - {fileID: 1210937206, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
-  - {fileID: 33532268, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
-  - {fileID: -1446428360, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
-  - {fileID: 1066858676, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
-  - {fileID: -1493912242, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
-  gimmickList: []
+  RoadList: []
+  GimmickList: []
 --- !u!1 &2078018643
 GameObject:
   m_ObjectHideFlags: 0
@@ -4016,16 +4014,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc5c2aa77e3704640aa30cdd3244305e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _MainMenuUI: {fileID: 0}
+  _PlayerGoldUI: {fileID: 0}
+  _missionSuccess: {fileID: 0}
+  _missionFail: {fileID: 0}
   _tileNode: {fileID: 4711707603068042305, guid: cc3608afdb4ec634fba79f8850ce3f43, type: 3}
   _tileSize: 120
-  roadList:
-  - {fileID: -2062186635, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
-  - {fileID: 1210937206, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
-  - {fileID: 33532268, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
-  - {fileID: -1446428360, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
-  - {fileID: 1066858676, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
-  - {fileID: -1493912242, guid: 49d1f296e0818ee48adad228cf201ef8, type: 3}
-  gimmickList: []
+  RoadList: []
+  GimmickList: []
 --- !u!114 &2128209772
 MonoBehaviour:
   m_ObjectHideFlags: 0
