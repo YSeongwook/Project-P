@@ -61,7 +61,10 @@ namespace EnumTypes
 
     public enum StageEvent
     {
+        EnterStage,
         StartStage,
+        StageClear,
+        StageFail,
         ResetTileGrid,
         SetTileGrid,
         UseTurn
