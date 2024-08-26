@@ -57,6 +57,9 @@ public class Chapter : MonoBehaviour
         }
 
         EventManager<UIEvents>.TriggerEvent(UIEvents.CreateStageButton, _chapter, _maxStageCount);
+
+
+        EventManager<UIEvents>.TriggerEvent(UIEvents.ChangeScrollViewCenter, 1);
     }
 
     // 플레이어 챕터 및 스테이지 해금
