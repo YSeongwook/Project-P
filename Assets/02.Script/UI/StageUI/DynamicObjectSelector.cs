@@ -95,19 +95,8 @@ public class DynamicObjectSelector : MonoBehaviour
 
     private void ScrollToStage(int stage)
     {
-        RectTransform targetItem = itemRects[stage-1];
-
-        // 오브젝트의 월드 좌표를 뷰포트 좌표로 변환
-        Vector2 viewportPosition = scrollRect.viewport.InverseTransformPoint(targetItem.position);
-
-        // 스크롤뷰의 중앙 위치 계산
-        Vector2 scrollViewCenter = scrollRect.viewport.rect.center;
-
-        // 오브젝트가 중앙에 오도록 스크롤 위치 조정
-        Vector2 offset = viewportPosition - scrollViewCenter;
-
-        // 스크롤 뷰의 콘텐츠 위치를 조정하여 오브젝트가 중앙에 오도록 함
-        Vector2 newContentPosition = scrollRect.content.anchoredPosition - offset;
+        var Y_pos = (stage - 1) * 400 * -1;
+        Vector2 newContentPosition = new Vector2(0, Y_pos);
 
         // 콘텐츠 위치 업데이트
         scrollRect.content.anchoredPosition = newContentPosition;

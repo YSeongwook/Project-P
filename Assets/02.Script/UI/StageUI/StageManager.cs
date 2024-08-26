@@ -39,6 +39,7 @@ public class StageManager : Singleton<StageManager>
             stages[i] = Instantiate(stagePrefab, contentTransform);
             var stage = stages[i].GetComponent<Stage>();
             if(stage == null) continue;
+            stage.name = $"Stage{i+1}";
 
             stage.SetStageNumber(chapter, i+1);
             int playerChapter = PlayerInformation.Instance.GetPlayerCurrentChapter();

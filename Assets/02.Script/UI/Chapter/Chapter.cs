@@ -89,11 +89,5 @@ public class Chapter : MonoBehaviour
 
         // 스테이지 UI - 해금된 스테이지가 화면 가운데에 위치
         EventManager<UIEvents>.TriggerEvent(UIEvents.ChangeScrollViewCenter, newStage);
-
-
-        DebugLogger.Log($"new Stage : {newStage}");
-
-        DebugLogger.Log("Chapter : " + PlayerInformation.Instance.PlayerViewModel.CurrentChapter);
-        DebugLogger.Log("Stage : " + PlayerInformation.Instance.PlayerViewModel.CurrentStage);
     }
 }

@@ -111,10 +111,13 @@ public class MapGenerator : MonoBehaviour
         bool isLoop = true;
         while (isLoop)
         {
+            int index = 0;
             // tileList의 길이만큼 TileNode 생성
             foreach (var tile in _tileList)
             {
+                index++;
                 var newTile = Instantiate(_tileNode, transform);
+                newTile.name = $"TileNode{index}";
                 var tileNode = newTile.GetComponent<TileNode>();
                 if (tileNode == null) continue;
                 tileNode.SetTileNodeData(tile);
