@@ -12,6 +12,8 @@ public class AlertFadeOut : MonoBehaviour
     [SerializeField] private Text Text_Msg;
     private AndroidJavaObject _androidJavaObject;
     private CanvasGroup canvasGroup;
+    // 코루틴을 제어할 변수 선언
+    private Coroutine fadeOutCoroutine;
 
     void Start()
     {
@@ -27,8 +29,14 @@ public class AlertFadeOut : MonoBehaviour
         // SetActive(true)로 시작하려고.
         canvasGroup.alpha = 1;
 
-        // Alert 창을 일정 시간 후에 서서히 사라지게 하는 코루틴 시작
-        StartCoroutine(FadeOut());
+        // 이전에 실행 중이던 FadeOut 코루틴이 있으면 중지
+        if (fadeOutCoroutine != null)
+        {
+            StopCoroutine(fadeOutCoroutine);
+        }
+
+        // 새로운 코루틴 시작
+        fadeOutCoroutine = StartCoroutine(FadeOut());
     }
 
     private IEnumerator FadeOut()
@@ -49,6 +57,6 @@ public class AlertFadeOut : MonoBehaviour
         canvasGroup.alpha = 0;
 
         // 필요한 경우, Alert 창을 비활성화하거나 제거
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 }

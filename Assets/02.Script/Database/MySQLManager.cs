@@ -1,14 +1,54 @@
 using System;
 using System.Data;
+using DG.Tweening.Core.Easing;
 using MySql.Data.MySqlClient;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MySQLManager : Singleton<MySQLManager>
+public class MySQLManager : MonoBehaviour
 {
+    private static MySQLManager _instance;
+    public static MySQLManager Instance
+    {
+        get
+        {
+            // 만약 인스턴스가 null이면, 새로운 GameManager 오브젝트를 생성
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<MySQLManager>();
+
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new GameObject();
+                    _instance = singletonObject.AddComponent<MySQLManager>();
+                    singletonObject.name = typeof(MySQLManager).ToString() + " (Singleton)";
+
+                    // GameManager 오브젝트가 씬 전환 시 파괴되지 않도록 설정
+                    DontDestroyOnLoad(singletonObject);
+                }
+            }
+            return _instance;
+        }
+    }
+
     private AndroidJavaObject _androidJavaObject;
     private string connectionString;
     [SerializeField] private Text textCheck;
+    //[SerializeField] private GameObject DBDataManager_;
+
+    private void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (_instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
@@ -115,6 +155,13 @@ public class MySQLManager : Singleton<MySQLManager>
                         if (!string.IsNullOrEmpty(strArr[3])) cmd.Parameters.AddWithValue("@ProfileURL", strArr[3]);
                         //if (!string.IsNullOrEmpty(strArr[4])) cmd.Parameters.AddWithValue("@GuestPassword", "");
                         break;
+                    case "Assets":
+                        if (!string.IsNullOrEmpty(strArr[0])) cmd.Parameters.AddWithValue("@MemberID", Int64.Parse(strArr[0]));
+                        if (!string.IsNullOrEmpty(strArr[1])) cmd.Parameters.AddWithValue("@Gold", strArr[1]);
+                        if (!string.IsNullOrEmpty(strArr[2])) cmd.Parameters.AddWithValue("@HeartTime", strArr[2]);
+                        if (!string.IsNullOrEmpty(strArr[3])) cmd.Parameters.AddWithValue("@ItemCount", strArr[3]);
+                        //if (!string.IsNullOrEmpty(strArr[4])) cmd.Parameters.AddWithValue("@GuestPassword", "");
+                        break;
                     default:
                         Debug.LogError("Invalid query type provided.");
                         return;
@@ -159,6 +206,9 @@ public class MySQLManager : Singleton<MySQLManager>
                         // 체크용
                         // textCheck.text += $"{query}\n";
                         break;
+                    case "Assets": // Kakao = 회원번호||이메일||닉네임||프로필사진URL
+                        query = $"SELECT * FROM {strArr[0]} WHERE MemberID = {strArr[1]}";
+                        break;
                     default:
                         Debug.LogError("Invalid query type provided.");
                         return;
@@ -182,6 +232,17 @@ public class MySQLManager : Singleton<MySQLManager>
 
                             InputDataAtDictionary("MemberInfo", $"{MemberID}||{Email}||{Nickname}||{ProfileURL}");
                             break;
+                        case "Assets": // Kakao = 회원번호||이메일||닉네임||프로필사진URL
+                            string ID = reader["MemberID"].ToString();
+                            string Gold = reader["Gold"].ToString();
+                            string HeartTime = reader["HeartTime"].ToString();
+                            string ItemCount = reader["ItemCount"].ToString();
+
+                            // 체크용
+                            //textCheck.text += $"{MemberID}\n{Email}\n{Nickname}\n{ProfileURL}";
+
+                            InputDataAtDictionary("Assets", $"{ID}||{Gold}||{HeartTime}||{ItemCount}");
+                            break;
                         default:
                             Debug.LogError("Invalid query type provided.");
                             return;
@@ -201,7 +262,9 @@ public class MySQLManager : Singleton<MySQLManager>
         //userData = "3666640951||dls625@hanmail.net||.||https://img1.kakaocdn.net/thumb/R110x110.q70/?fname=https://t1.kakaocdn.net/account_images/default_profile.jpeg";
 
         InsertData("MemberInfo", userData);
-        InsertData("MemberInfo", userData);
+
+        // 만들어야 할거!
+        //InsertData("Assets", userData);
     }
 
     public void InputDataAtDictionary(string type, string str)
@@ -215,7 +278,18 @@ public class MySQLManager : Singleton<MySQLManager>
                 DBDataManager.Instance.UserData.Add("Email", strArr[1]);
                 DBDataManager.Instance.UserData.Add("Nickname", strArr[2]);
                 DBDataManager.Instance.UserData.Add("ProfileURL", strArr[3]);
-                //DBDataManager.Instance.ShowDicDataCheck("UserData");
+                DBDataManager.Instance.ShowDicDataCheck("UserData");
+                // GuestLogin에서 안불러와져서, 여기서 Assets 데이터 Call.
+                ReadData($"Assets||{strArr[0]}");
+                break;
+            case "Assets":
+                DBDataManager.Instance.UserAssetsData.Add("MemberID", strArr[0]);
+                DBDataManager.Instance.UserAssetsData.Add("Gold", strArr[1]);
+                DBDataManager.Instance.UserAssetsData.Add("HeartTime", strArr[2]);
+                DBDataManager.Instance.UserAssetsData.Add("ItemCount", strArr[3]);
+                DBDataManager.Instance.ShowDicDataCheck("Assets");
+                // 다 불러오면 Scene Change
+                SceneManager.LoadScene("Jinmyung");
                 break;
             default:
                 Debug.LogError("Invalid query type provided.");
