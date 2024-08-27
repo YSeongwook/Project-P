@@ -286,7 +286,7 @@ public class DataManager : Singleton<DataManager>
     public List<Tile> GetPuzzleTileMap(string fileName)
     {
         if(LoadedTileMapList.ContainsKey(fileName)) return LoadedTileMapList[fileName];
-        else return null;
+        else return default;
     }
 
     protected new void Awake()

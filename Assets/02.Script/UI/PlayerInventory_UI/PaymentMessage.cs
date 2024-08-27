@@ -26,10 +26,12 @@ public class PaymentMessage : MonoBehaviour
     private void AddEvent()
     {
         EventManager<DataEvents>.StartListening<bool>(DataEvents.OnPaymentSuccessful, PopUpMessage);
+        EventManager<UIEvents>.StartListening<string>(UIEvents.GameMessagePopUp, ErrorMessage);
     }
     private void RemoveEvent()
     {
         EventManager<DataEvents>.StopListening<bool>(DataEvents.OnPaymentSuccessful, PopUpMessage);
+        EventManager<UIEvents>.StopListening<string>(UIEvents.GameMessagePopUp, ErrorMessage);
     }
 
     private void PopUpMessage(bool PaymentSuccessful)
@@ -44,5 +46,12 @@ public class PaymentMessage : MonoBehaviour
         {
             textMessage.text = "Payment is Fail";
         }
+    }
+
+    private void ErrorMessage(string message)
+    {
+        gameObject.SetActive(true);
+
+        textMessage.text = message;
     }
 }

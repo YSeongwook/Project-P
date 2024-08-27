@@ -6,7 +6,9 @@ using UnityEngine;
 
 public class Temp2
 {
-    List<TileNode> _correctAnswerTileTransform = new List<TileNode>();
+    private List<Vector2> _startPoint = new List<Vector2>();
+    private List<Vector2> _endPoint = new List<Vector2>();
+    private  List<TileNode> _correctAnswerTileTransform = new List<TileNode>();
     private Dictionary<Vector2, TileNode> _tileGrid = new Dictionary<Vector2, TileNode>();
 
     public void SetTileGridEvent(bool isRegister)
@@ -17,18 +19,22 @@ public class Temp2
 
     private void AddEvents()
     {
-        EventManager<StageEvent>.StartListening(StageEvent.ResetTileGrid, ResetTIleGrid);
-        EventManager<StageEvent>.StartListening<TileNode>(StageEvent.SetTileGrid, SetTileList);
+        EventManager<StageEvent>.StartListening(StageEvent.ResetTileGrid, ResetTileGrid);
+        EventManager<StageEvent>.StartListening<TileNode>(StageEvent.SetPathTileList, SetTileList);
+        EventManager<StageEvent>.StartListening(StageEvent.SetPathTileGrid, SetTileGrid);
     }
 
     private void RemoveEvents()
     {
-        EventManager<StageEvent>.StopListening(StageEvent.ResetTileGrid, ResetTIleGrid);
-        EventManager<StageEvent>.StopListening<TileNode>(StageEvent.SetTileGrid, SetTileList);
+        EventManager<StageEvent>.StopListening(StageEvent.ResetTileGrid, ResetTileGrid);
+        EventManager<StageEvent>.StopListening<TileNode>(StageEvent.SetPathTileList, SetTileList);
+        EventManager<StageEvent>.StopListening(StageEvent.SetPathTileGrid, SetTileGrid);
     }
 
-    private void ResetTIleGrid()
+    private void ResetTileGrid()
     {
+        _startPoint.Clear();
+        _endPoint.Clear();
         _correctAnswerTileTransform.Clear();
         _tileGrid.Clear();
     }
@@ -37,20 +43,24 @@ public class Temp2
     {
         _correctAnswerTileTransform.Add(tileNode);
 
-        SetTileGrid();
+        DebugLogger.Log(tileNode.name + " : " + _correctAnswerTileTransform.Count);
     }
 
     private void SetTileGrid()
     {
-        _tileGrid.Clear();
-
         foreach (var tile in _correctAnswerTileTransform)
         {
             if(tile.GetTileInfo.RoadShape == RoadShape.Start)
             {
                 var rectTransform = tile.GetComponent<RectTransform>();
-                // _tileGrid.Add(tile.transform.position, tile);
-                DebugLogger.Log(rectTransform.anchoredPosition);
+                _startPoint.Add(rectTransform.anchoredPosition);
+                break;
+            }
+
+            if (tile.GetTileInfo.RoadShape == RoadShape.End)
+            {
+                var rectTransform = tile.GetComponent<RectTransform>();
+                _endPoint.Add(rectTransform.anchoredPosition);
                 break;
             }
         }

@@ -23,6 +23,7 @@ namespace EnumTypes
         CreateStageButton,
         ChangeScrollViewCenter,
         MissionSuccessPopUp,
+        GameMessagePopUp,
     }
 
     public enum DataEvents
@@ -67,7 +68,8 @@ namespace EnumTypes
         StageClear,
         StageFail,
         ResetTileGrid,
-        SetTileGrid,
+        SetPathTileList,
+        SetPathTileGrid,
         UseTurn
     }
     

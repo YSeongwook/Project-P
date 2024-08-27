@@ -77,19 +77,24 @@ public class MapGenerator : MonoBehaviour
     //스테이지 열기
     private void OpenNewStage(int chapter, int stage)
     {
-        // 입장권 티켓 감소
-        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
-
         DestroyAllTile();
         _check = false;
 
         string fileName = $"{chapter}-{stage}";
-        _tileList = new List<Tile>(DataManager.Instance.GetPuzzleTileMap(fileName));
-        if (_tileList == null )
+
+        var newTileList = DataManager.Instance.GetPuzzleTileMap(fileName);
+        if (newTileList == default )
         {
-            DebugLogger.Log("생성되어 있는 미로가 존재하지 않습니다.");
+            var Errormessage = "업데이트 예정입니다.";
+            EventManager<UIEvents>.TriggerEvent(UIEvents.GameMessagePopUp, Errormessage);
+            DebugLogger.Log(Errormessage);
             return;
         }
+
+        _tileList = new List<Tile>(newTileList);
+
+        // 입장권 티켓 감소
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
 
         currentChapter = chapter;
         currentStage = stage;
@@ -115,6 +120,8 @@ public class MapGenerator : MonoBehaviour
         while (isLoop)
         {
             int index = 0;
+            EventManager<StageEvent>.TriggerEvent(StageEvent.ResetTileGrid);
+
             // tileList의 길이만큼 TileNode 생성
             foreach (var tile in _tileList)
             {
@@ -132,11 +139,15 @@ public class MapGenerator : MonoBehaviour
                 }
                 tileNode.SetTilImage(RoadList[shapeRotation - 1]);
 
-                
+                // 경로 타일 List 삽입
+                EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathTileList, tileNode);
             }
 
             isLoop = IsCorrectAnswer();
         }
+
+        // 경로 타일 그리드화
+        EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathTileGrid);
 
         // 제한 횟수 수치 이벤트로 넘기기
         var tileMapTable = DataManager.Instance.GetTileMapTable($"M{chapter}{stage.ToString("000")}");
@@ -263,7 +274,7 @@ public class MapGenerator : MonoBehaviour
 
     private void SetTileMapPositionGrid(RectTransform transform, TileNode tileNode)
     {
-        EventManager<StageEvent>.TriggerEvent(StageEvent.SetTileGrid, transform, tileNode);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathTileList, transform, tileNode);
     }
 
     private void PopUpMissionSuccess()
