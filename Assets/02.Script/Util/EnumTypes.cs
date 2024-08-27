@@ -68,9 +68,12 @@ namespace EnumTypes
         StageClear,
         StageFail,
         ResetTileGrid,
-        SetPathTileList,
-        SetPathTileGrid,
-        UseTurn
+        SetPathTileGridAdd,
+        SetPathEndPoint,
+        SortPathTileGrid,
+        UseTurn,
+        MissionSuccess,
+        CheckMissionFail,
     }
     
     public enum PuzzleEvent

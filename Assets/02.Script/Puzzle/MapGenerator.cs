@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using EnumTypes;
 using EventLibrary;
@@ -61,6 +62,8 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StartListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
         EventManager<UIEvents>.StartListening(UIEvents.MissionSuccessPopUp, PopUpMissionSuccess);
         EventManager<DataEvents>.StartListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
+        EventManager<StageEvent>.StartListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
+        EventManager<StageEvent>.StartListening(StageEvent.CheckMissionFail, CheckMissionFail);
         temp.SetTileGridEvent(true);
     }
 
@@ -71,95 +74,227 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StopListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
         EventManager<UIEvents>.StopListening(UIEvents.MissionSuccessPopUp, PopUpMissionSuccess);
         EventManager<DataEvents>.StopListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
+        EventManager<StageEvent>.StopListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
+        EventManager<StageEvent>.StopListening(StageEvent.CheckMissionFail, CheckMissionFail);
         temp.SetTileGridEvent(false);
     }
 
-    //스테이지 열기
+    // 스테이지 열기
     private void OpenNewStage(int chapter, int stage)
     {
-        DestroyAllTile();
-        _check = false;
+        DestroyAllTiles();
+        InitializeStage(chapter, stage);
 
-        string fileName = $"{chapter}-{stage}";
-
-        var newTileList = DataManager.Instance.GetPuzzleTileMap(fileName);
-        if (newTileList == default )
+        bool isLoop = true;
+        while (isLoop)
         {
-            var Errormessage = "업데이트 예정입니다.";
-            EventManager<UIEvents>.TriggerEvent(UIEvents.GameMessagePopUp, Errormessage);
-            DebugLogger.Log(Errormessage);
+            EventManager<StageEvent>.TriggerEvent(StageEvent.ResetTileGrid);
+            GenerateTiles();
+            isLoop = IsCorrectAnswer();
+        }        
+    }
+
+    // 스테이지 초기화
+    private void InitializeStage(int chapter, int stage)
+    {
+        _check = false;
+        string fileName = $"{chapter}-{stage}";
+        var newTileList = DataManager.Instance.GetPuzzleTileMap(fileName);
+
+        if (newTileList == default)
+        {
+            HandleError("업데이트 예정입니다.");
             return;
         }
 
         _tileList = new List<Tile>(newTileList);
-
-        // 입장권 티켓 감소
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
 
         currentChapter = chapter;
         currentStage = stage;
 
-        // UI들 비활성화
         _MainMenuUI.enabled = false;
         _PlayerGoldUI.enabled = false;
+        _canvas.enabled = true;
 
-        // 캔버스 활성화
-        _canvas.enabled =true;
+        SetupGridSize();
+    }
 
-        //맵 사이즈 결정
+    // 에러 처리
+    private void HandleError(string errorMessage)
+    {
+        EventManager<UIEvents>.TriggerEvent(UIEvents.GameMessagePopUp, errorMessage);
+        DebugLogger.Log(errorMessage);
+    }
+
+    // 그리드 사이즈 설정
+    private void SetupGridSize()
+    {
         DetectTileSize(_tileList.Count);
-        //셀 사이즈 결정
         _grid.cellSize = new Vector2(_tileSize, _tileSize);
 
-        // tileList의 제곱근 길이만큼 RectTransform 크기 설정
         float sizeValue = Mathf.Sqrt(_tileList.Count) * _tileSize;
         _rectTransform.sizeDelta = new Vector2(sizeValue, sizeValue);
+    }
 
-        // 만약 랜덤으로 생성한 오브젝트가 정답과 동일하면 다시 랜덤
-        bool isLoop = true;
-        while (isLoop)
+    // 타일 생성
+    private void GenerateTiles()
+    {
+        int index = 0;
+        foreach (var tile in _tileList)
         {
-            int index = 0;
-            EventManager<StageEvent>.TriggerEvent(StageEvent.ResetTileGrid);
+            index++;
+            var newTile = Instantiate(_tileNode, _grid.transform);
+            newTile.name = $"TileNode{index}";
 
-            // tileList의 길이만큼 TileNode 생성
-            foreach (var tile in _tileList)
+            var tileNode = newTile.GetComponent<TileNode>();
+            if (tileNode == null) continue;
+
+            tileNode.SetTileNodeData(tile);
+
+            int shapeRotation = (int)tile.RoadShape;
+            if (shapeRotation > 0)
             {
-                index++;
-                var newTile = Instantiate(_tileNode, _grid.transform);
-                newTile.name = $"TileNode{index}";
-                var tileNode = newTile.GetComponent<TileNode>();
-                if (tileNode == null) continue;
-                tileNode.SetTileNodeData(tile);
-                int shapeRotation = (int)tile.RoadShape;
-                if (shapeRotation <= 0)
-                {
-                    //shapeRotation = Random.Range(1, 5);
-                    continue;
-                }
                 tileNode.SetTilImage(RoadList[shapeRotation - 1]);
-
-                // 경로 타일 List 삽입
-                EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathTileList, tileNode);
             }
-
-            isLoop = IsCorrectAnswer();
         }
 
-        // 경로 타일 그리드화
-        EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathTileGrid);
+        StartCoroutine(dummmy());
+    }
 
-        // 제한 횟수 수치 이벤트로 넘기기
-        var tileMapTable = DataManager.Instance.GetTileMapTable($"M{chapter}{stage.ToString("000")}");
+    IEnumerator dummmy()
+    {
+        yield return new WaitForEndOfFrame();
+
+        var tileList = _grid.GetComponentsInChildren<TileNode>();
+
+        foreach(var tile in tileList)
+        {
+            var tilePos = tile.GetComponent<RectTransform>().anchoredPosition;
+            EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathTileGridAdd, tilePos, tile);
+        }
+
+        FinalizeStage();
+    }
+
+    // 스테이지 완료 후 처리
+    private void FinalizeStage()
+    {
+        EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathEndPoint, _tileSize);
+
+        var tileMapTable = DataManager.Instance.GetTileMapTable($"M{currentChapter}{currentStage.ToString("000")}");
         _limitCount = tileMapTable.LimitCount;
         EventManager<StageEvent>.TriggerEvent(StageEvent.StartStage, _limitCount);
+    }
 
-        // 플레이어의 보유 아이템 이벤트로 넘기기
+    // 타일 리셋
+    private void DestroyAllTiles()
+    {
+        foreach (Transform child in _grid.GetComponent<Transform>())
+        {
+            Destroy(child.gameObject);
+        }
+
+        _tileList.Clear();
+    }
+
+    // 정답 여부 확인
+    private bool IsCorrectAnswer()
+    {
+        foreach (Transform child in transform)
+        {
+            var childTileNode = child.GetComponent<TileNode>();
+            if (childTileNode == null || childTileNode.GetTileInfo.Type == TileType.None) continue;
+            if (!childTileNode.IsCorrect) return false;
+        }
+        return true;
     }
 
 
+    // 정답 확인 처리
+    private void CheckAnswer()
+    {
+        EventManager<StageEvent>.TriggerEvent(StageEvent.SortPathTileGrid);
+        //EventManager<StageEvent>.TriggerEvent(StageEvent.ResetTileGrid);
+        //_check = IsCorrectAnswer();
 
-    // 다시하기 버튼 클릭
+        //if (_check)
+        //{
+        //    HandleCorrectAnswer();
+        //}
+        //else if (_limitCount <= 0)
+        //{
+        //    _missionFail.SetActive(true);
+        //    DebugLogger.Log("실패");
+        //}
+    }
+
+    // 미션 성공
+    private void HandleCorrectAnswer()
+    {
+        float playerGold = PlayerInformation.Instance.PlayerViewModel.PlayerGold;
+        float plusGold = currentChapter * 50;
+        EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, playerGold + plusGold);
+
+        EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage, currentChapter, currentStage);
+        EventManager<UIEvents>.TriggerEvent(UIEvents.MissionSuccessPopUp);
+
+        DebugLogger.Log("클리어");
+    }
+
+    // 미션 실패
+    private void CheckMissionFail()
+    {
+        if (_limitCount <= 0)
+        {
+            _missionFail.SetActive(true);
+            DebugLogger.Log("실패");
+        }
+    }
+
+    // 제한 횟수 감소
+    private void DecreaseLimitCount()
+    {
+        _limitCount -= 1;
+        DebugLogger.Log(_limitCount);
+    }
+
+    // 타일 크기 설정
+    private void DetectTileSize(int listCount)
+    {
+        switch (Mathf.Sqrt(listCount))
+        {
+            case 3:
+                _tileSize = 320;
+                break;
+            case 4:
+                _tileSize = 270;
+                break;
+            case 5:
+                _tileSize = 220;
+                break;
+            case 6:
+                _tileSize = 170;
+                break;
+            case 7:
+                _tileSize = 120;
+                break;
+        }
+    }
+
+    // 타일 맵 위치 그리드 설정
+    private void SetTileMapPositionGrid(RectTransform transform, TileNode tileNode)
+    {
+        EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathTileGridAdd, transform, tileNode);
+    }
+
+    // 미션 성공 팝업
+    private void PopUpMissionSuccess()
+    {
+        _missionSuccess.SetActive(true);
+    }
+
+    // 다시 하기 버튼 클릭 처리
     public void OnClickReplay()
     {
         _missionFail.SetActive(false);
@@ -194,99 +329,5 @@ public class MapGenerator : MonoBehaviour
         }
 
         _tileList.Clear();   // 모든 타일이 삭제되면 저장하고 있던 리스트 초기화
-    }
-
-    private bool IsCorrectAnswer()
-    {
-        int checking = 1;
-
-        foreach (Transform child in transform)
-        {
-            var childTileNode = child.GetComponent<TileNode>();
-            if (childTileNode == null) continue;
-            if (childTileNode.GetTileInfo.Type == TileType.None) continue;
-
-            int check = childTileNode.IsCorrect ? 1 : 0;
-
-            checking *= check;
-        }
-
-        return checking == 1;
-    }
-
-    // 정답 확인
-    private void CheckAnswer()
-    {
-        EventManager<StageEvent>.TriggerEvent(StageEvent.ResetTileGrid);
-
-        _check = IsCorrectAnswer();
-
-        // 정답이면
-        if (_check)
-        {
-            // 플레이어 골드 증가
-            var playerGold = PlayerInformation.Instance.PlayerViewModel.PlayerGold;
-            int plusGold = currentChapter * 50;
-            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, playerGold + plusGold);
-
-            // 플레이어 해금 챕터 및 스테이지 증가
-            EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage, currentChapter, currentStage);
-
-            // 정답 애니메이션 연출 발생
-
-            // 정답 UI Enable
-            EventManager<UIEvents>.TriggerEvent(UIEvents.MissionSuccessPopUp);
-            DebugLogger.Log("클리어");
-            return;
-        }
-        
-        if(_limitCount <= 0)
-        {
-            // 실패 UI 등장
-            _missionFail.SetActive(true);
-            DebugLogger.Log("실패");
-        }
-
-    }
-        
-    // 리스트 수에 맞추어 Tile의 크기 설정
-    private void DetectTileSize(int listCount)
-    {
-        switch(Mathf.Sqrt(listCount))
-        {
-            case 3:
-                _tileSize = 320;
-                break;
-            case 4:
-                _tileSize = 270;
-                break;
-            case 5:
-                _tileSize = 220;
-                break;
-            case 6:
-                _tileSize = 170;
-                break;
-            case 7:
-                _tileSize = 120;
-                break;
-        }
-    }
-
-    private void SetTileMapPositionGrid(RectTransform transform, TileNode tileNode)
-    {
-        EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathTileList, transform, tileNode);
-    }
-
-    private void PopUpMissionSuccess()
-    {
-        // 정답 UI 등장
-        _missionSuccess.SetActive(true);
-    }
-
-    private void DecreaseLimitCount()
-    {
-        _limitCount -= 1;
-
-        DebugLogger.Log(_limitCount);
     }
 }

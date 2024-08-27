@@ -2,14 +2,18 @@ using EnumTypes;
 using EventLibrary;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Temp2
 {
-    private List<Vector2> _startPoint = new List<Vector2>();
-    private List<Vector2> _endPoint = new List<Vector2>();
-    private  List<TileNode> _correctAnswerTileTransform = new List<TileNode>();
     private Dictionary<Vector2, TileNode> _tileGrid = new Dictionary<Vector2, TileNode>();
+    private Dictionary<int, Dictionary<Vector2, TileNode>> _PathTileList = new Dictionary<int, Dictionary<Vector2, TileNode>>();
+    private Dictionary<Vector2, TileNode> _startPoint = new Dictionary<Vector2, TileNode>();
+    private Dictionary<Vector2, TileNode> _endPoint = new Dictionary<Vector2, TileNode>();
+
+    private float CellSize;
 
     public void SetTileGridEvent(bool isRegister)
     {
@@ -20,67 +24,161 @@ public class Temp2
     private void AddEvents()
     {
         EventManager<StageEvent>.StartListening(StageEvent.ResetTileGrid, ResetTileGrid);
-        EventManager<StageEvent>.StartListening<TileNode>(StageEvent.SetPathTileList, SetTileList);
-        EventManager<StageEvent>.StartListening(StageEvent.SetPathTileGrid, SetTileGrid);
+        EventManager<StageEvent>.StartListening<Vector2, TileNode>(StageEvent.SetPathTileGridAdd, AddTileGrid);
+        EventManager<StageEvent>.StartListening<float>(StageEvent.SetPathEndPoint, SetStartAndEndPoint);
+        EventManager<StageEvent>.StartListening(StageEvent.SortPathTileGrid, SortTileGrid);
     }
 
     private void RemoveEvents()
     {
         EventManager<StageEvent>.StopListening(StageEvent.ResetTileGrid, ResetTileGrid);
-        EventManager<StageEvent>.StopListening<TileNode>(StageEvent.SetPathTileList, SetTileList);
-        EventManager<StageEvent>.StopListening(StageEvent.SetPathTileGrid, SetTileGrid);
+        EventManager<StageEvent>.StopListening<Vector2, TileNode>(StageEvent.SetPathTileGridAdd, AddTileGrid);
+        EventManager<StageEvent>.StopListening<float>(StageEvent.SetPathEndPoint, SetStartAndEndPoint);
+        EventManager<StageEvent>.StopListening(StageEvent.SortPathTileGrid, SortTileGrid);
     }
 
     private void ResetTileGrid()
     {
         _startPoint.Clear();
         _endPoint.Clear();
-        _correctAnswerTileTransform.Clear();
         _tileGrid.Clear();
+        _PathTileList.Clear();
     }
 
-    private void SetTileList(TileNode tileNode)
+    private void AddTileGrid(Vector2 tilePosition, TileNode tileNode)
     {
-        _correctAnswerTileTransform.Add(tileNode);
-
-        DebugLogger.Log(tileNode.name + " : " + _correctAnswerTileTransform.Count);
+        if (_tileGrid.ContainsKey(tilePosition)) _tileGrid[tilePosition] = tileNode;
+        else _tileGrid.Add(tilePosition, tileNode);
     }
 
-    private void SetTileGrid()
+    private void SetStartAndEndPoint(float cellSize)
     {
-        foreach (var tile in _correctAnswerTileTransform)
+        CellSize = cellSize;
+
+        foreach (var tile in _tileGrid)
         {
-            if(tile.GetTileInfo.RoadShape == RoadShape.Start)
+            if (tile.Value.GetTileInfo.RoadShape == RoadShape.Start)
             {
-                var rectTransform = tile.GetComponent<RectTransform>();
-                _startPoint.Add(rectTransform.anchoredPosition);
-                break;
+                _startPoint.Add(tile.Key, tile.Value);
+                continue;
             }
 
-            if (tile.GetTileInfo.RoadShape == RoadShape.End)
+            if (tile.Value.GetTileInfo.RoadShape == RoadShape.End)
             {
-                var rectTransform = tile.GetComponent<RectTransform>();
-                _endPoint.Add(rectTransform.anchoredPosition);
-                break;
+                _endPoint.Add(tile.Key, tile.Value);
+            }
+        }
+    }
+
+    private void SortTileGrid()
+    {
+        foreach(var startPoint in  _startPoint)
+        {
+            foreach(var endPoint in _endPoint)
+            {
+                var path = FindPath(startPoint.Key, endPoint.Key);
+                if(path != null)
+                {
+                    // 정답 확인 이벤트 발생
+                    EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
+                    ResetTileGrid();
+                    return;
+                }
+
+                // 미션 실패 확인 이벤트 발생
+                EventManager<StageEvent>.TriggerEvent(StageEvent.CheckMissionFail);
+            }
+        }
+    }
+
+    private Dictionary<Vector2, TileNode> FindPath(Vector2 start, Vector2 end)
+    {
+        var openSet = new List<Vector2> { start };
+        var cameFrom = new Dictionary<Vector2, Vector2>();
+        var gScore = new Dictionary<Vector2, float> { [start] = 0 };
+        var fScore = new Dictionary<Vector2, float> { [start] = Heuristic(start, end) };
+
+        while (openSet.Count > 0)
+        {
+            var current = openSet.OrderBy(n => fScore.ContainsKey(n) ? fScore[n] : float.MaxValue).First();
+
+            if (current == end)
+            {
+                return ReconstructPath(cameFrom, current);
+            }
+
+            openSet.Remove(current);
+
+            foreach (var neighbor in GetNeighbors(current))
+            {
+                float tentativeGScore = gScore[current] + Vector2.Distance(current, neighbor);
+
+                if (!gScore.ContainsKey(neighbor) || tentativeGScore < gScore[neighbor])
+                {
+                    cameFrom[neighbor] = current;
+                    gScore[neighbor] = tentativeGScore;
+                    fScore[neighbor] = gScore[neighbor] + Heuristic(neighbor, end);
+
+                    if (!openSet.Contains(neighbor))
+                    {
+                        openSet.Add(neighbor);
+                    }
+                }
             }
         }
 
+        return null; // 경로가 없는 경우
     }
 
-    private bool IsConnected(Vector2Int current, Vector2Int neighbor)
+    private Dictionary<Vector2, TileNode> ReconstructPath(Dictionary<Vector2, Vector2> cameFrom, Vector2 current)
+    {
+        var totalPath = new Dictionary<Vector2, TileNode>();
+        while (cameFrom.ContainsKey(current))
+        {
+            totalPath[current] = _tileGrid[current];
+            current = cameFrom[current];
+        }
+        totalPath[current] = _tileGrid[current]; // Add the start node
+        return totalPath;
+    }
+
+    private List<Vector2> GetNeighbors(Vector2 current)
+    {
+        List<Vector2> neighbors = new List<Vector2>();
+
+        foreach (var direction in new[] { Vector2.up, Vector2.right, Vector2.down, Vector2.left })
+        {
+            Vector2 neighborPos = current + direction * CellSize;
+            bool a = _tileGrid.ContainsKey(neighborPos);
+            if (a)
+            {
+                bool b = IsConnected(current, neighborPos);
+
+                if (b)
+                    neighbors.Add(neighborPos);
+            }
+        }
+
+        return neighbors;
+    }
+
+    private float Heuristic(Vector2 a, Vector2 b)
+    {
+        return Vector2.Distance(a, b);
+    }
+
+    private bool IsConnected(Vector2 current, Vector2 neighbor)
     {
         TileNode currentNode = _tileGrid[current];
         TileNode neighborNode = _tileGrid[neighbor];
 
-        // 현재 타일의 연결 상태를 구합니다.
+        // 현재 타일과 이웃 타일의 연결 방향을 가져옴
         List<Vector2Int> currentConnections = GetConnectedDirections(currentNode);
-
-        // 이웃 타일의 연결 상태를 구합니다.
         List<Vector2Int> neighborConnections = GetConnectedDirections(neighborNode);
 
-        // 두 타일이 서로 연결되는지 확인
-        Vector2Int directionToNeighbor = neighbor - current;
-        Vector2Int directionFromNeighbor = current - neighbor;
+        // 현재 타일에서 이웃 타일로의 방향
+        Vector2Int directionToNeighbor = Vector2Int.RoundToInt((neighbor - current)/CellSize);
+        Vector2Int directionFromNeighbor = Vector2Int.RoundToInt((current - neighbor)/CellSize);
 
         return currentConnections.Contains(directionToNeighbor) && neighborConnections.Contains(directionFromNeighbor);
     }
@@ -109,19 +207,19 @@ public class Temp2
                 {
                     case 0:
                         connections.Add(Vector2Int.up);
-                        connections.Add(Vector2Int.right);
+                        connections.Add(Vector2Int.left);
                         break;
                     case 1:
                         connections.Add(Vector2Int.right);
-                        connections.Add(Vector2Int.down);
+                        connections.Add(Vector2Int.up);
                         break;
                     case 2:
+                        connections.Add(Vector2Int.right);
                         connections.Add(Vector2Int.down);
-                        connections.Add(Vector2Int.left);
                         break;
                     case 3:
+                        connections.Add(Vector2Int.down);
                         connections.Add(Vector2Int.left);
-                        connections.Add(Vector2Int.up);
                         break;
                 }
                 break;
@@ -130,23 +228,23 @@ public class Temp2
                 {
                     case 0:
                         connections.Add(Vector2Int.up);
-                        connections.Add(Vector2Int.left);
+                        connections.Add(Vector2Int.down);
                         connections.Add(Vector2Int.right);
                         break;
                     case 1:
                         connections.Add(Vector2Int.right);
-                        connections.Add(Vector2Int.up);
+                        connections.Add(Vector2Int.left);
                         connections.Add(Vector2Int.down);
                         break;
                     case 2:
                         connections.Add(Vector2Int.down);
                         connections.Add(Vector2Int.left);
-                        connections.Add(Vector2Int.right);
+                        connections.Add(Vector2Int.up);
                         break;
                     case 3:
                         connections.Add(Vector2Int.left);
                         connections.Add(Vector2Int.up);
-                        connections.Add(Vector2Int.down);
+                        connections.Add(Vector2Int.right);
                         break;
                 }
                 break;
@@ -158,6 +256,23 @@ public class Temp2
                 break;
             // Start와 End 타일의 경우, 특정 연결 상태만을 가질 수 있도록 처리
             case RoadShape.Start:
+                if (tileNode.GetTileInfo.RotateValue == 0)
+                {
+                    connections.Add(Vector2Int.down);
+                }
+                else if (tileNode.GetTileInfo.RotateValue == 1)
+                {
+                    connections.Add(Vector2Int.left);
+                }
+                else if (tileNode.GetTileInfo.RotateValue == 2)
+                {
+                    connections.Add(Vector2Int.up);
+                }
+                else if (tileNode.GetTileInfo.RotateValue == 3)
+                {
+                    connections.Add(Vector2Int.right);
+                }
+                break;
             case RoadShape.End:
                 if (tileNode.GetTileInfo.RotateValue == 0)
                 {
