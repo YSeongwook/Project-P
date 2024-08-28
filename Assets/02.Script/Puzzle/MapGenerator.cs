@@ -215,18 +215,6 @@ public class MapGenerator : MonoBehaviour
     private void CheckAnswer()
     {
         EventManager<StageEvent>.TriggerEvent(StageEvent.SortPathTileGrid);
-        //EventManager<StageEvent>.TriggerEvent(StageEvent.ResetTileGrid);
-        //_check = IsCorrectAnswer();
-
-        //if (_check)
-        //{
-        //    HandleCorrectAnswer();
-        //}
-        //else if (_limitCount <= 0)
-        //{
-        //    _missionFail.SetActive(true);
-        //    DebugLogger.Log("실패");
-        //}
     }
 
     // 미션 성공

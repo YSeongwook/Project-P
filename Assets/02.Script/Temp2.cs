@@ -72,24 +72,51 @@ public class Temp2
 
     private void SortTileGrid()
     {
-        foreach(var startPoint in  _startPoint)
+        bool missionSuccess = false;
+
+        foreach (var startPoint in _startPoint)
         {
-            foreach(var endPoint in _endPoint)
+            var successfulPaths = new Dictionary<int, Dictionary<Vector2, TileNode>>();
+            bool allEndPointsConnected = true;
+
+            foreach (var endPoint in _endPoint)
             {
                 var path = FindPath(startPoint.Key, endPoint.Key);
-                if(path != null)
+                if (path != null)
                 {
-                    // 정답 확인 이벤트 발생
-                    EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
-                    ResetTileGrid();
-                    return;
+                    // 경로가 존재할 경우, successfulPaths에 저장
+                    int pathIndex = successfulPaths.Count + 1;
+                    successfulPaths.Add(pathIndex, path);
                 }
+                else
+                {
+                    // 하나의 endPoint라도 연결되지 못하면 이 startPoint는 실패
+                    allEndPointsConnected = false;
+                    break;
+                }
+            }
 
-                // 미션 실패 확인 이벤트 발생
-                EventManager<StageEvent>.TriggerEvent(StageEvent.CheckMissionFail);
+            if (allEndPointsConnected)
+            {
+                // 하나의 startPoint에서 모든 endPoint들이 연결된 경우
+                _PathTileList = successfulPaths;
+                missionSuccess = true;
+                break;
             }
         }
+
+        if (missionSuccess)
+        {
+            // 하나 이상의 startPoint가 모든 endPoint와 연결된 경우
+            EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
+        }
+        else
+        {
+            // 모든 startPoint에서 하나 이상의 endPoint가 연결되지 않은 경우
+            EventManager<StageEvent>.TriggerEvent(StageEvent.CheckMissionFail);
+        }
     }
+
 
     private Dictionary<Vector2, TileNode> FindPath(Vector2 start, Vector2 end)
     {
