@@ -152,11 +152,15 @@ public class MapGenerator : MonoBehaviour
 
             tileNode.SetTileNodeData(tile);
 
-            int shapeRotation = (int)tile.RoadShape;
-            if (shapeRotation > 0)
+            int tileShape = (int)tile.RoadShape;
+            if (tileShape <= 0)
             {
-                tileNode.SetTilImage(RoadList[shapeRotation - 1]);
+                tileShape = Random.Range(1, 5);
+                var newTileInfo = new Tile { Type = TileType.Road, RoadShape = (RoadShape)tileShape, GimmickShape = GimmickShape.None };
+                tileNode.SetTileNodeData(newTileInfo);
             }
+
+            tileNode.SetTilImage(RoadList[tileShape - 1]);
         }
 
         StartCoroutine(dummmy());
