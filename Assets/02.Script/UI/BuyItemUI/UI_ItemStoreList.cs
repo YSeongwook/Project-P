@@ -45,7 +45,6 @@ public class UI_ItemStoreList : MonoBehaviour
     private void Start()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        canvas.gameObject.SetActive(false);
     }
 
     // 상점 아이템 List 나열

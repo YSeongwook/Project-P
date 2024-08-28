@@ -39,7 +39,7 @@ public class UI_GoldStoreList : MonoBehaviour
     private void Start()
     {
         _rectTransform.sizeDelta = new Vector2(_widthValue, 10);
-        _canvas.gameObject.SetActive(false);
+        
     }
 
     private void AddEvent()
