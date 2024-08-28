@@ -1,9 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Temp_PackageList>
   <dataCategory>
-    <data PackageID="G1001" Name="패키지1" Description="골드 패키지다" ERCPrice="0.5" GiveGold="100" Image="aaa" />
-    <data PackageID="G1002" Name="패키지2" Description="골드 패키지다" ERCPrice="1" GiveGold="300" Image="bbb" />
-    <data PackageID="G1003" Name="패키지3" Description="골드 패키지다" ERCPrice="1.5" GiveGold="600" Image="ccc" />
-    <data PackageID="G1004" Name="패키지4" Description="골드 패키지다" ERCPrice="3" GiveGold="2000" Image="ddd" />
+    <data PackageID="G1001" ERCPrice="0.5" GiveGold="1500" Image="1" />
+    <data PackageID="G1002" ERCPrice="1" GiveGold="4000" Image="2" />
+    <data PackageID="G1003" ERCPrice="1.5" GiveGold="12000" Image="3" />
+    <data PackageID="G1004" ERCPrice="3" GiveGold="25000" Image="4" />
+    <data PackageID="G1005" ERCPrice="6.5" GiveGold="60000" Image="5" />
   </dataCategory>
 </Temp_PackageList>

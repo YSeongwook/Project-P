@@ -9,7 +9,6 @@ using UnityEngine.UI;
 public class GoldPackageSlot : MonoBehaviour
 {
     [FoldoutGroup("Gold Shop UI")][SerializeField] private Image imagePackageIcon;
-    [FoldoutGroup("Gold Shop UI")][SerializeField] private TMP_Text textPackageName;
     [FoldoutGroup("Gold Shop UI")][SerializeField] private TMP_Text textPriceErc;
 
     private GoldPackageData _packageInfo;
@@ -39,8 +38,6 @@ public class GoldPackageSlot : MonoBehaviour
     public void SetPackageInfo(GoldPackageData packageData)
     {
         _packageInfo = packageData;
-
-        textPackageName.text = _packageInfo.Name;
         textPriceErc.text = _packageInfo.ERCPrice.ToString();
     }
 
