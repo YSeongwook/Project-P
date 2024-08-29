@@ -5,9 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TouchDrag : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IDragHandler
+public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IDragHandler
 {
-    public TMP_Text text;
     public Camera ParticleCamera;
     public Collider2D bladeCollider;
     private bool slicing;
@@ -32,13 +31,13 @@ public class TouchDrag : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, 
 
     private void Start()
     {
-        ParticleCamera.GetComponent<RectTransform>().position = canvas.GetComponent<RectTransform>().position + new Vector3(0,0,-0.1f);
+        ParticleCamera.GetComponent<RectTransform>().position = canvas.GetComponent<RectTransform>().position + new Vector3(0,0,-30f);
         AdjustCameraToCanvas();
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        ContinueSlicing(eventData);
+        Drag(eventData);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -68,7 +67,7 @@ public class TouchDrag : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, 
         trailRenderer.enabled = false;
     }
 
-    private void ContinueSlicing(PointerEventData eventData)
+    private void Drag(PointerEventData eventData)
     {
         UpdateBladePosition(eventData);
 
@@ -76,18 +75,13 @@ public class TouchDrag : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, 
 
         float Velocity = direction.magnitude / Time.deltaTime;
         bladeCollider.enabled = Velocity > minSliceVelocity;
-
-        // 터치 좌표를 TMP_Text에 출력
-        if (text != null)
-        {
-            text.text = $"Touch Position: {bladeCollider.transform.position}";
-        }
     }
 
     private void UpdateBladePosition(PointerEventData eventData)
     {
         bladeCollider.transform.position = eventData.position;
-        lineObject.transform.position = bladeCollider.transform.position;
+        //lineObject.transform.position = bladeCollider.transform.position + new Vector3(0,0,-0.1f);
+        lineObject.transform.position = bladeCollider.transform.position + new Vector3(0,0,-10f);
     }
     void AdjustCameraToCanvas()
     {
