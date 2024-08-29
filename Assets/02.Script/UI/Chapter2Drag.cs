@@ -9,7 +9,7 @@ public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandle
 {
     public Camera ParticleCamera;
     public Collider2D bladeCollider;
-    private bool slicing;
+
     public float minSliceVelocity = 0.01f;
     public GameObject lineObject;
     private TrailRenderer trailRenderer;
@@ -54,7 +54,6 @@ public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandle
     {
         UpdateBladePosition(eventData);
 
-        slicing = true;
         bladeCollider.enabled = true;
         trailRenderer.enabled = true;
         trailRenderer.Clear();
@@ -62,7 +61,6 @@ public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandle
 
     private void StopSlicing()
     {
-        slicing = false;
         bladeCollider.enabled = false;
         trailRenderer.enabled = false;
     }

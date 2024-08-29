@@ -81,4 +81,6 @@ public class UI_GoldStoreList : MonoBehaviour
     {
         _canvas.gameObject.SetActive(false);
     }
+
+
 }

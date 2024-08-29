@@ -26,6 +26,11 @@ namespace EnumTypes
         GameMessagePopUp,
     }
 
+    public enum Temp
+    {
+        PopUp
+    }
+
     public enum DataEvents
     {
         OnUserInformationLoad,
