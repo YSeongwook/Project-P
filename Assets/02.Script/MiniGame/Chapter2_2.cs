@@ -1,10 +1,9 @@
-using Org.BouncyCastle.X509;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Chapter2_MiniGame : MonoBehaviour
+public class Chapter2_2 : MonoBehaviour
 {
     [SerializeField] private List<GameObject> RiceObjects;
     [SerializeField] private TMP_Text Text_timer;
@@ -13,21 +12,14 @@ public class Chapter2_MiniGame : MonoBehaviour
     private float timer;
 
     private bool isGameClear;
-
-    private void OnEnable()
-    {
-        isGameClear = false;
-        timer = SetTimer;
-    }
-
     private void Start()
     {
-        StartCoroutine(StartTimer());
+        
     }
 
     IEnumerator StartTimer()
     {
-        while(true)
+        while (true)
         {
             yield return null;
             timer -= Time.deltaTime;
@@ -63,7 +55,7 @@ public class Chapter2_MiniGame : MonoBehaviour
     private bool CheckGameClear()
     {
         bool isClear = true;
-        foreach(var rice in RiceObjects)
+        foreach (var rice in RiceObjects)
         {
             var Rice = rice.GetComponent<Rice>();
             if (Rice == null) continue;
