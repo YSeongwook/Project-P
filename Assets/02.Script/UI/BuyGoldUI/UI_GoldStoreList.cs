@@ -10,6 +10,7 @@ public class UI_GoldStoreList : MonoBehaviour
 {
     [FoldoutGroup("Gold Shop List")] [SerializeField]
     private GameObject itemSlotPrefab;
+    [SerializeField] private GameObject goldShop;
 
     private Canvas _canvas;
     private RectTransform _rectTransform;
@@ -27,7 +28,6 @@ public class UI_GoldStoreList : MonoBehaviour
         _gridLayoutGroup = GetComponent<GridLayoutGroup>();
         _widthValue = _rectTransform.rect.width;
         _cellHeight = _gridLayoutGroup.cellSize.y + _gridLayoutGroup.spacing.y;
-
         AddEvent();
     }
 
@@ -39,7 +39,7 @@ public class UI_GoldStoreList : MonoBehaviour
     private void Start()
     {
         _rectTransform.sizeDelta = new Vector2(_widthValue, 10);
-        
+        goldShop.SetActive(false);
     }
 
     private void AddEvent()
@@ -68,7 +68,6 @@ public class UI_GoldStoreList : MonoBehaviour
             GoldPackageSlot goldPackageSlot = PackageSlot.GetComponent<GoldPackageSlot>();
             goldPackageSlot.SetPackageInfo(PackageData);
         }
-
         _rectTransform.sizeDelta = new Vector2(_widthValue, count * _cellHeight);
     }
 
