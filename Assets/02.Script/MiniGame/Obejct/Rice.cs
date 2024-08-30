@@ -1,9 +1,5 @@
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor.Drawers;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Rice : MonoBehaviour
 {
