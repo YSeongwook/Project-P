@@ -3,7 +3,6 @@ using DataStruct;
 using EnumTypes;
 using EventLibrary;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class PlayerInformation : Singleton<PlayerInformation>
 {

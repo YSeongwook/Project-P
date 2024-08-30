@@ -1004,7 +1004,7 @@ GameObject:
   - component: {fileID: 2689715782425721942}
   - component: {fileID: 2382618232954338998}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text_Timer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1493,7 +1493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameTickets: {fileID: 8634000638126946495}
-  timer: {fileID: 0}
+  timer: {fileID: 2382618232954338998}
   goldPrice: {fileID: 7028084695720617279}
   ercPrice: {fileID: 7028084695782115353}
   paymentPopup: {fileID: 140382617}

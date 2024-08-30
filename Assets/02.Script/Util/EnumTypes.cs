@@ -4,7 +4,6 @@ namespace EnumTypes
 {
     public enum UIEvents
     {
-        OnClickSignInGoogle,
         OnClickStart,
         OnClickUseTicket,
         OnClickItemBuyButton,
@@ -79,6 +78,8 @@ namespace EnumTypes
         UseTurn,
         MissionSuccess,
         CheckMissionFail,
+        ReturnSelectStage,
+        RestartStage
     }
     
     public enum PuzzleEvent

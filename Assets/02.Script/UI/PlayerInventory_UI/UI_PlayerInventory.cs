@@ -1,11 +1,10 @@
+using System.Collections;
 using DataStruct;
 using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
-using System.Collections;
 using TMPro;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
 {
@@ -17,6 +16,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
     [FoldoutGroup("Payment UI")] [SerializeField] private GameObject paymentPopup;
 
     public Canvas Canvas { get; private set; }
+    private GameObject _parent;
 
     private int _ticketCount; // Player가 가지고 있는 티겟
     private float _goldValue; // Player가 가지고 있는 Gold의 갯수
@@ -33,6 +33,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         base.Awake();
 
         Canvas = GetComponentInParent<Canvas>();
+        _parent = gameObject.transform.parent.gameObject;
 
         AddEvents();
     }
@@ -54,6 +55,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<UIEvents>.StartListening<ItemData, float>(UIEvents.OnClickItemBuyButton, BuyItem_Gold);
         EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyItem_ERC);
         EventManager<GoldEvent>.StartListening<float>(GoldEvent.OnGetGold, GetGold);
+        EventManager<StageEvent>.StartListening(StageEvent.ReturnSelectStage, TogglePlayerCurrencyUI);
     }
 
     private void RemoveEvents()
@@ -63,6 +65,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<UIEvents>.StopListening<ItemData, float>(UIEvents.OnClickItemBuyButton, BuyItem_Gold);
         EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyItem_ERC);
         EventManager<GoldEvent>.StopListening<float>(GoldEvent.OnGetGold, GetGold);
+        EventManager<StageEvent>.StopListening(StageEvent.ReturnSelectStage, TogglePlayerCurrencyUI);
     }
 
     //Gold와 ERC 초기화
@@ -121,7 +124,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         UpdateUIText();
     }
 
-    IEnumerator StartRechargeTicket()
+    private IEnumerator StartRechargeTicket()
     {
         while(true)
         {
@@ -211,5 +214,12 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         _goldValue += getGold;
 
         UpdateUIText();
+    }
+
+    private void TogglePlayerCurrencyUI()
+    {
+        bool isActive = _parent.activeSelf;
+        
+        _parent.SetActive(!isActive);
     }
 }

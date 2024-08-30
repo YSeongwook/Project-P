@@ -203,6 +203,7 @@ public class MapGenerator : MonoBehaviour
     // 정답 확인 처리
     private void CheckAnswer()
     {
+        // 정답 확인 시 바로 클리어 되는 것이 아니라 연출 이후에 스테이지 클리어
         EventManager<StageEvent>.TriggerEvent(StageEvent.SortPathTileGrid);
     }
 
