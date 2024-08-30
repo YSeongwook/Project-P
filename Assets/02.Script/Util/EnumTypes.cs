@@ -26,9 +26,10 @@ namespace EnumTypes
         GameMessagePopUp,
     }
 
-    public enum Temp
+    public enum MiniGame
     {
-        PopUp
+        Catch,
+        PoliceGameOver,
     }
 
     public enum DataEvents

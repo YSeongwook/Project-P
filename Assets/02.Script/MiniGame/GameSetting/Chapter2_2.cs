@@ -5,16 +5,37 @@ using UnityEngine;
 
 public class Chapter2_2 : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> RiceObjects;
+    [SerializeField] private Transform fishs;
     [SerializeField] private TMP_Text Text_timer;
-
     [SerializeField] private float SetTimer;
     private float timer;
 
+    private List<Fish> fishLists = new List<Fish>();
     private bool isGameClear;
+
+    private void OnEnable()
+    {
+        fishLists.Clear();
+        isGameClear = false;
+        timer = SetTimer;
+
+        SetCameraToFish();
+    }
+
     private void Start()
     {
-        
+        StartCoroutine(StartTimer());
+    }
+
+    private void SetCameraToFish()
+    {
+        foreach(Transform child in fishs)
+        {
+            var fish = child.GetComponent<Fish>();
+            if(fish == null) continue;
+
+            fishLists.Add(fish);
+        }
     }
 
     IEnumerator StartTimer()
@@ -55,12 +76,11 @@ public class Chapter2_2 : MonoBehaviour
     private bool CheckGameClear()
     {
         bool isClear = true;
-        foreach (var rice in RiceObjects)
+        foreach(var  fish in fishLists)
         {
-            var Rice = rice.GetComponent<Rice>();
-            if (Rice == null) continue;
-            isClear = Rice.isSlices;
-            if (!isClear) break;
+            if (fish == null) continue;
+            if (!fish.isClearAble) 
+                isClear = false;
         }
 
         return isClear;

@@ -2,11 +2,13 @@ using Org.BouncyCastle.X509;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Chapter2_MiniGame : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> RiceObjects;
+    [SerializeField] private Transform Rice;
+    private List<GameObject> RiceObjects = new List<GameObject>();
     [SerializeField] private TMP_Text Text_timer;
 
     [SerializeField] private float SetTimer;
@@ -18,11 +20,23 @@ public class Chapter2_MiniGame : MonoBehaviour
     {
         isGameClear = false;
         timer = SetTimer;
+        RiceObjects.Clear();
+
+        SetRiceObejct();
     }
 
     private void Start()
     {
+        
         StartCoroutine(StartTimer());
+    }
+
+    private void SetRiceObejct()
+    {
+        foreach(Transform child in Rice)
+        {
+            RiceObjects.Add(child.gameObject);
+        }
     }
 
     IEnumerator StartTimer()

@@ -2,15 +2,17 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using static UnityEditorInternal.ReorderableList;
 
-public class Fish : MonoBehaviour
+public class Fish : DropHandler
 {
     private RectTransform rectTransform;
-    private Vector2 SpawnPoint;
 
     private Collider2D collider;
 
-    public bool isSlices { get; private set; }
+    public bool isClearAble {  get; private set; }
 
     private void Awake()
     {
@@ -21,7 +23,7 @@ public class Fish : MonoBehaviour
     private void OnEnable()
     {
         collider.enabled = true;
-        isSlices = false;
+        isClearAble = false;
 
         RandomSpawn();
     }
@@ -34,11 +36,10 @@ public class Fish : MonoBehaviour
         rectTransform.localPosition = new Vector2(randomX, randomY);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void SetClearAble(bool SetAble)
     {
-        if (collision.CompareTag("Player"))
-        {
+        isClearAble = SetAble;
 
-        }
+        DebugLogger.Log($"{gameObject.name} : {isClearAble}");
     }
 }
