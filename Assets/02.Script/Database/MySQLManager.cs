@@ -13,7 +13,7 @@ public class MySQLManager : MonoBehaviour
     {
         get
         {
-            // ¸¸¾à ÀÎ½ºÅÏ½º°¡ nullÀÌ¸é, »õ·Î¿î GameManager ¿ÀºêÁ§Æ®¸¦ »ı¼º
+            // ë§Œì•½ ì¸ìŠ¤í„´ìŠ¤ê°€ nullì´ë©´, ìƒˆë¡œìš´ GameManager ì˜¤ë¸Œì íŠ¸ë¥¼ ìƒì„±
             if (_instance == null)
             {
                 _instance = FindObjectOfType<MySQLManager>();
@@ -24,7 +24,7 @@ public class MySQLManager : MonoBehaviour
                     _instance = singletonObject.AddComponent<MySQLManager>();
                     singletonObject.name = typeof(MySQLManager).ToString() + " (Singleton)";
 
-                    // GameManager ¿ÀºêÁ§Æ®°¡ ¾À ÀüÈ¯ ½Ã ÆÄ±«µÇÁö ¾Êµµ·Ï ¼³Á¤
+                    // GameManager ì˜¤ë¸Œì íŠ¸ê°€ ì”¬ ì „í™˜ ì‹œ íŒŒê´´ë˜ì§€ ì•Šë„ë¡ ì„¤ì •
                     DontDestroyOnLoad(singletonObject);
                 }
             }
@@ -53,18 +53,18 @@ public class MySQLManager : MonoBehaviour
     void Start()
     {
         _androidJavaObject = new AndroidJavaObject("com.unity3d.player.KakaoLogin");
-        // µ¥ÀÌÅÍº£ÀÌ½º ¿¬°á ¹®ÀÚ¿­ ¼³Á¤
+        // ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²° ë¬¸ìì—´ ì„¤ì •
         connectionString = "Server=3.38.178.218;Database=ProjectP;User ID=ubuntu;Password=P@ssw0rd!;Pooling=false;SslMode=None;AllowPublicKeyRetrieval=true;";
     }
 
-    // type = Table ÀÌ¸§ str = ³Ñ°Ü¹ŞÀº || ·Î ±¸ºĞµÈ Á¤º¸
+    // type = Table ì´ë¦„ str = ë„˜ê²¨ë°›ì€ || ë¡œ êµ¬ë¶„ëœ ì •ë³´
     public void InsertData(string type, string str)
     {
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
             try
             {
-                // check¿ë
+                // checkìš©
                 //textCheck.text += $"{str}\n";
 
                 conn.Open();
@@ -77,7 +77,7 @@ public class MySQLManager : MonoBehaviour
 
                 switch (type)
                 {
-                    case "MemberInfo": // Kakao = È¸¿ø¹øÈ£||ÀÌ¸ŞÀÏ||´Ğ³×ÀÓ||ÇÁ·ÎÇÊ»çÁøURL
+                    case "MemberInfo": // Kakao = íšŒì›ë²ˆí˜¸||ì´ë©”ì¼||ë‹‰ë„¤ì„||í”„ë¡œí•„ì‚¬ì§„URL
                         if (!string.IsNullOrEmpty(strArr[0]))
                         {
                             query += "MemberID";
@@ -104,7 +104,7 @@ public class MySQLManager : MonoBehaviour
                         //    values += ", @GuestPassword";
                         //}
                         break;
-                    case "Assets": // Kakao = È¸¿ø¹øÈ£||ÀÌ¸ŞÀÏ||´Ğ³×ÀÓ||ÇÁ·ÎÇÊ»çÁøURL
+                    case "Assets": // Kakao = íšŒì›ë²ˆí˜¸||ì´ë©”ì¼||ë‹‰ë„¤ì„||í”„ë¡œí•„ì‚¬ì§„URL
                         if (!string.IsNullOrEmpty(strArr[0]))
                         {
                             query += "MemberID";
@@ -141,7 +141,7 @@ public class MySQLManager : MonoBehaviour
 
                 query += values;
 
-                // check¿ë
+                // checkìš©
                 //textCheck.text += $"{query}\n";
 
                 MySqlCommand cmd = new MySqlCommand(query, conn);
@@ -169,14 +169,24 @@ public class MySQLManager : MonoBehaviour
 
                 cmd.ExecuteNonQuery();
 
-                // ÃÖÃÊ ·Î±×ÀÎ½Ã DBDataManager¿¡ Dictionary µ¥ÀÌÅÍ ÀúÀå
+                // ìµœì´ˆ ë¡œê·¸ì¸ì‹œ DBDataManagerì— Dictionary ë°ì´í„° ì €ì¥
                 InputDataAtDictionary(type,str);
 
                 Debug.Log("Data Inserted Successfully");
             }
             catch (Exception ex)
             {
-                Debug.LogError("Failed to insert data: " + ex.Message);
+                if (ex.Message.Contains("MySqlPoolManager"))
+                {
+                    // ì˜¤ë¥˜ ë¬´ì‹œí•˜ê³  ë¡œê¹…ë§Œ
+                    Debug.LogWarning("MySqlPoolManager ê´€ë ¨ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆì§€ë§Œ ë¬´ì‹œí•©ë‹ˆë‹¤: " + ex.Message);
+                }
+                else
+                {
+                    // ë‹¤ë¥¸ ì˜ˆì™¸ëŠ” ë‹¤ì‹œ ë˜ì§€ê±°ë‚˜ ì²˜ë¦¬
+                    Debug.LogError("Failed to insert data: " + ex.Message);
+                    //throw;
+                }
             }
         }
     }
@@ -189,10 +199,10 @@ public class MySQLManager : MonoBehaviour
             {
                 //str = "MemberInfo||3666640951";
 
-                // Ã¼Å©¿ë
+                // ì²´í¬ìš©
                 //textCheck.text += $"{str}\n";
 
-                // strArr[0]Àº Å×ÀÌºí¸í strArr[1]Àº È¸¿ø¹øÈ£ °íÁ¤
+                // strArr[0]ì€ í…Œì´ë¸”ëª… strArr[1]ì€ íšŒì›ë²ˆí˜¸ ê³ ì •
                 string[] strArr = str.Split("||");
 
                 string query = string.Empty;
@@ -201,13 +211,16 @@ public class MySQLManager : MonoBehaviour
 
                 switch (strArr[0])
                 {
-                    case "MemberInfo": // Kakao = È¸¿ø¹øÈ£||ÀÌ¸ŞÀÏ||´Ğ³×ÀÓ||ÇÁ·ÎÇÊ»çÁøURL
+                    case "MemberInfo": // Kakao = íšŒì›ë²ˆí˜¸||ì´ë©”ì¼||ë‹‰ë„¤ì„||í”„ë¡œí•„ì‚¬ì§„URL
                         query = $"SELECT * FROM {strArr[0]} WHERE MemberID = {strArr[1]}";
-                        // Ã¼Å©¿ë
+                        // ì²´í¬ìš©
                         // textCheck.text += $"{query}\n";
                         break;
-                    case "Assets": // Kakao = È¸¿ø¹øÈ£||ÀÌ¸ŞÀÏ||´Ğ³×ÀÓ||ÇÁ·ÎÇÊ»çÁøURL
+                    case "Assets": // Kakao = íšŒì›ë²ˆí˜¸||ì´ë©”ì¼||ë‹‰ë„¤ì„||í”„ë¡œí•„ì‚¬ì§„URL
                         query = $"SELECT * FROM {strArr[0]} WHERE MemberID = {strArr[1]}";
+                        break;
+                    case "MapData": // ìƒˆë¡œìš´ MapData ë¡œì§ ì¶”ê°€
+                        query = $"SELECT * FROM MapData";
                         break;
                     default:
                         Debug.LogError("Invalid query type provided.");
@@ -221,28 +234,40 @@ public class MySQLManager : MonoBehaviour
                 {
                     switch (strArr[0])
                     {
-                        case "MemberInfo": // Kakao = È¸¿ø¹øÈ£||ÀÌ¸ŞÀÏ||´Ğ³×ÀÓ||ÇÁ·ÎÇÊ»çÁøURL
+                        case "MemberInfo": // Kakao = íšŒì›ë²ˆí˜¸||ì´ë©”ì¼||ë‹‰ë„¤ì„||í”„ë¡œí•„ì‚¬ì§„URL
                             string MemberID = reader["MemberID"].ToString();
                             string Email = reader["Email"].ToString();
                             string Nickname = reader["Nickname"].ToString();
                             string ProfileURL = reader["ProfileURL"].ToString();
 
-                            // Ã¼Å©¿ë
+                            // ì²´í¬ìš©
                             //textCheck.text += $"{MemberID}\n{Email}\n{Nickname}\n{ProfileURL}";
 
                             InputDataAtDictionary("MemberInfo", $"{MemberID}||{Email}||{Nickname}||{ProfileURL}");
                             break;
-                        case "Assets": // Kakao = È¸¿ø¹øÈ£||ÀÌ¸ŞÀÏ||´Ğ³×ÀÓ||ÇÁ·ÎÇÊ»çÁøURL
+                        case "Assets": // Kakao = íšŒì›ë²ˆí˜¸||ì´ë©”ì¼||ë‹‰ë„¤ì„||í”„ë¡œí•„ì‚¬ì§„URL
                             string ID = reader["MemberID"].ToString();
                             string Gold = reader["Gold"].ToString();
                             string HeartTime = reader["HeartTime"].ToString();
                             string ItemCount = reader["ItemCount"].ToString();
 
-                            // Ã¼Å©¿ë
+                            // ì²´í¬ìš©
                             //textCheck.text += $"{MemberID}\n{Email}\n{Nickname}\n{ProfileURL}";
 
                             InputDataAtDictionary("Assets", $"{ID}||{Gold}||{HeartTime}||{ItemCount}");
                             break;
+                        case "MapData": // ìƒˆë¡œìš´ MapData ë¡œì§ ì¶”ê°€
+                            string chapter = reader["Chapter"].ToString();
+                            string stage = reader["Stage"].ToString();
+                            string mapID = reader["MapID"].ToString();
+                            string tileValue = reader["TileValue"].ToString();
+                            string limitCount = reader["LimitCount"].ToString();
+                            string createTime = reader["CreateTime"].ToString();
+
+                            // ë°ì´í„°ë¥¼ ì ì ˆí•œ í¬ë§·ìœ¼ë¡œ ì €ì¥
+                            InputDataAtDictionary("MapData", $"{chapter}||{stage}||{mapID}||{tileValue}||{limitCount}||{createTime}");
+                            break;
+
                         default:
                             Debug.LogError("Invalid query type provided.");
                             return;
@@ -251,19 +276,29 @@ public class MySQLManager : MonoBehaviour
             }
             catch (Exception ex)
             {
-                Debug.LogError("Failed to read data: " + ex.Message);
+                if (ex.Message.Contains("MySqlPoolManager"))
+                {
+                    // ì˜¤ë¥˜ ë¬´ì‹œí•˜ê³  ë¡œê¹…ë§Œ
+                    Debug.LogWarning("MySqlPoolManager ê´€ë ¨ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆì§€ë§Œ ë¬´ì‹œí•©ë‹ˆë‹¤: " + ex.Message);
+                }
+                else
+                {
+                    // ë‹¤ë¥¸ ì˜ˆì™¸ëŠ” ë‹¤ì‹œ ë˜ì§€ê±°ë‚˜ ì²˜ë¦¬
+                    Debug.LogError("Failed to Read data: " + ex.Message);
+                    //throw;
+                }
             }
         }
     }
 
-    // Kotlin¿¡¼­ ³Ñ°Ü¹ŞÀº Ä«Ä«¿ÀÅå À¯Àú µ¥ÀÌÅÍ
+    // Kotlinì—ì„œ ë„˜ê²¨ë°›ì€ ì¹´ì¹´ì˜¤í†¡ ìœ ì € ë°ì´í„°
     public void GetAndSetUserData(string userData)
     {
         //userData = "3666640951||dls625@hanmail.net||.||https://img1.kakaocdn.net/thumb/R110x110.q70/?fname=https://t1.kakaocdn.net/account_images/default_profile.jpeg";
 
         InsertData("MemberInfo", userData);
 
-        // ¸¸µé¾î¾ß ÇÒ°Å!
+        // ë§Œë“¤ì–´ì•¼ í• ê±°!
         //InsertData("Assets", userData);
     }
 
@@ -279,7 +314,7 @@ public class MySQLManager : MonoBehaviour
                 DBDataManager.Instance.UserData.Add("Nickname", strArr[2]);
                 DBDataManager.Instance.UserData.Add("ProfileURL", strArr[3]);
                 DBDataManager.Instance.ShowDicDataCheck("UserData");
-                // GuestLogin¿¡¼­ ¾ÈºÒ·¯¿ÍÁ®¼­, ¿©±â¼­ Assets µ¥ÀÌÅÍ Call.
+                // GuestLoginì—ì„œ ì•ˆë¶ˆëŸ¬ì™€ì ¸ì„œ, ì—¬ê¸°ì„œ Assets ë°ì´í„° Call.
                 ReadData($"Assets||{strArr[0]}");
                 break;
             case "Assets":
@@ -288,8 +323,21 @@ public class MySQLManager : MonoBehaviour
                 DBDataManager.Instance.UserAssetsData.Add("HeartTime", strArr[2]);
                 DBDataManager.Instance.UserAssetsData.Add("ItemCount", strArr[3]);
                 DBDataManager.Instance.ShowDicDataCheck("Assets");
-                // ´Ù ºÒ·¯¿À¸é Scene Change
-                SceneManager.LoadScene("Jinmyung");
+                // ë‹¤ ë¶ˆëŸ¬ì˜¤ë©´ Scene Change
+
+                // ë§µ ë‹¤ìš´ë¡œë“œ ì²´í¬ í›„ SceneChanger
+                MapDownloadManager.Instance.CheckMapDownload();
+
+                break;
+            case "MapData":
+                // MapDataì˜ ê° í•­ëª©ì„ ì ì ˆí•œ í‚¤ë¡œ Dictionaryì— ì €ì¥
+                DBDataManager.Instance.MapData.Add("Chapter", strArr[0]);
+                DBDataManager.Instance.MapData.Add("Stage", strArr[1]);
+                DBDataManager.Instance.MapData.Add("MapID", strArr[2]);
+                DBDataManager.Instance.MapData.Add("TileValue", strArr[3]);
+                DBDataManager.Instance.MapData.Add("LimitCount", strArr[4]);
+                DBDataManager.Instance.MapData.Add("CreateTime", strArr[5]);
+                DBDataManager.Instance.ShowDicDataCheck("MapData");
                 break;
             default:
                 Debug.LogError("Invalid query type provided.");
