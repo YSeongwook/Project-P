@@ -191,7 +191,7 @@ public class MapGenerator : MonoBehaviour
     // 정답 여부 확인
     private bool IsCorrectAnswer()
     {
-        foreach (Transform child in transform)
+        foreach (Transform child in mapGridLayout.transform)
         {
             var childTileNode = child.GetComponent<TileNode>();
             if (childTileNode == null || childTileNode.GetTileInfo.Type == TileType.None) continue;
@@ -214,7 +214,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, playerGold + plusGold);
 
         EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage, _currentChapter, _currentStage);
-        EventManager<UIEvents>.TriggerEvent(UIEvents.MissionSuccessPopUp);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.StageClear);
 
         DebugLogger.Log("클리어");
     }
