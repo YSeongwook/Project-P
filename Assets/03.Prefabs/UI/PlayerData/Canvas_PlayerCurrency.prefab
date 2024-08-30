@@ -1272,7 +1272,7 @@ GameObject:
   - component: {fileID: 7028084694378726078}
   - component: {fileID: 7028084694378726079}
   m_Layer: 5
-  m_Name: Canvas_TopPlayerGold
+  m_Name: Canvas_PlayerCurrency
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

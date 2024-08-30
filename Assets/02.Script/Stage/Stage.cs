@@ -19,7 +19,7 @@ public class Stage : MonoBehaviour
     
     public void SetStageNumber(int chapter, int number)
     {
-        this._chapter = chapter;
+        _chapter = chapter;
         stageNumber = number;
     }
 
@@ -30,7 +30,7 @@ public class Stage : MonoBehaviour
             DebugLogger.Log("티켓의 수가 부족합니다.");
             return;
         }
-        EventManager<DataEvents>.TriggerEvent(DataEvents.SelectStage, this._chapter,stageNumber);
+        EventManager<DataEvents>.TriggerEvent(DataEvents.SelectStage, _chapter,stageNumber);
     }     
 
     public void ButtonActivate(bool isEnable)

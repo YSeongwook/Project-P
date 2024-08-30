@@ -3,43 +3,34 @@ using System.Collections.Generic;
 using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MapGenerator : MonoBehaviour
 {
-    [FoldoutGroup("Canvas")][SerializeField] private Canvas _MainMenuUI;
-    [FoldoutGroup("Canvas")][SerializeField] private Canvas _PlayerGoldUI;
-    [FoldoutGroup("Canvas")][SerializeField] private GameObject _missionSuccess;
-    [FoldoutGroup("Canvas")][SerializeField] private GameObject _missionFail;
-
+    public Canvas stageCanvas;
+    public GameObject mapGridLayout;
+    
     [FoldoutGroup("Tile")][SerializeField] private GameObject _tileNode;
     [FoldoutGroup("Tile")][SerializeField] private float _tileSize;
 
-    [FoldoutGroup("Tile Sprite")]
-    [SerializeField] private List<Sprite> RoadList;
-    [FoldoutGroup("Tile Sprite")]
-    [SerializeField] private List<Sprite> GimmickList;
+    [FoldoutGroup("Tile Sprite")] [SerializeField] private List<Sprite> roadList;
+    [FoldoutGroup("Tile Sprite")] [SerializeField] private List<Sprite> gimmickList;
 
-    private Canvas _canvas;
     private List<Tile> _tileList = new List<Tile>();
     private RectTransform _rectTransform;
     private GridLayoutGroup _grid;
     private int _limitCount;
     
-    private bool _check; // 정답 체크 변수
-    private int currentChapter;
-    private int currentStage;
+    private int _currentChapter;
+    private int _currentStage;
 
     private Temp2 temp; // 디버거
 
     private void Awake()
     {
-        _canvas = GetComponentInParent<Canvas>();
-        _rectTransform = GetComponent<RectTransform>();
-        _grid = GetComponentInChildren<GridLayoutGroup>();
+        _rectTransform = mapGridLayout.GetComponent<RectTransform>();
+        _grid = mapGridLayout.GetComponent<GridLayoutGroup>();
         temp = new Temp2();
 
         AddEvents();
@@ -47,7 +38,7 @@ public class MapGenerator : MonoBehaviour
 
     private void Start()
     {
-        _canvas.enabled = false;
+        stageCanvas.enabled = false;
     }
 
     private void OnDestroy()
@@ -60,7 +51,6 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StartListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StartListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StartListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
-        EventManager<UIEvents>.StartListening(UIEvents.MissionSuccessPopUp, PopUpMissionSuccess);
         EventManager<DataEvents>.StartListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
         EventManager<StageEvent>.StartListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
         EventManager<StageEvent>.StartListening(StageEvent.CheckMissionFail, CheckMissionFail);
@@ -72,7 +62,6 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StopListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StopListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StopListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
-        EventManager<UIEvents>.StopListening(UIEvents.MissionSuccessPopUp, PopUpMissionSuccess);
         EventManager<DataEvents>.StopListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
         EventManager<StageEvent>.StopListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
         EventManager<StageEvent>.StopListening(StageEvent.CheckMissionFail, CheckMissionFail);
@@ -97,7 +86,9 @@ public class MapGenerator : MonoBehaviour
     // 스테이지 초기화
     private void InitializeStage(int chapter, int stage)
     {
-        _check = false;
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.EnterStage);
+        
         string fileName = $"{chapter}-{stage}";
         var newTileList = DataManager.Instance.GetPuzzleTileMap(fileName);
 
@@ -108,15 +99,10 @@ public class MapGenerator : MonoBehaviour
         }
 
         _tileList = new List<Tile>(newTileList);
-        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
 
-        currentChapter = chapter;
-        currentStage = stage;
-
-        _MainMenuUI.enabled = false;
-        _PlayerGoldUI.enabled = false;
-        _canvas.enabled = true;
-
+        _currentChapter = chapter;
+        _currentStage = stage;
+        
         SetupGridSize();
     }
 
@@ -160,13 +146,13 @@ public class MapGenerator : MonoBehaviour
                 tileNode.SetTileNodeData(newTileInfo);
             }
 
-            tileNode.SetTilImage(RoadList[tileShape - 1]);
+            tileNode.SetTilImage(roadList[tileShape - 1]);
         }
 
-        StartCoroutine(dummmy());
+        StartCoroutine(Dummy());
     }
 
-    IEnumerator dummmy()
+    private IEnumerator Dummy()
     {
         yield return new WaitForEndOfFrame();
 
@@ -181,12 +167,12 @@ public class MapGenerator : MonoBehaviour
         FinalizeStage();
     }
 
-    // 스테이지 완료 후 처리
+    // 스테이지 생성 완료 후 처리
     private void FinalizeStage()
     {
         EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathEndPoint, _tileSize);
 
-        var tileMapTable = DataManager.Instance.GetTileMapTable($"M{currentChapter}{currentStage.ToString("000")}");
+        var tileMapTable = DataManager.Instance.GetTileMapTable($"M{_currentChapter}{_currentStage.ToString("000")}");
         _limitCount = tileMapTable.LimitCount;
         EventManager<StageEvent>.TriggerEvent(StageEvent.StartStage, _limitCount);
     }
@@ -214,7 +200,6 @@ public class MapGenerator : MonoBehaviour
         return true;
     }
 
-
     // 정답 확인 처리
     private void CheckAnswer()
     {
@@ -225,10 +210,10 @@ public class MapGenerator : MonoBehaviour
     private void HandleCorrectAnswer()
     {
         float playerGold = PlayerInformation.Instance.PlayerViewModel.PlayerGold;
-        float plusGold = currentChapter * 50;
+        float plusGold = _currentChapter * 50;
         EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, playerGold + plusGold);
 
-        EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage, currentChapter, currentStage);
+        EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage, _currentChapter, _currentStage);
         EventManager<UIEvents>.TriggerEvent(UIEvents.MissionSuccessPopUp);
 
         DebugLogger.Log("클리어");
@@ -239,7 +224,7 @@ public class MapGenerator : MonoBehaviour
     {
         if (_limitCount <= 0)
         {
-            _missionFail.SetActive(true);
+            EventManager<StageEvent>.TriggerEvent(StageEvent.StageFail);
             DebugLogger.Log("실패");
         }
     }
@@ -275,33 +260,9 @@ public class MapGenerator : MonoBehaviour
     }
 
     // 타일 맵 위치 그리드 설정
-    private void SetTileMapPositionGrid(RectTransform transform, TileNode tileNode)
+    private void SetTileMapPositionGrid(RectTransform rectTransform, TileNode tileNode)
     {
-        EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathTileGridAdd, transform, tileNode);
-    }
-
-    // 미션 성공 팝업
-    private void PopUpMissionSuccess()
-    {
-        _missionSuccess.SetActive(true);
-    }
-
-    // 다시 하기 버튼 클릭 처리
-    public void OnClickReplay()
-    {
-        _missionFail.SetActive(false);
-        OpenNewStage(currentChapter, currentStage);
-    }
-
-    // 메인 UI로 돌아가기
-    public void OnClickClose()
-    {
-        // UI 변화
-        _missionFail.SetActive(false);
-        _missionSuccess.SetActive(false);
-        _canvas.enabled = false;
-        _MainMenuUI.enabled = true;
-        _PlayerGoldUI.enabled = true;
+        EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathTileGridAdd, rectTransform, tileNode);
     }
 
     // 타일 리셋

@@ -20,6 +20,8 @@ public class StageUI : MonoBehaviour
     {
         EventManager<StageEvent>.StartListening<int>(StageEvent.StartStage, UpdateLimitCount);
         EventManager<StageEvent>.StartListening(StageEvent.UseTurn, DecreaseLimitCount);
+        EventManager<StageEvent>.StartListening(StageEvent.StageClear, EnableStageClearPanel);
+        EventManager<StageEvent>.StartListening(StageEvent.StageFail, EnableStageFailPanel);
     }
 
     private void Start()
@@ -36,6 +38,8 @@ public class StageUI : MonoBehaviour
     {
         EventManager<StageEvent>.StopListening<int>(StageEvent.StartStage, UpdateLimitCount);
         EventManager<StageEvent>.StopListening(StageEvent.UseTurn, DecreaseLimitCount);
+        EventManager<StageEvent>.StopListening(StageEvent.StageClear, EnableStageClearPanel);
+        EventManager<StageEvent>.StopListening(StageEvent.StageFail, EnableStageFailPanel);
     }
 
     // 제한 횟수 UI 업데이트
