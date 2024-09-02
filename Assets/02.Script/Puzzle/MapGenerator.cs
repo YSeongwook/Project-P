@@ -33,14 +33,14 @@ public class MapGenerator : MonoBehaviour
     private int currentChapter;
     private int currentStage;
 
-    private Temp2 temp; // 디버거
+    private PathFind checkPath; // 디버거
 
     private void Awake()
     {
         _canvas = GetComponentInParent<Canvas>();
         _rectTransform = GetComponent<RectTransform>();
         _grid = GetComponentInChildren<GridLayoutGroup>();
-        temp = new Temp2();
+        checkPath = new PathFind();
 
         AddEvents();
     }
@@ -48,9 +48,6 @@ public class MapGenerator : MonoBehaviour
     private void Start()
     {
         _canvas.enabled = false;
-
-        // 테스트 용
-        OpenNewStage(1, 1);
     }
 
     private void OnDestroy()
@@ -67,7 +64,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StartListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
         EventManager<StageEvent>.StartListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
         EventManager<StageEvent>.StartListening(StageEvent.CheckMissionFail, CheckMissionFail);
-        temp.SetTileGridEvent(true);
+        checkPath.SetTileGridEvent(true);
     }
 
     private void RemoveEvents()
@@ -79,7 +76,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StopListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
         EventManager<StageEvent>.StopListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
         EventManager<StageEvent>.StopListening(StageEvent.CheckMissionFail, CheckMissionFail);
-        temp.SetTileGridEvent(false);
+        checkPath.SetTileGridEvent(false);
     }
 
     // 스테이지 열기
@@ -216,13 +213,8 @@ public class MapGenerator : MonoBehaviour
     // 정답 여부 확인
     private bool IsCorrectAnswer()
     {
-        foreach (Transform child in transform)
-        {
-            var childTileNode = child.GetComponent<TileNode>();
-            if (childTileNode == null || childTileNode.GetTileInfo.Type == TileType.None) continue;
-            if (!childTileNode.IsCorrect) return false;
-        }
-        return true;
+        bool isLoop = checkPath.TilePathFind();
+        return isLoop;
     }
 
 

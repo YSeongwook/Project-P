@@ -85,6 +85,7 @@ namespace EnumTypes
     public enum PuzzleEvent
     {
         StartClearAnimation,
+        Rotation,
     }
 
     public enum GimmickEvent

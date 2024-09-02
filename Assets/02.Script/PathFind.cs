@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Temp2
+public class PathFind
 {
     private Dictionary<Vector2, TileNode> _tileGrid = new Dictionary<Vector2, TileNode>();
     private Dictionary<int, Dictionary<Vector2, TileNode>> _PathTileList = new Dictionary<int, Dictionary<Vector2, TileNode>>();
     private Dictionary<Vector2, TileNode> _startPoint = new Dictionary<Vector2, TileNode>();
     private Dictionary<Vector2, TileNode> _endPoint = new Dictionary<Vector2, TileNode>();
     private Dictionary<Vector2, Vector2> _warpPoints = new Dictionary<Vector2, Vector2>();
+    private List<TileNode> _linkTiles = new List<TileNode>();
 
     private float CellSize;
 
@@ -25,7 +26,8 @@ public class Temp2
         EventManager<StageEvent>.StartListening(StageEvent.ResetTileGrid, ResetTileGrid);
         EventManager<StageEvent>.StartListening<Vector2, TileNode>(StageEvent.SetPathTileGridAdd, AddTileGrid);
         EventManager<StageEvent>.StartListening<float>(StageEvent.SetPathEndPoint, SetStartAndEndPoint);
-        EventManager<StageEvent>.StartListening(StageEvent.SortPathTileGrid, SortTileGrid);
+        EventManager<StageEvent>.StartListening(StageEvent.SortPathTileGrid, ChckTilePath);
+        EventManager<PuzzleEvent>.StartListening<TileNode>(PuzzleEvent.Rotation, LinkTileRotate);
     }
 
     private void RemoveEvents()
@@ -33,7 +35,8 @@ public class Temp2
         EventManager<StageEvent>.StopListening(StageEvent.ResetTileGrid, ResetTileGrid);
         EventManager<StageEvent>.StopListening<Vector2, TileNode>(StageEvent.SetPathTileGridAdd, AddTileGrid);
         EventManager<StageEvent>.StopListening<float>(StageEvent.SetPathEndPoint, SetStartAndEndPoint);
-        EventManager<StageEvent>.StopListening(StageEvent.SortPathTileGrid, SortTileGrid);
+        EventManager<StageEvent>.StopListening(StageEvent.SortPathTileGrid, ChckTilePath);
+        EventManager<PuzzleEvent>.StopListening<TileNode>(PuzzleEvent.Rotation, LinkTileRotate);
     }
 
     private void ResetTileGrid()
@@ -43,6 +46,7 @@ public class Temp2
         _tileGrid.Clear();
         _PathTileList.Clear();
         _warpPoints.Clear();
+        _linkTiles.Clear();
     }
 
     private void AddTileGrid(Vector2 tilePosition, TileNode tileNode)
@@ -56,6 +60,7 @@ public class Temp2
         CellSize = cellSize;
 
         List<Vector2> unpairedWarps = new List<Vector2>();
+        List<TileNode> unpaireLinks = new List<TileNode>();
 
         foreach (var tile in _tileGrid)
         {
@@ -74,6 +79,13 @@ public class Temp2
             if (tile.Value.GetTileInfo.GimmickShape == GimmickShape.Warp)
             {
                 unpairedWarps.Add(tile.Key);
+                continue;
+            }
+
+            if(tile.Value.GetTileInfo.GimmickShape == GimmickShape.Link)
+            {
+                _linkTiles.Add(tile.Value);
+                continue;
             }
         }
 
@@ -87,7 +99,21 @@ public class Temp2
         }
     }
 
-    private void SortTileGrid()
+    private void ChckTilePath()
+    {
+        if (TilePathFind())
+        {
+            // 하나 이상의 startPoint가 모든 endPoint와 연결된 경우
+            EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
+        }
+        else
+        {
+            // 모든 startPoint에서 하나 이상의 endPoint가 연결되지 않은 경우
+            EventManager<StageEvent>.TriggerEvent(StageEvent.CheckMissionFail);
+        }
+    }
+
+    public bool TilePathFind()
     {
         bool missionSuccess = false;
 
@@ -122,18 +148,8 @@ public class Temp2
             }
         }
 
-        if (missionSuccess)
-        {
-            // 하나 이상의 startPoint가 모든 endPoint와 연결된 경우
-            EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
-        }
-        else
-        {
-            // 모든 startPoint에서 하나 이상의 endPoint가 연결되지 않은 경우
-            EventManager<StageEvent>.TriggerEvent(StageEvent.CheckMissionFail);
-        }
+        return missionSuccess;
     }
-
 
     private Dictionary<Vector2, TileNode> FindPath(Vector2 start, Vector2 end)
     {
@@ -343,5 +359,19 @@ public class Temp2
         }
 
         return connections;
+    }
+
+    private void LinkTileRotate(TileNode tile)
+    {
+        if (!_linkTiles.Contains(tile))
+        {
+            tile.RotationTile(tile.GetTileInfo.RotateValue, true);
+            return;
+        }
+
+        foreach(var linktile in _linkTiles)
+        {
+            linktile.RotationTile(tile.GetTileInfo.RotateValue, true);
+        }
     }
 }

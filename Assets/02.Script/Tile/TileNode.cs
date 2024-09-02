@@ -76,12 +76,6 @@ public class TileNode : MonoBehaviour
 
     private void Start()
     {
-        //RectTransform imageBackGroundRectTransform = _background.GetComponent<RectTransform>();
-        //imageBackGroundRectTransform.sizeDelta = _rectTransform.sizeDelta;
-
-       // _imageRoadRectTransform.sizeDelta = _rectTransform.sizeDelta;
-       // _imageGimmickRectTransform.sizeDelta = _rectTransform.sizeDelta - new Vector2(10, 10);
-
         _backgroundOutline.enabled = false;
 
         if(_imageGimmick.sprite == default)
@@ -98,6 +92,8 @@ public class TileNode : MonoBehaviour
         CorrectTileInfo = tile;
 
         IsCorrect = false;
+
+        _gimmick.GetGimmickShape(_tile.GimmickShape);
     }
 
     // Road 타일 이미지 변경
@@ -106,9 +102,9 @@ public class TileNode : MonoBehaviour
         _imageRoad.sprite = Road;
 
         // 임시 테스트용
-        //RotationTile(_tile.RotateValue);
+        RotationTile(_tile.RotateValue, false);
 
-        RandomTileRotate();
+        //RandomTileRotate();
     }
 
     // Gimmick 타일 이미지 변경
@@ -124,13 +120,13 @@ public class TileNode : MonoBehaviour
     }
 
     // 타일 회전값 랜덤 설정
-    private void RandomTileRotate()
-    {
-        int randomRotateValue = Random.Range(0, 4);
-        _tile.RotateValue = randomRotateValue;
+    //private void RandomTileRotate()
+    //{
+    //    int randomRotateValue = Random.Range(0, 4);
+    //    _tile.RotateValue = randomRotateValue;
 
-        RotationTile(randomRotateValue, false);
-    }
+    //    RotationTile(randomRotateValue, false);
+    //}
 
     // 회전 명령 실행
     public void OnClickRotationTile()
@@ -138,11 +134,13 @@ public class TileNode : MonoBehaviour
         _tile.RotateValue = (_tile.RotateValue + 1) % 4;
 
         EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
-        RotationTile(_tile.RotateValue, true);
+
+        EventManager<PuzzleEvent>.TriggerEvent(PuzzleEvent.Rotation, this);
+        //RotationTile(_tile.RotateValue, true);
     }
 
     // 타일 회전
-    private void RotationTile(int rotateValue, bool isCheckAble)
+    public void RotationTile(int rotateValue, bool isCheckAble)
     {
         float rotationAngle = rotateValue * -90f;
 
