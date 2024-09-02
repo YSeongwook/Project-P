@@ -1,9 +1,7 @@
 using EnumTypes;
 using EventLibrary;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Temp2
@@ -12,6 +10,7 @@ public class Temp2
     private Dictionary<int, Dictionary<Vector2, TileNode>> _PathTileList = new Dictionary<int, Dictionary<Vector2, TileNode>>();
     private Dictionary<Vector2, TileNode> _startPoint = new Dictionary<Vector2, TileNode>();
     private Dictionary<Vector2, TileNode> _endPoint = new Dictionary<Vector2, TileNode>();
+    private Dictionary<Vector2, Vector2> _warpPoints = new Dictionary<Vector2, Vector2>();
 
     private float CellSize;
 
@@ -43,6 +42,7 @@ public class Temp2
         _endPoint.Clear();
         _tileGrid.Clear();
         _PathTileList.Clear();
+        _warpPoints.Clear();
     }
 
     private void AddTileGrid(Vector2 tilePosition, TileNode tileNode)
@@ -55,6 +55,8 @@ public class Temp2
     {
         CellSize = cellSize;
 
+        List<Vector2> unpairedWarps = new List<Vector2>();
+
         foreach (var tile in _tileGrid)
         {
             if (tile.Value.GetTileInfo.RoadShape == RoadShape.Start)
@@ -66,6 +68,21 @@ public class Temp2
             if (tile.Value.GetTileInfo.RoadShape == RoadShape.End)
             {
                 _endPoint.Add(tile.Key, tile.Value);
+                continue;
+            }
+
+            if (tile.Value.GetTileInfo.GimmickShape == GimmickShape.Warp)
+            {
+                unpairedWarps.Add(tile.Key);
+            }
+        }
+
+        for (int i = 0; i < unpairedWarps.Count; i += 2)
+        {
+            if (i + 1 < unpairedWarps.Count)
+            {
+                _warpPoints.Add(unpairedWarps[i], unpairedWarps[i + 1]);
+                _warpPoints.Add(unpairedWarps[i + 1], unpairedWarps[i]); // 양방향 워프
             }
         }
     }
@@ -172,6 +189,11 @@ public class Temp2
     private List<Vector2> GetNeighbors(Vector2 current)
     {
         List<Vector2> neighbors = new List<Vector2>();
+
+        if (_tileGrid[current].GetTileInfo.GimmickShape == GimmickShape.Warp)
+        {
+            neighbors.Add(_warpPoints[current]);
+        }
 
         foreach (var direction in new[] { Vector2.up, Vector2.right, Vector2.down, Vector2.left })
         {

@@ -48,6 +48,9 @@ public class MapGenerator : MonoBehaviour
     private void Start()
     {
         _canvas.enabled = false;
+
+        // 테스트 용
+        OpenNewStage(1, 1);
     }
 
     private void OnDestroy()
@@ -150,17 +153,25 @@ public class MapGenerator : MonoBehaviour
             var tileNode = newTile.GetComponent<TileNode>();
             if (tileNode == null) continue;
 
+            tileNode._gimmick.SetScale(_tileSize);
             tileNode.SetTileNodeData(tile);
 
             int tileShape = (int)tile.RoadShape;
-            if (tileShape <= 0)
+            if (tileShape > 0)
             {
-                tileShape = Random.Range(1, 5);
-                var newTileInfo = new Tile { Type = TileType.Road, RoadShape = (RoadShape)tileShape, GimmickShape = GimmickShape.None };
-                tileNode.SetTileNodeData(newTileInfo);
+                //tileShape = Random.Range(1, 5);
+                //var newTileInfo = new Tile { Type = TileType.Road, RoadShape = (RoadShape)tileShape, GimmickShape = GimmickShape.None };
+                //tileNode.SetTileNodeData(newTileInfo);
+
+                tileNode.SetTileRoadImage(RoadList[tileShape - 1]);
             }
 
-            tileNode.SetTilImage(RoadList[tileShape - 1]);
+            int GimmickShape = (int)tile.GimmickShape;
+            if (GimmickShape > 0)
+            {
+                tileNode.SetTileGimmickImage(GimmickList[GimmickShape - 1]);
+            }
+                
         }
 
         StartCoroutine(dummmy());

@@ -87,6 +87,11 @@ namespace EnumTypes
         StartClearAnimation,
     }
 
+    public enum GimmickEvent
+    {
+        GetGimmickShape,
+    }
+
     public class EnumTypes : MonoBehaviour
     {
     }
