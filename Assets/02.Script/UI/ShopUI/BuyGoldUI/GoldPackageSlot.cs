@@ -2,6 +2,7 @@ using DataStruct;
 using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,10 +12,12 @@ public class GoldPackageSlot : MonoBehaviour
     [FoldoutGroup("Gold Shop UI")][SerializeField] private Image imagePackageIcon;
     [FoldoutGroup("Gold Shop UI")][SerializeField] private TMP_Text textPriceErc;
     [FoldoutGroup("Gold shop UI")][SerializeField] private TMP_Text textPriceGold;
-    [FoldoutGroup("Gold shop UI")][SerializeField] private GameObject ShineParticle;
     [SerializeField] private GameObject goldBuyPopup; // 팝업 프리팹
+    [SerializeField] private GameObject goldPackageSlot;
 
     private GoldPackageData _packageInfo;
+
+    private Dictionary<string, GoldPackageData> _goldPackageDataDictionary;
 
     private void Awake()
     {
@@ -43,11 +46,11 @@ public class GoldPackageSlot : MonoBehaviour
             Debug.LogWarning("PackageIcon is null!");
         }
 
-        ShineParticle.SetActive(_packageInfo.PackageID == "G1005");
     }
 
+
     // 슬롯 클릭 시 팝업 열기
-    private void OnSlotClick()
+    public void OnSlotClick()
     {
         if (goldBuyPopup != null)
         {
