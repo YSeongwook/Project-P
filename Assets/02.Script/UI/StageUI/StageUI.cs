@@ -20,6 +20,7 @@ public class StageUI : MonoBehaviour
     {
         EventManager<StageEvent>.StartListening<int>(StageEvent.StartStage, UpdateLimitCount);
         EventManager<StageEvent>.StartListening(StageEvent.UseTurn, DecreaseLimitCount);
+        EventManager<StageEvent>.StartListening(StageEvent.RecoveryLimitCount, IncreaseLimitCount);
     }
 
     private void Start()
@@ -36,6 +37,7 @@ public class StageUI : MonoBehaviour
     {
         EventManager<StageEvent>.StopListening<int>(StageEvent.StartStage, UpdateLimitCount);
         EventManager<StageEvent>.StopListening(StageEvent.UseTurn, DecreaseLimitCount);
+        EventManager<StageEvent>.StopListening(StageEvent.RecoveryLimitCount, IncreaseLimitCount);
     }
 
     // 제한 횟수 UI 업데이트
@@ -51,7 +53,15 @@ public class StageUI : MonoBehaviour
         _limitCount -= 1;
         limitCountText.text = $"{_limitCount}";
 
-        EventManager<DataEvents>.TriggerEvent(DataEvents.DecreaseLimitCount);
+        EventManager<DataEvents>.TriggerEvent(DataEvents.DecreaseLimitCount, _limitCount);
+    }
+
+    private void IncreaseLimitCount()
+    {
+        _limitCount += 5;
+        limitCountText.text = $"{_limitCount}";
+
+        EventManager<DataEvents>.TriggerEvent(DataEvents.DecreaseLimitCount, _limitCount);
     }
     
     // 다시하기 버튼 클릭

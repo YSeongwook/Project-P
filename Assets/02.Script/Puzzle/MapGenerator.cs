@@ -61,7 +61,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StartListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StartListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
         EventManager<UIEvents>.StartListening(UIEvents.MissionSuccessPopUp, PopUpMissionSuccess);
-        EventManager<DataEvents>.StartListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
+        EventManager<DataEvents>.StartListening<int>(DataEvents.DecreaseLimitCount, LimitCountUpdate);
         EventManager<StageEvent>.StartListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
         EventManager<StageEvent>.StartListening(StageEvent.CheckMissionFail, CheckMissionFail);
         checkPath.SetTileGridEvent(true);
@@ -73,7 +73,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StopListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StopListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
         EventManager<UIEvents>.StopListening(UIEvents.MissionSuccessPopUp, PopUpMissionSuccess);
-        EventManager<DataEvents>.StopListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
+        EventManager<DataEvents>.StopListening<int>(DataEvents.DecreaseLimitCount, LimitCountUpdate);
         EventManager<StageEvent>.StopListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
         EventManager<StageEvent>.StopListening(StageEvent.CheckMissionFail, CheckMissionFail);
         checkPath.SetTileGridEvent(false);
@@ -247,10 +247,10 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    // 제한 횟수 감소
-    private void DecreaseLimitCount()
+    // 제한 횟수 업데이트
+    private void LimitCountUpdate(int ChangedCount)
     {
-        _limitCount -= 1;
+        _limitCount = ChangedCount;
         DebugLogger.Log(_limitCount);
     }
 

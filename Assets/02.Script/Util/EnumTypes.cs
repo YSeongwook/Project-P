@@ -58,6 +58,7 @@ namespace EnumTypes
         CheckAnswer,
         SetTileGrid,
         DecreaseLimitCount,
+        SavePlayerData,
     }
 
     public enum GoldEvent
@@ -80,6 +81,8 @@ namespace EnumTypes
         UseTurn,
         MissionSuccess,
         CheckMissionFail,
+        RecoveryLimitCount,
+        LoadInventoryItem,
     }
     
     public enum PuzzleEvent
@@ -91,6 +94,12 @@ namespace EnumTypes
     public enum GimmickEvent
     {
         GetGimmickShape,
+    }
+
+    public enum InventoryItemEvent
+    {
+        GetInventoryItemList,
+        UseItem,
     }
 
     public class EnumTypes : MonoBehaviour

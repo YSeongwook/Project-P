@@ -3,7 +3,10 @@ using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -27,6 +30,8 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
     private const int MaxTimer = 300;
 
     private int ticketTimer = MaxTimer;
+
+    public Dictionary<ItemData, int> _itemInventory { get; private set; }
 
     protected new void Awake()
     {
@@ -54,6 +59,8 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<UIEvents>.StartListening<ItemData, float>(UIEvents.OnClickItemBuyButton, BuyItem_Gold);
         EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyItem_ERC);
         EventManager<GoldEvent>.StartListening<float>(GoldEvent.OnGetGold, GetGold);
+        EventManager<InventoryItemEvent>.StartListening<Dictionary<ItemData, int>>(InventoryItemEvent.GetInventoryItemList, GetPlayerItemInventory);
+        EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.UseItem, UseItem);
     }
 
     private void RemoveEvents()
@@ -63,6 +70,8 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<UIEvents>.StopListening<ItemData, float>(UIEvents.OnClickItemBuyButton, BuyItem_Gold);
         EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyItem_ERC);
         EventManager<GoldEvent>.StopListening<float>(GoldEvent.OnGetGold, GetGold);
+        EventManager<InventoryItemEvent>.StopListening<Dictionary<ItemData, int>>(InventoryItemEvent.GetInventoryItemList, GetPlayerItemInventory);
+        EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.UseItem, UseItem);
     }
 
     //Gold와 ERC 초기화
@@ -168,9 +177,18 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         else
         {
             _goldValue -= itemInfo.GoldPrice * Count;
+
+            // 소지 아이템 리스트 변경
+            _itemInventory[itemInfo] += (int)Count;
+
+            ItemData newItemData = new ItemData();
+            newItemData.ItemID = itemInfo.ItemID;
+
             // Player Inventory View Model에 반영
             EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, _goldValue);
-            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerItemListChanged, itemInfo, Count);
+
+            // Player Informaiton에 데이터 전달
+            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerItemListChanged, newItemData, _itemInventory[itemInfo]);
 
             // 구매 완료 Message 출력
             EventManager<DataEvents>.TriggerEvent(DataEvents.OnPaymentSuccessful, true);
@@ -212,4 +230,50 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
 
         UpdateUIText();
     }
+
+    private void GetPlayerItemInventory(Dictionary<ItemData, int> itemList)
+    {
+        _itemInventory = itemList;
+
+        foreach(var item in _itemInventory)
+        {
+            DebugLogger.Log($"{item.Key.Name} : {item.Value}");
+        }
+    }
+
+    private void UseItem(string itemID)
+    {
+        ItemData useItem = default;
+
+        foreach(var item in _itemInventory)
+        {
+            if(item.Key.ItemID == itemID)
+            {
+                useItem = item.Key;
+                break;
+            }
+        }
+
+        if(useItem.ItemID != default)
+        {
+            _itemInventory[useItem] -= 1;
+
+            if(_itemInventory[useItem] <= 0)
+            {
+                _itemInventory.Remove(useItem);
+            }
+        }
+        else
+        {
+            DebugLogger.LogWarning("아이템을 소지하고 있지 않습니다.");
+        }
+
+        ItemData newItemData = new ItemData();
+        newItemData.ItemID = useItem.ItemID;
+
+        // Player Informaiton에 데이터 전달
+        EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerItemListChanged, newItemData, _itemInventory[useItem]);
+    }
+
+
 }
