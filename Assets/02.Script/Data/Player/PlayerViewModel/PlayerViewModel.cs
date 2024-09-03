@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using DataStruct;
 using UnityEngine;
 
@@ -71,7 +72,9 @@ public class PlayerViewModel
         get { return inventory; }
         set
         {
-            if (inventory == value) return;
+            if (inventory.SequenceEqual(value)) 
+                return;
+
             inventory = value;
             OnPropertyChanged(nameof(PlayerInventory));
         }

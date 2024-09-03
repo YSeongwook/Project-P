@@ -32,6 +32,9 @@ public class Stage : MonoBehaviour
         }
 
         EventManager<DataEvents>.TriggerEvent(DataEvents.SelectStage, this._chapter,stageNumber);
+
+        // 플레이어 아이템 게임 캔버스에 적용
+        EventManager<StageEvent>.TriggerEvent(StageEvent.SetPlayerItemInventoryList);
     }     
 
     public void ButtonActivate(bool isEnable)

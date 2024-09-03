@@ -61,7 +61,6 @@ public class PlayerInformation : Singleton<PlayerInformation>
         EventManager<DataEvents>.StartListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
         EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerCurrentChapterChanged, PlayerCurrentChapterChanged);
         EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerCurrentStageChanged, PlayerCurrentStageChanged);
-        EventManager<DataEvents>.StartListening(DataEvents.SavePlayerData, PlayerDataSave);
     }
 
     private void RemoveEvents()
@@ -73,13 +72,10 @@ public class PlayerInformation : Singleton<PlayerInformation>
         EventManager<DataEvents>.StopListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
         EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerCurrentChapterChanged, PlayerCurrentChapterChanged);
         EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerCurrentStageChanged, PlayerCurrentStageChanged);
-        EventManager<DataEvents>.StopListening(DataEvents.SavePlayerData, PlayerDataSave);
     }
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        DebugLogger.Log(e.PropertyName);
-
         switch (e.PropertyName)
         {
             case nameof(PlayerViewModel.PlayerERC):
@@ -88,6 +84,9 @@ public class PlayerInformation : Singleton<PlayerInformation>
                 break;
             case nameof(PlayerViewModel.PlayerGold):
                 _playerInfo.Gold = PlayerViewModel.PlayerGold;
+                break;
+            case nameof(PlayerViewModel.PlayerInventory):
+                _playerInfo.ItemList = PlayerViewModel.PlayerInventory;
                 break;
             case nameof(PlayerViewModel.CurrentChapter):
                 _playerInfo.CurrentChapter = PlayerViewModel.CurrentChapter.ToString();
