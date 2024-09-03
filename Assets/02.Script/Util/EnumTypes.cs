@@ -84,6 +84,7 @@ namespace EnumTypes
         RestartStage,
         RecoveryLimitCount,
         LoadInventoryItem,
+        SetPlayerItemInventoryList
     }
     
     public enum PuzzleEvent

@@ -60,6 +60,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<GoldEvent>.StartListening<float>(GoldEvent.OnGetGold, GetGold);
         EventManager<InventoryItemEvent>.StartListening<Dictionary<ItemData, int>>(InventoryItemEvent.GetInventoryItemList, GetPlayerItemInventory);
         EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.UseItem, UseItem);
+        EventManager<StageEvent>.StartListening(StageEvent.SetPlayerItemInventoryList, SetGamePlayerItem);
     }
 
     private void RemoveEvents()
@@ -71,6 +72,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<GoldEvent>.StopListening<float>(GoldEvent.OnGetGold, GetGold);
         EventManager<InventoryItemEvent>.StopListening<Dictionary<ItemData, int>>(InventoryItemEvent.GetInventoryItemList, GetPlayerItemInventory);
         EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.UseItem, UseItem);
+        EventManager<StageEvent>.StopListening(StageEvent.SetPlayerItemInventoryList, SetGamePlayerItem);
     }
 
     //Gold와 ERC 초기화
@@ -240,11 +242,6 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
     private void GetPlayerItemInventory(Dictionary<ItemData, int> itemList)
     {
         _itemInventory = itemList;
-
-        foreach(var item in _itemInventory)
-        {
-            DebugLogger.Log($"{item.Key.Name} : {item.Value}");
-        }
     }
 
     private void UseItem(string itemID)
@@ -281,5 +278,8 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerItemListChanged, newItemData, _itemInventory[useItem]);
     }
 
-
+    private void SetGamePlayerItem()
+    {
+        EventManager<StageEvent>.TriggerEvent(StageEvent.LoadInventoryItem, _itemInventory);
+    }
 }
