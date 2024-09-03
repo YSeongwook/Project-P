@@ -25,13 +25,13 @@ public class MapGenerator : MonoBehaviour
     private int _currentChapter;
     private int _currentStage;
 
-    private Temp2 temp; // 디버거
+    private PathFind checkPath; // 디버거
 
     private void Awake()
     {
         _rectTransform = mapGridLayout.GetComponent<RectTransform>();
-        _grid = mapGridLayout.GetComponent<GridLayoutGroup>();
-        temp = new Temp2();
+        _grid = mapGridLayout.GetComponentInChildren<GridLayoutGroup>();
+        checkPath = new PathFind();
 
         AddEvents();
     }
@@ -51,10 +51,10 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StartListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StartListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StartListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
-        EventManager<DataEvents>.StartListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
+        EventManager<DataEvents>.StartListening<int>(DataEvents.DecreaseLimitCount, LimitCountUpdate);
         EventManager<StageEvent>.StartListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
         EventManager<StageEvent>.StartListening(StageEvent.CheckMissionFail, CheckMissionFail);
-        temp.SetTileGridEvent(true);
+        checkPath.SetTileGridEvent(true);
     }
 
     private void RemoveEvents()
@@ -62,10 +62,10 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StopListening<int, int>(DataEvents.SelectStage, OpenNewStage);
         EventManager<DataEvents>.StopListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StopListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
-        EventManager<DataEvents>.StopListening(DataEvents.DecreaseLimitCount, DecreaseLimitCount);
+        EventManager<DataEvents>.StopListening<int>(DataEvents.DecreaseLimitCount, LimitCountUpdate);
         EventManager<StageEvent>.StopListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
         EventManager<StageEvent>.StopListening(StageEvent.CheckMissionFail, CheckMissionFail);
-        temp.SetTileGridEvent(false);
+        checkPath.SetTileGridEvent(false);
     }
 
     // 스테이지 열기
@@ -136,17 +136,25 @@ public class MapGenerator : MonoBehaviour
             var tileNode = newTile.GetComponent<TileNode>();
             if (tileNode == null) continue;
 
+            tileNode._gimmick.SetScale(_tileSize);
             tileNode.SetTileNodeData(tile);
 
             int tileShape = (int)tile.RoadShape;
-            if (tileShape <= 0)
+            if (tileShape > 0)
             {
-                tileShape = Random.Range(1, 5);
-                var newTileInfo = new Tile { Type = TileType.Road, RoadShape = (RoadShape)tileShape, GimmickShape = GimmickShape.None };
-                tileNode.SetTileNodeData(newTileInfo);
+                //tileShape = Random.Range(1, 5);
+                //var newTileInfo = new Tile { Type = TileType.Road, RoadShape = (RoadShape)tileShape, GimmickShape = GimmickShape.None };
+                //tileNode.SetTileNodeData(newTileInfo);
+
+                tileNode.SetTileRoadImage(roadList[tileShape - 1]);
             }
 
-            tileNode.SetTilImage(roadList[tileShape - 1]);
+            int GimmickShape = (int)tile.GimmickShape;
+            if (GimmickShape > 0)
+            {
+                tileNode.SetTileGimmickImage(gimmickList[GimmickShape - 1]);
+            }
+                
         }
 
         StartCoroutine(Dummy());
@@ -191,13 +199,8 @@ public class MapGenerator : MonoBehaviour
     // 정답 여부 확인
     private bool IsCorrectAnswer()
     {
-        foreach (Transform child in mapGridLayout.transform)
-        {
-            var childTileNode = child.GetComponent<TileNode>();
-            if (childTileNode == null || childTileNode.GetTileInfo.Type == TileType.None) continue;
-            if (!childTileNode.IsCorrect) return false;
-        }
-        return true;
+        bool isLoop = checkPath.TilePathFind();
+        return isLoop;
     }
 
     // 정답 확인 처리
@@ -230,10 +233,10 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    // 제한 횟수 감소
-    private void DecreaseLimitCount()
+    // 제한 횟수 업데이트
+    private void LimitCountUpdate(int ChangedCount)
     {
-        _limitCount -= 1;
+        _limitCount = ChangedCount;
         DebugLogger.Log(_limitCount);
     }
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel;
 using DataStruct;
 using EnumTypes;
@@ -59,6 +60,7 @@ public class PlayerInformation : Singleton<PlayerInformation>
         EventManager<DataEvents>.StartListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
         EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerCurrentChapterChanged, PlayerCurrentChapterChanged);
         EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerCurrentStageChanged, PlayerCurrentStageChanged);
+        EventManager<DataEvents>.StartListening(DataEvents.SavePlayerData, PlayerDataSave);
     }
 
     private void RemoveEvents()
@@ -70,10 +72,13 @@ public class PlayerInformation : Singleton<PlayerInformation>
         EventManager<DataEvents>.StopListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
         EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerCurrentChapterChanged, PlayerCurrentChapterChanged);
         EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerCurrentStageChanged, PlayerCurrentStageChanged);
+        EventManager<DataEvents>.StopListening(DataEvents.SavePlayerData, PlayerDataSave);
     }
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
+        DebugLogger.Log(e.PropertyName);
+
         switch (e.PropertyName)
         {
             case nameof(PlayerViewModel.PlayerERC):
@@ -82,9 +87,6 @@ public class PlayerInformation : Singleton<PlayerInformation>
                 break;
             case nameof(PlayerViewModel.PlayerGold):
                 _playerInfo.Gold = PlayerViewModel.PlayerGold;
-                break;
-            case nameof(PlayerViewModel.PlayerInventory):
-                _playerInfo.ItemList = PlayerViewModel.PlayerInventory;
                 break;
             case nameof(PlayerViewModel.CurrentChapter):
                 _playerInfo.CurrentChapter = PlayerViewModel.CurrentChapter.ToString();
@@ -97,7 +99,12 @@ public class PlayerInformation : Singleton<PlayerInformation>
         // Player UI 반영
         EventManager<UIEvents>.TriggerEvent(UIEvents.GetPlayerInventoryResources, 
             PlayerViewModel.GameTickets, PlayerViewModel.PlayerGold, PlayerViewModel.PlayerERC);
-        
+
+        PlayerDataSave();
+    }
+
+    private void PlayerDataSave()
+    {
         // Player Inventory Data XML로 Save
         EventManager<DataEvents>.TriggerEvent(DataEvents.OnUserInventorySave, _playerInfo);
     }
@@ -112,6 +119,16 @@ public class PlayerInformation : Singleton<PlayerInformation>
         SetPlayerInventory(_playerInfo);
 
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnEnableChapterMoveButton, _playerInfo.CurrentChapter);
+
+        var playerItemList = new Dictionary<ItemData, int>();
+        foreach(var item in _playerInfo.ItemList)
+        {
+            var itemData = DataManager.Instance.GetItemData(item.Key.ItemID);
+            playerItemList.Add(itemData, item.Value);
+        }
+
+        // 인벤토리에 아이템 리스트 전달
+        EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.GetInventoryItemList, playerItemList);
     }
 
     // 플레이어 자원 데이터 초기화
@@ -168,4 +185,6 @@ public class PlayerInformation : Singleton<PlayerInformation>
     {
         return int.Parse(_playerInfo.CurrentStage);
     }
+
+
 }

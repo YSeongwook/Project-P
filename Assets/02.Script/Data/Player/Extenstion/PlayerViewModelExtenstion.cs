@@ -1,6 +1,7 @@
 using DataStruct;
 using EnumTypes;
 using EventLibrary;
+using Unity.VisualScripting;
 
 public static class PlayerViewModelExtenstion
 {
@@ -109,15 +110,22 @@ public static class PlayerViewModelExtenstion
 
     public static void OnResponsePlayerItemListChangedEvent(this PlayerViewModel vm, ItemData item, int count)
     {
-        if(vm.PlayerInventory.ContainsKey(item))
+        var inventory = vm.PlayerInventory;
+
+        if (inventory.ContainsKey(item))
         {
-            vm.PlayerInventory[item] = count;
+            inventory[item] = count;
+
             if (vm.PlayerInventory[item] <= 0) vm.PlayerInventory.Remove(item);
         }
         else
         {
-            vm.PlayerInventory.Add(item, count);
+            inventory.Add(item, count);
         }
+
+        vm.PlayerInventory = inventory;
+
+        EventManager<DataEvents>.TriggerEvent(DataEvents.SavePlayerData);
     }
     #endregion
 }

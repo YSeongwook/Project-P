@@ -25,9 +25,10 @@ namespace EnumTypes
         GameMessagePopUp,
     }
 
-    public enum Temp
+    public enum MiniGame
     {
-        PopUp
+        Catch,
+        PoliceGameOver,
     }
 
     public enum DataEvents
@@ -56,6 +57,7 @@ namespace EnumTypes
         CheckAnswer,
         SetTileGrid,
         DecreaseLimitCount,
+        SavePlayerData,
     }
 
     public enum GoldEvent
@@ -79,12 +81,26 @@ namespace EnumTypes
         MissionSuccess,
         CheckMissionFail,
         ReturnSelectStage,
-        RestartStage
+        RestartStage,
+        RecoveryLimitCount,
+        LoadInventoryItem,
     }
     
     public enum PuzzleEvent
     {
         StartClearAnimation,
+        Rotation,
+    }
+
+    public enum GimmickEvent
+    {
+        GetGimmickShape,
+    }
+
+    public enum InventoryItemEvent
+    {
+        GetInventoryItemList,
+        UseItem,
     }
 
     public class EnumTypes : MonoBehaviour
