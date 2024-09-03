@@ -77,8 +77,6 @@ public class PlayerInformation : Singleton<PlayerInformation>
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        DebugLogger.Log(e.PropertyName);
-
         switch (e.PropertyName)
         {
             case nameof(PlayerViewModel.PlayerERC):

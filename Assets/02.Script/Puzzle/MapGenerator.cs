@@ -237,7 +237,6 @@ public class MapGenerator : MonoBehaviour
     private void LimitCountUpdate(int ChangedCount)
     {
         _limitCount = ChangedCount;
-        DebugLogger.Log(_limitCount);
     }
 
     // 타일 크기 설정

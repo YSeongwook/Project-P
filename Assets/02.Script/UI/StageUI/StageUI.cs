@@ -105,16 +105,16 @@ public class StageUI : MonoBehaviour
         stageFailPanel.SetActive(true);
     }
     
-    // 스테이지 클리어 후 메뉴로 돌아가기 버튼 클릭 메서드
-    public void OnClickReturnSelectStageButton()
+    // 나가기 버튼 클릭 시 스테이지 선택 화면으로 전환
+    public void OnClickExitButton()
     {
         EventManager<StageEvent>.TriggerEvent(StageEvent.ReturnSelectStage);
         
         ReturnSelectStage();
     }
 
-    public void OnClickExitButton()
+    public void OnClickRestartButton()
     {
-        EventManager<StageEvent>.TriggerEvent(StageEvent.RestartStage);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.);
     }
 }
