@@ -1,7 +1,6 @@
 using EnumTypes;
 using EventLibrary;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 // 빈 타일, 길 타일, 기믹 타일(길을 항상 포함)
@@ -59,6 +58,8 @@ public class TileNode : MonoBehaviour
 
     public bool IsCorrect { get; private set; }
 
+    private bool IsReverseRotate;
+
     private void Awake()
     {
         _gimmick = GetComponentInChildren<GimmickAnimation>();
@@ -72,6 +73,18 @@ public class TileNode : MonoBehaviour
 
         _imageRoadRectTransform = _imageRoad.GetComponent<RectTransform>();
         _imageGimmickRectTransform = _imageGimmick.GetComponent<RectTransform>();
+
+        EventManager<InventoryItemEvent>.StartListening<bool>(InventoryItemEvent.SetReverseRotate, SetReverse);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager<InventoryItemEvent>.StopListening<bool>(InventoryItemEvent.SetReverseRotate, SetReverse);
+    }
+
+    private void OnEnable()
+    {
+        IsReverseRotate = false;
     }
 
     private void Start()
@@ -131,7 +144,17 @@ public class TileNode : MonoBehaviour
     // 회전 명령 실행
     public void OnClickRotationTile()
     {
-        _tile.RotateValue = (_tile.RotateValue + 1) % 4;
+        if (IsReverseRotate)
+        {
+            _tile.RotateValue = (_tile.RotateValue + 3) % 4;
+
+            // 모든 타일들의 ReverseRotate 값 변화
+            EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetReverseRotate, false);
+        }
+        else
+        {
+            _tile.RotateValue = (_tile.RotateValue + 1) % 4;
+        }        
 
         EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
 
@@ -176,5 +199,10 @@ public class TileNode : MonoBehaviour
             // MapGenerator의 CheckAnswer 이벤트 실행
             EventManager<DataEvents>.TriggerEvent(DataEvents.CheckAnswer);
         }
+    }
+
+    private void SetReverse(bool isReverse)
+    {
+        IsReverseRotate = isReverse;
     }
 }

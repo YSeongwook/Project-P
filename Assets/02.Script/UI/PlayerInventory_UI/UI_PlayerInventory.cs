@@ -260,22 +260,39 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         if(useItem.ItemID != default)
         {
             _itemInventory[useItem] -= 1;
-
-            if(_itemInventory[useItem] <= 0)
-            {
-                _itemInventory.Remove(useItem);
-            }
         }
         else
         {
             DebugLogger.LogWarning("아이템을 소지하고 있지 않습니다.");
+            return;
         }
+
+        ExecuteItemEffect(itemID);
 
         ItemData newItemData = new ItemData();
         newItemData.ItemID = useItem.ItemID;
 
         // Player Informaiton에 데이터 전달
         EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerItemListChanged, newItemData, _itemInventory[useItem]);
+
+        if (_itemInventory[useItem] <= 0)
+        {
+            _itemInventory.Remove(useItem);
+        }
+    }
+
+    private void ExecuteItemEffect(string itemID)
+    {
+        switch (itemID)
+        {
+            case nameof(ItemID.I1001):
+                // limitCount 증가
+                EventManager<StageEvent>.TriggerEvent(StageEvent.RecoveryLimitCount);
+                break;
+            case nameof(ItemID.I1002):
+                EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetReverseRotate, true);
+                break;
+        }
     }
 
     private void SetGamePlayerItem()

@@ -103,6 +103,8 @@ namespace EnumTypes
     {
         GetInventoryItemList,
         UseItem,
+        SetEnableButton,
+        SetReverseRotate,
     }
 
     public class EnumTypes : MonoBehaviour
