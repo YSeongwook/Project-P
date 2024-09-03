@@ -167,11 +167,10 @@ public class DataManager : Singleton<DataManager>
         {
             GoldPackageData item = new GoldPackageData();
             item.PackageID = data.Attribute(nameof(item.PackageID)).Value;
-            item.Name = data.Attribute(nameof(item.Name)).Value;
-            item.Description = data.Attribute(nameof(item.Description)).Value;
             item.ERCPrice = float.Parse(data.Attribute(nameof(item.ERCPrice)).Value);
             item.GiveGold = float.Parse(data.Attribute(nameof(item.GiveGold)).Value);
-            item.Image = data.Attribute(nameof(item.Image)).Value;
+            string imageName = data.Attribute(nameof(item.Image)).Value;
+            item.Image = Resources.Load<Sprite>($"Images/{imageName}");
 
             LoadedGoldPackageDataList.Add(item.PackageID, item);
         }

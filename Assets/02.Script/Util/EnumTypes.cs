@@ -11,6 +11,7 @@ namespace EnumTypes
         OnClickChangeBuyItemCount,
         OnClickEnableItemBuyPopup,
         OnClickEnableGoldBuyPopup,
+        OnClickEnableGoldStore,
         OnClickGoldBuyExit,
         OnCreateItemSlot,
         OnCreateGoldPackageSlot,

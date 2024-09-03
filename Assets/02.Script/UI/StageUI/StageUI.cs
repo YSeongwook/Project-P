@@ -115,6 +115,6 @@ public class StageUI : MonoBehaviour
 
     public void OnClickRestartButton()
     {
-        EventManager<StageEvent>.TriggerEvent(StageEvent.);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.RestartStage);
     }
 }

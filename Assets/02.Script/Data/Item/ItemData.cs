@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace DataStruct
 {
@@ -19,7 +20,7 @@ namespace DataStruct
         public string Description;
         public float ERCPrice;
         public float GiveGold;
-        public string Image;
+        public Sprite Image;
     }
 
     public struct PlayerInfo

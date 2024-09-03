@@ -2,6 +2,7 @@ using DataStruct;
 using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,64 +10,61 @@ using UnityEngine.UI;
 public class GoldPackageSlot : MonoBehaviour
 {
     [FoldoutGroup("Gold Shop UI")][SerializeField] private Image imagePackageIcon;
-    [FoldoutGroup("Gold Shop UI")][SerializeField] private TMP_Text textPackageName;
     [FoldoutGroup("Gold Shop UI")][SerializeField] private TMP_Text textPriceErc;
+    [FoldoutGroup("Gold shop UI")][SerializeField] private TMP_Text textPriceGold;
+    [SerializeField] private GameObject goldBuyPopup; // 팝업 프리팹
+    [SerializeField] private GameObject goldPackageSlot;
 
     private GoldPackageData _packageInfo;
 
+    private Dictionary<string, GoldPackageData> _goldPackageDataDictionary;
+
     private void Awake()
     {
-        AddEvent();
+        // 추가: 슬롯 클릭 이벤트 등록
+        GetComponent<Button>().onClick.AddListener(OnSlotClick);
     }
 
-    private void OnDestroy()
-    {
-        RemoveEvent();
-    }
-
-    private void AddEvent()
-    {
-        EventManager<UIEvents>.StartListening(UIEvents.OnClickEnableGoldBuyPopup, PopUpOn);
-        EventManager<UIEvents>.StartListening(UIEvents.OnClickGoldBuyExit, PopUpOff);
-    }
-    private void RemoveEvent()
-    {
-        EventManager<UIEvents>.StopListening(UIEvents.OnClickEnableGoldBuyPopup, PopUpOn);
-        EventManager<UIEvents>.StopListening(UIEvents.OnClickGoldBuyExit, PopUpOff);
-    }
-
-    //패키지 정보 초기화
+    // 패키지 정보 초기화
     public void SetPackageInfo(GoldPackageData packageData)
     {
         _packageInfo = packageData;
+        UpdateUI();
+    }
 
-        textPackageName.text = _packageInfo.Name;
+    private void UpdateUI()
+    {
         textPriceErc.text = _packageInfo.ERCPrice.ToString();
+        textPriceGold.text = _packageInfo.GiveGold.ToString();
+
+        if (_packageInfo.Image != null)
+        {
+            imagePackageIcon.sprite = _packageInfo.Image;
+        }
+        else
+        {
+            Debug.LogWarning("PackageIcon is null!");
+        }
+
     }
 
-    //구매 창 PopUp On
-    private void PopUpOn()
+
+    // 슬롯 클릭 시 팝업 열기
+    public void OnSlotClick()
     {
-        this.gameObject.SetActive(true);
-    }
+        if (goldBuyPopup != null)
+        {
+            GoldBuyPopup popup = goldBuyPopup.GetComponent<GoldBuyPopup>();
 
-    //구매 창 PopUp Off
-    private void PopUpOff()
-    {
-        this.gameObject.SetActive(false);
-    }
-
-    //골드 구매
-    public void BuyGold_ERC()
-    {
-        //ERC 감소
-        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickGoldBuyButton, _packageInfo);
-        // ERC 코인 소비 코드 전송
-
-        //골드 획득
-        EventManager<GoldEvent>.TriggerEvent(GoldEvent.OnGetGold, _packageInfo.GiveGold);
-
-        //골드 상점 닫기
-        //EventManager<UIEvents>.TriggerEvent(UIEvents.GoldStoreExit);
+            if (popup != null)
+            {
+                popup.SetPackageInfo(_packageInfo);
+                goldBuyPopup.SetActive(true);
+            }
+        }
+        else
+        {
+            Debug.LogError("Gold Buy Popup is not assigned.");
+        }
     }
 }
