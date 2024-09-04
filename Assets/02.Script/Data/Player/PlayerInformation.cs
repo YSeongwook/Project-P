@@ -1,9 +1,9 @@
+using System.Collections.Generic;
 using System.ComponentModel;
 using DataStruct;
 using EnumTypes;
 using EventLibrary;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class PlayerInformation : Singleton<PlayerInformation>
 {
@@ -98,7 +98,12 @@ public class PlayerInformation : Singleton<PlayerInformation>
         // Player UI 반영
         EventManager<UIEvents>.TriggerEvent(UIEvents.GetPlayerInventoryResources, 
             PlayerViewModel.GameTickets, PlayerViewModel.PlayerGold, PlayerViewModel.PlayerERC);
-        
+
+        PlayerDataSave();
+    }
+
+    private void PlayerDataSave()
+    {
         // Player Inventory Data XML로 Save
         EventManager<DataEvents>.TriggerEvent(DataEvents.OnUserInventorySave, _playerInfo);
     }
@@ -113,6 +118,16 @@ public class PlayerInformation : Singleton<PlayerInformation>
         SetPlayerInventory(_playerInfo);
 
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnEnableChapterMoveButton, _playerInfo.CurrentChapter);
+
+        var playerItemList = new Dictionary<ItemData, int>();
+        foreach(var item in _playerInfo.ItemList)
+        {
+            var itemData = DataManager.Instance.GetItemData(item.Key.ItemID);
+            playerItemList.Add(itemData, item.Value);
+        }
+
+        // 인벤토리에 아이템 리스트 전달
+        EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.GetInventoryItemList, playerItemList);
     }
 
     // 플레이어 자원 데이터 초기화
@@ -169,4 +184,6 @@ public class PlayerInformation : Singleton<PlayerInformation>
     {
         return int.Parse(_playerInfo.CurrentStage);
     }
+
+
 }

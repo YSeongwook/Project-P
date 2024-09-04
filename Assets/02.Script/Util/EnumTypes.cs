@@ -4,7 +4,6 @@ namespace EnumTypes
 {
     public enum UIEvents
     {
-        OnClickSignInGoogle,
         OnClickStart,
         OnClickUseTicket,
         OnClickItemBuyButton,
@@ -12,6 +11,7 @@ namespace EnumTypes
         OnClickChangeBuyItemCount,
         OnClickEnableItemBuyPopup,
         OnClickEnableGoldBuyPopup,
+        OnClickEnableGoldStore,
         OnClickGoldBuyExit,
         OnCreateItemSlot,
         OnCreateGoldPackageSlot,
@@ -24,6 +24,12 @@ namespace EnumTypes
         ChangeScrollViewCenter,
         MissionSuccessPopUp,
         GameMessagePopUp,
+    }
+
+    public enum MiniGame
+    {
+        Catch,
+        PoliceGameOver,
     }
 
     public enum DataEvents
@@ -52,6 +58,7 @@ namespace EnumTypes
         CheckAnswer,
         SetTileGrid,
         DecreaseLimitCount,
+        SavePlayerData,
     }
 
     public enum GoldEvent
@@ -68,14 +75,37 @@ namespace EnumTypes
         StageClear,
         StageFail,
         ResetTileGrid,
-        SetPathTileList,
-        SetPathTileGrid,
-        UseTurn
+        SetPathTileGridAdd,
+        SetPathEndPoint,
+        SetRandomRotateLinkTile,
+        SortPathTileGrid,
+        UseTurn,
+        MissionSuccess,
+        CheckMissionFail,
+        ReturnSelectStage,
+        RestartStage,
+        RecoveryLimitCount,
+        LoadInventoryItem,
+        SetPlayerItemInventoryList,
     }
     
     public enum PuzzleEvent
     {
         StartClearAnimation,
+        Rotation,
+    }
+
+    public enum GimmickEvent
+    {
+        GetGimmickShape,
+    }
+
+    public enum InventoryItemEvent
+    {
+        GetInventoryItemList,
+        UseItem,
+        SetEnableButton,
+        SetReverseRotate,
     }
 
     public class EnumTypes : MonoBehaviour

@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/01.Scenes/Jinmyung/Jinmyung.unity
     guid: 12534f8e6f147954db50df04fa738cf3
+  - enabled: 0
+    path: Assets/01.Scenes/Jinmyung/MiniGameTest.unity
+    guid: e971ff5f5461e924cbad84de7bcdfcc1
   m_configObjects: {}

@@ -1,6 +1,8 @@
 using DataStruct;
 using EnumTypes;
 using EventLibrary;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public static class PlayerViewModelExtenstion
 {
@@ -109,15 +111,25 @@ public static class PlayerViewModelExtenstion
 
     public static void OnResponsePlayerItemListChangedEvent(this PlayerViewModel vm, ItemData item, int count)
     {
-        if(vm.PlayerInventory.ContainsKey(item))
+        var updatedInventory = new Dictionary<ItemData, int>(vm.PlayerInventory);
+
+        if (count <= 0)
         {
-            vm.PlayerInventory[item] = count;
-            if (vm.PlayerInventory[item] <= 0) vm.PlayerInventory.Remove(item);
+            updatedInventory.Remove(item);
         }
         else
         {
-            vm.PlayerInventory.Add(item, count);
+            if (updatedInventory.ContainsKey(item))
+            {
+                updatedInventory[item] = count;
+            }
+            else
+            {
+                updatedInventory.Add(item, count);
+            }
         }
+
+        vm.PlayerInventory = updatedInventory; // 변경된 사본을 할당하여 OnPropertyChanged를 호출합니다.
     }
     #endregion
 }
