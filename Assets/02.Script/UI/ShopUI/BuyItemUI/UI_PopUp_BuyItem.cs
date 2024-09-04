@@ -76,6 +76,7 @@ public class UI_PopUp_BuyItem : MonoBehaviour
     private void SetBuyItem(ItemData item)
     {
         _data = item;
+        SetItemInfo(_data);
     }
 
     //구매 갯수 증가
