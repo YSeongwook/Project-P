@@ -98,7 +98,7 @@ public class StageUI : MonoBehaviour
         EventManager<DataEvents>.TriggerEvent(DataEvents.DecreaseLimitCount, _limitCount);
     }
 
-    // 메인 UI로 돌아가기
+    // 스테이지 선택 화면으로 돌아가기
     private void ReturnSelectStage()
     {
         // 스테이지 성공, 실패 패널, 스테이지 UI 비활성화
