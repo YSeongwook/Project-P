@@ -61,6 +61,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<InventoryItemEvent>.StartListening<Dictionary<ItemData, int>>(InventoryItemEvent.GetInventoryItemList, GetPlayerItemInventory);
         EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.UseItem, UseItem);
         EventManager<StageEvent>.StartListening(StageEvent.SetPlayerItemInventoryList, SetGamePlayerItem);
+        EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.DecreaseItemCount, DecreaseItemCount);
     }
 
     private void RemoveEvents()
@@ -73,6 +74,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<InventoryItemEvent>.StopListening<Dictionary<ItemData, int>>(InventoryItemEvent.GetInventoryItemList, GetPlayerItemInventory);
         EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.UseItem, UseItem);
         EventManager<StageEvent>.StopListening(StageEvent.SetPlayerItemInventoryList, SetGamePlayerItem);
+        EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.DecreaseItemCount, DecreaseItemCount);
     }
 
     //Gold와 ERC 초기화
@@ -246,18 +248,26 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
 
     private void UseItem(string itemID)
     {
+        // 아이템 사용
+        ExecuteItemEffect(itemID);
+    }
+
+    // 아이템 감소
+    private void DecreaseItemCount(string itemID)
+    {
         ItemData useItem = default;
 
-        foreach(var item in _itemInventory)
+        foreach (var item in _itemInventory)
         {
-            if(item.Key.ItemID == itemID)
+            if (item.Key.ItemID == itemID)
             {
                 useItem = item.Key;
                 break;
             }
         }
 
-        if(useItem.ItemID != default)
+        // 소유 아이템 개수 감소
+        if (useItem.ItemID != default)
         {
             _itemInventory[useItem] -= 1;
         }
@@ -266,8 +276,6 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
             DebugLogger.LogWarning("아이템을 소지하고 있지 않습니다.");
             return;
         }
-
-        ExecuteItemEffect(itemID);
 
         ItemData newItemData = new ItemData();
         newItemData.ItemID = useItem.ItemID;
@@ -287,10 +295,16 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         {
             case nameof(ItemID.I1001):
                 // limitCount 증가
+                DecreaseItemCount(itemID);
                 EventManager<StageEvent>.TriggerEvent(StageEvent.RecoveryLimitCount);
                 break;
             case nameof(ItemID.I1002):
+                EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetHint, false);
                 EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetReverseRotate, true);
+                break;
+            case nameof(ItemID.I1003):
+                EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetReverseRotate, false);
+                EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetHint, true);
                 break;
         }
     }

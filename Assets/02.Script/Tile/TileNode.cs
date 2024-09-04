@@ -1,5 +1,7 @@
+using System.Collections;
 using EnumTypes;
 using EventLibrary;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -51,6 +53,7 @@ public class TileNode : MonoBehaviour
     private Image _background;
     private Image _imageRoad;
     private Image _imageGimmick;
+    private Image _imageHint;
     private RectTransform _rectTransform;
     private RectTransform _imageRoadRectTransform;
     private RectTransform _imageGimmickRectTransform;
@@ -59,6 +62,7 @@ public class TileNode : MonoBehaviour
     public bool IsCorrect { get; private set; }
 
     private bool IsReverseRotate;
+    private bool IsHint;
 
     private void Awake()
     {
@@ -67,6 +71,11 @@ public class TileNode : MonoBehaviour
         _background = transform.GetChild(0).GetComponent<Image>();
         _imageRoad = transform.GetChild(1).GetComponent<Image>();
         _imageGimmick = transform.GetChild(2).GetComponent<Image>();
+        _imageHint = transform.GetChild(3).GetComponent<Image>();
+
+        var newColor = _imageHint.color;
+        newColor.a = 0.45f;
+        _imageHint.color = newColor;
 
         _backgroundOutline = transform.GetChild(0).GetComponent<Outline>();
         _rectTransform = GetComponent<RectTransform>();
@@ -75,11 +84,13 @@ public class TileNode : MonoBehaviour
         _imageGimmickRectTransform = _imageGimmick.GetComponent<RectTransform>();
 
         EventManager<InventoryItemEvent>.StartListening<bool>(InventoryItemEvent.SetReverseRotate, SetReverse);
+        EventManager<InventoryItemEvent>.StartListening<bool>(InventoryItemEvent.SetHint, UseHintItem);
     }
 
     private void OnDestroy()
     {
         EventManager<InventoryItemEvent>.StopListening<bool>(InventoryItemEvent.SetReverseRotate, SetReverse);
+        EventManager<InventoryItemEvent>.StopListening<bool>(InventoryItemEvent.SetHint, UseHintItem);
     }
 
     private void OnEnable()
@@ -113,6 +124,9 @@ public class TileNode : MonoBehaviour
     public void SetTileRoadImage(Sprite Road)
     {
         _imageRoad.sprite = Road;
+        _imageHint.sprite = Road;
+
+        _imageHint.enabled = false;
 
         // 임시 테스트용
         RotationTile(_tile.RotateValue, false);
@@ -159,33 +173,40 @@ public class TileNode : MonoBehaviour
     // 회전 명령 실행
     public void OnClickRotationTile()
     {
-        if(_tile.GimmickShape == GimmickShape.Link)
+        DebugLogger.Log($"{transform.name} 타일이 눌림");
+
+        if (_tile.GimmickShape == GimmickShape.Link)
         {
             EventManager<PuzzleEvent>.TriggerEvent(PuzzleEvent.Rotation, this);
             return;
         }
 
-        if (IsReverseRotate)
+        if (IsReverseRotate && !IsHint)
         {
             _tile.RotateValue = (_tile.RotateValue + 3) % 4;
 
+            // 사용한 아이템의 수 감소 
+            EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.DecreaseItemCount, nameof(ItemID.I1002));
             // 모든 타일들의 ReverseRotate 값 변화
             EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetReverseRotate, false);
+        }
+        else if(!IsReverseRotate && IsHint)
+        {
+            TriggerHint();
         }
         else
         {
             _tile.RotateValue = (_tile.RotateValue + 1) % 4;
-        }        
+            EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
+        }      
 
-        EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
-
-
-        //RotationTile(_tile.RotateValue, true);
+        RotationTile(_tile.RotateValue, true);
     }
 
     // 타일 회전
     public void RotationTile(int rotateValue, bool isCheckAble)
     {
+        DebugLogger.Log("회전됨");
         float rotationAngle = rotateValue * -90f;
 
         _imageRoadRectTransform.rotation = Quaternion.Euler(0, 0, rotationAngle);
@@ -225,5 +246,29 @@ public class TileNode : MonoBehaviour
     private void SetReverse(bool isReverse)
     {
         IsReverseRotate = isReverse;
+    }
+
+    private void UseHintItem(bool isHint)
+    {
+        IsHint = isHint;
+    }
+
+    // 힌트 실행
+    public void TriggerHint()
+    {
+        // 사용한 아이템의 수 감소 
+        EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.DecreaseItemCount, nameof(ItemID.I1003));
+
+        EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetHint, false);
+        StartCoroutine(ShowHintTile());
+    }
+
+    IEnumerator ShowHintTile()
+    {
+        _imageHint.enabled = true;
+
+        yield return new WaitForSeconds(5f);
+
+        _imageHint.enabled = false;
     }
 }
