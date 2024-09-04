@@ -10,7 +10,7 @@ namespace DataStruct
         public string Description;
         public float GoldPrice;
         public float ERCPrice;
-        public string Image;
+        public Sprite Image;
     }
 
     public struct GoldPackageData

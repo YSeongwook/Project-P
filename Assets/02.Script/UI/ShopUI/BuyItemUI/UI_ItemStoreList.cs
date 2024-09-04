@@ -7,23 +7,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class UI_ItemStoreList : MonoBehaviour
-{ 
-    [FoldoutGroup("Item Shop List")] [SerializeField] private GameObject itemSlotPrefab;
-
-    private RectTransform _rectTransform;
-    private GridLayoutGroup _gridLayoutGroup;
-    private float _widthValue;
+{
+    [SerializeField] private GameObject[] itemList;
     private Dictionary<string, ItemData> _itemDataDictionary;
 
-    private float _cellHeight;
 
     private void Awake()
     {
-        _rectTransform = GetComponent<RectTransform>();
-        _gridLayoutGroup = GetComponent<GridLayoutGroup>();
-        _widthValue = _rectTransform.rect.width;
-        _cellHeight = _gridLayoutGroup.cellSize.y + _gridLayoutGroup.spacing.y;
-
         AddEvent();
     }
 
@@ -52,15 +42,13 @@ public class UI_ItemStoreList : MonoBehaviour
     {
         _itemDataDictionary = DataManager.Instance.GetItemInfoDatas();
 
-        float count = 0; // rectTransform.rect.height;
+        int count = 0;
         foreach (var itemData in _itemDataDictionary.Values)
         {
-            count++;
-            GameObject itemSlot = Instantiate(itemSlotPrefab, this.transform);
+            GameObject itemSlot = itemList[count++];
             Item_Basic itemSlotData = itemSlot.GetComponent<Item_Basic>();
             itemSlotData.SetItemInfo(itemData);
+            //count++;
         }
-
-        _rectTransform.sizeDelta = new Vector2(_widthValue, count * _cellHeight);
     }
 }

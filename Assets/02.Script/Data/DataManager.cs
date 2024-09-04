@@ -153,7 +153,8 @@ public class DataManager : Singleton<DataManager>
             item.Description = data.Attribute(nameof(item.Description)).Value;
             item.GoldPrice = float.Parse(data.Attribute(nameof(item.GoldPrice)).Value);
             item.ERCPrice = float.Parse(data.Attribute(nameof(item.ERCPrice)).Value);
-            item.Image = data.Attribute(nameof(item.Image)).Value;
+            string imageName = data.Attribute(nameof(item.Image)).Value;
+            item.Image = Resources.Load<Sprite>($"ItemImages/{imageName}");
 
             LoadedItemDataList.Add(item.ItemID, item);
         }
@@ -170,7 +171,7 @@ public class DataManager : Singleton<DataManager>
             item.ERCPrice = float.Parse(data.Attribute(nameof(item.ERCPrice)).Value);
             item.GiveGold = float.Parse(data.Attribute(nameof(item.GiveGold)).Value);
             string imageName = data.Attribute(nameof(item.Image)).Value;
-            item.Image = Resources.Load<Sprite>($"Images/{imageName}");
+            item.Image = Resources.Load<Sprite>($"GoldImages/{imageName}");
 
             LoadedGoldPackageDataList.Add(item.PackageID, item);
         }
