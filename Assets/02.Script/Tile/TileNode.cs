@@ -132,18 +132,39 @@ public class TileNode : MonoBehaviour
         _gimmick.StartGimmickAnimation();
     }
 
-    // 타일 회전값 랜덤 설정
-    //private void RandomTileRotate()
-    //{
-    //    int randomRotateValue = Random.Range(0, 4);
-    //    _tile.RotateValue = randomRotateValue;
+    //타일 회전값 랜덤 설정
+    public void SetRandomTileRotate(int rotateValue)
+    {
+        _tile.RotateValue = rotateValue;
 
-    //    RotationTile(randomRotateValue, false);
-    //}
+        RotationTile(rotateValue, false);
+    }
+
+    public void SetLinkTileRotate(bool isChecking)
+    {
+        if (IsReverseRotate)
+        {
+            _tile.RotateValue = (_tile.RotateValue + 3) % 4;
+
+            // 모든 타일들의 ReverseRotate 값 변화
+            EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetReverseRotate, false);
+        }
+        else
+        {
+            _tile.RotateValue = (_tile.RotateValue + 1) % 4;
+        }
+        RotationTile(_tile.RotateValue, false);
+    }
 
     // 회전 명령 실행
     public void OnClickRotationTile()
     {
+        if(_tile.GimmickShape == GimmickShape.Link)
+        {
+            EventManager<PuzzleEvent>.TriggerEvent(PuzzleEvent.Rotation, this);
+            return;
+        }
+
         if (IsReverseRotate)
         {
             _tile.RotateValue = (_tile.RotateValue + 3) % 4;
@@ -158,7 +179,7 @@ public class TileNode : MonoBehaviour
 
         EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
 
-        EventManager<PuzzleEvent>.TriggerEvent(PuzzleEvent.Rotation, this);
+
         //RotationTile(_tile.RotateValue, true);
     }
 

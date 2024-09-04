@@ -11,7 +11,7 @@ public class PathFind
     private Dictionary<Vector2, TileNode> _startPoint = new Dictionary<Vector2, TileNode>();
     private Dictionary<Vector2, TileNode> _endPoint = new Dictionary<Vector2, TileNode>();
     private Dictionary<Vector2, Vector2> _warpPoints = new Dictionary<Vector2, Vector2>();
-    private List<TileNode> _linkTiles = new List<TileNode>();
+    public List<TileNode> _linkTiles { get; private set; } = new List<TileNode>();
 
     private float CellSize;
 
@@ -28,6 +28,7 @@ public class PathFind
         EventManager<StageEvent>.StartListening<float>(StageEvent.SetPathEndPoint, SetStartAndEndPoint);
         EventManager<StageEvent>.StartListening(StageEvent.SortPathTileGrid, ChckTilePath);
         EventManager<PuzzleEvent>.StartListening<TileNode>(PuzzleEvent.Rotation, LinkTileRotate);
+        EventManager<StageEvent>.StartListening<int>(StageEvent.SetRandomRotateLinkTile, SetLinkTileRandomRotate);
     }
 
     private void RemoveEvents()
@@ -37,6 +38,7 @@ public class PathFind
         EventManager<StageEvent>.StopListening<float>(StageEvent.SetPathEndPoint, SetStartAndEndPoint);
         EventManager<StageEvent>.StopListening(StageEvent.SortPathTileGrid, ChckTilePath);
         EventManager<PuzzleEvent>.StopListening<TileNode>(PuzzleEvent.Rotation, LinkTileRotate);
+        EventManager<StageEvent>.StopListening<int>(StageEvent.SetRandomRotateLinkTile, SetLinkTileRandomRotate);
     }
 
     private void ResetTileGrid()
@@ -371,7 +373,20 @@ public class PathFind
 
         foreach(var linktile in _linkTiles)
         {
-            linktile.RotationTile(tile.GetTileInfo.RotateValue, true);
+            linktile.SetLinkTileRotate(true);
+        }
+    }
+
+    private void SetLinkTileRandomRotate(int rotateValue)
+    {
+        foreach (var linktile in _linkTiles)
+        {
+            for (var i = 0; i < rotateValue; i++)
+            {
+                linktile.SetLinkTileRotate(false);
+            }
+
+            DebugLogger.Log($"{linktile.transform.name} : {linktile.GetTileInfo.RotateValue}");
         }
     }
 }

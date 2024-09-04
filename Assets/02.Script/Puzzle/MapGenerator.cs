@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
@@ -18,6 +19,7 @@ public class MapGenerator : MonoBehaviour
     [FoldoutGroup("Tile Sprite")] [SerializeField] private List<Sprite> gimmickList;
 
     private List<Tile> _tileList = new List<Tile>();
+    private List<TileNode> _pathTileList = new List<TileNode>();
     private RectTransform _rectTransform;
     private GridLayoutGroup _grid;
     private int _limitCount;
@@ -73,6 +75,7 @@ public class MapGenerator : MonoBehaviour
     {
         DestroyAllTiles();
         InitializeStage(chapter, stage);
+        LimitCountSet();
 
         bool isLoop = true;
         while (isLoop)
@@ -99,7 +102,6 @@ public class MapGenerator : MonoBehaviour
         }
 
         _tileList = new List<Tile>(newTileList);
-
         _currentChapter = chapter;
         _currentStage = stage;
         
@@ -127,6 +129,8 @@ public class MapGenerator : MonoBehaviour
     private void GenerateTiles()
     {
         int index = 0;
+        _pathTileList.Clear();
+
         foreach (var tile in _tileList)
         {
             index++;
@@ -147,6 +151,7 @@ public class MapGenerator : MonoBehaviour
                 //tileNode.SetTileNodeData(newTileInfo);
 
                 tileNode.SetTileRoadImage(roadList[tileShape - 1]);
+                _pathTileList.Add(tileNode);
             }
 
             int GimmickShape = (int)tile.GimmickShape;
@@ -159,6 +164,40 @@ public class MapGenerator : MonoBehaviour
 
         StartCoroutine(Dummy());
     }
+
+    // 타일을 무작위로 회전시키되, 총 회전 수를 만족하도록 구현
+    private void RandomlyRotateTilesForTotalRotations(int totalRotations, int currentRotationCount, List<TileNode> allTiles)
+    {
+        int _currentRotationCount = currentRotationCount;
+        while (_currentRotationCount < totalRotations)
+        {
+            // 모든 타일 중에서 랜덤한 타일을 선택
+            var randomTile = allTiles[Random.Range(0, allTiles.Count)];
+
+            var rotateValue = randomTile.GetTileInfo.RotateValue;
+            rotateValue = (rotateValue + 1) % 4;
+
+            if (randomTile.GetTileInfo.GimmickShape == GimmickShape.Link)
+            {
+                EventManager<StageEvent>.TriggerEvent(StageEvent.SetRandomRotateLinkTile, rotateValue);
+            }
+            else
+            {
+                // 90도씩 무작위 회전
+                randomTile.SetRandomTileRotate(rotateValue);
+            }           
+
+            if(randomTile.GetTileInfo.RotateValue == 0)
+            {
+                _currentRotationCount--;
+            }
+            else
+            {
+                _currentRotationCount++;
+            }
+        }
+    }
+
 
     private IEnumerator Dummy()
     {
@@ -173,16 +212,22 @@ public class MapGenerator : MonoBehaviour
         }
 
         FinalizeStage();
+
+        RandomlyRotateTilesForTotalRotations(_limitCount, 0, _pathTileList);
     }
 
     // 스테이지 생성 완료 후 처리
     private void FinalizeStage()
     {
         EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathEndPoint, _tileSize);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.StartStage, _limitCount);
+    }
 
+    // 회전 제한 수 설정
+    private void LimitCountSet()
+    {
         var tileMapTable = DataManager.Instance.GetTileMapTable($"M{_currentChapter}{_currentStage.ToString("000")}");
         _limitCount = tileMapTable.LimitCount;
-        EventManager<StageEvent>.TriggerEvent(StageEvent.StartStage, _limitCount);
     }
 
     // 타일 리셋
@@ -286,4 +331,5 @@ public class MapGenerator : MonoBehaviour
 
         _tileList.Clear();   // 모든 타일이 삭제되면 저장하고 있던 리스트 초기화
     }
+
 }
