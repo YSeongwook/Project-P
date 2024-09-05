@@ -16,11 +16,14 @@ public class StageUI : MonoBehaviour
     
     // 스테이지 메뉴 패널
     [FoldoutGroup("Stage Menu Panel")] [SerializeField] private TMP_Text limitCountText; // 제한 횟수 텍스트
-    
+
+    private Canvas _canvas;
     private int _limitCount;
 
     private void Awake()
     {
+        _canvas = GetComponent<Canvas>();
+        
         AddEvents();
         AddButtonEvents();
     }
@@ -104,7 +107,7 @@ public class StageUI : MonoBehaviour
         // 스테이지 성공, 실패 패널, 스테이지 UI 비활성화
         stageClearPanel.SetActive(false);
         stageFailPanel.SetActive(false);
-        gameObject.SetActive(false);
+        _canvas.enabled = false;
     }
 
     // 스테이지 클리어 패널 활성화
