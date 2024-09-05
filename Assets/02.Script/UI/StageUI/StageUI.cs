@@ -51,6 +51,7 @@ public class StageUI : MonoBehaviour
         EventManager<StageEvent>.StartListening(StageEvent.UseTurn, DecreaseLimitCount);
         EventManager<StageEvent>.StartListening(StageEvent.StageClear, EnableStageClearPanel);
         EventManager<StageEvent>.StartListening(StageEvent.StageFail, EnableStageFailPanel);
+        EventManager<StageEvent>.StartListening(StageEvent.RecoveryLimitCount, IncreaseLimitCount);
     }
 
     // 이벤트 리스너 해제
@@ -97,6 +98,8 @@ public class StageUI : MonoBehaviour
     {
         _limitCount += 5;
         limitCountText.text = $"{_limitCount}";
+
+        DebugLogger.Log(_limitCount);
 
         EventManager<DataEvents>.TriggerEvent(DataEvents.DecreaseLimitCount, _limitCount);
     }

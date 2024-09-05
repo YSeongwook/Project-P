@@ -10,9 +10,7 @@ public enum ItemID
 {
     I1001,
     I1002,
-    I1003,
-    I1004,
-    I1005,
+    I1003
 }
 
 public enum PaymentMethod

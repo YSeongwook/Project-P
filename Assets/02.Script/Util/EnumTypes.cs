@@ -77,6 +77,7 @@ namespace EnumTypes
         ResetTileGrid,
         SetPathTileGridAdd,
         SetPathEndPoint,
+        SetRandomRotateLinkTile,
         SortPathTileGrid,
         UseTurn,
         MissionSuccess,
@@ -85,7 +86,7 @@ namespace EnumTypes
         RestartStage,
         RecoveryLimitCount,
         LoadInventoryItem,
-        SetPlayerItemInventoryList
+        SetPlayerItemInventoryList,
     }
     
     public enum PuzzleEvent
@@ -103,6 +104,10 @@ namespace EnumTypes
     {
         GetInventoryItemList,
         UseItem,
+        DecreaseItemCount,
+        SetEnableButton,
+        SetReverseRotate,
+        SetHint,
     }
 
     public class EnumTypes : MonoBehaviour

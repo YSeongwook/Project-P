@@ -83,7 +83,7 @@ public class PlayerInformation : Singleton<PlayerInformation>
                 break;
             case nameof(PlayerViewModel.PlayerGold):
                 _playerInfo.Gold = PlayerViewModel.PlayerGold;
-                break;
+                break;           
             case nameof(PlayerViewModel.PlayerInventory):
                 _playerInfo.ItemList = PlayerViewModel.PlayerInventory;
                 break;
