@@ -101,6 +101,14 @@ public class PlayerInformation : Singleton<PlayerInformation>
         EventManager<UIEvents>.TriggerEvent(UIEvents.GetPlayerInventoryResources, 
             PlayerViewModel.GameTickets, PlayerViewModel.PlayerGold, PlayerViewModel.PlayerERC);
 
+        // DB에 업데이트할 데이터
+        UpdateDBData();
+
+        PlayerDataSave();
+    }
+
+    public void UpdateDBData()
+    {
         // StringBuilder 객체 생성
         StringBuilder sb = new StringBuilder();
 
@@ -121,18 +129,19 @@ public class PlayerInformation : Singleton<PlayerInformation>
         // 문자열 추가
         sb.Append("Assets");
         sb.Append("||");
-        sb.Append(DBDataManager.Instance.UserData["MemberID"]);
+        //sb.Append(DBDataManager.Instance.UserData["MemberID"]);
+        sb.Append("1");
         sb.Append("||");
-        sb.Append(PlayerViewModel.PlayerGold.ToString());
+        //sb.Append(PlayerViewModel.PlayerGold.ToString());
+        sb.Append("0");
         sb.Append("||");
         sb.Append(kstTime.ToString("HH:mm:ss"));    // HeartTime
         sb.Append("||");
         sb.Append($"{Heart}/{Item1}/{Item2}");    // ItemCount
 
         MySQLManager.Instance.UpdateDB(sb.ToString());
-
-        PlayerDataSave();
     }
+
 
     private void PlayerDataSave()
     {
