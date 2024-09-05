@@ -83,6 +83,10 @@ public class PlayerInformation : Singleton<PlayerInformation>
                 //코인 삭제
                 _playerInfo.ERC = PlayerViewModel.PlayerERC;
                 break;
+            case nameof(PlayerViewModel.GameTickets):
+                //코인 삭제
+                _playerInfo.TicketCount = PlayerViewModel.GameTickets;
+                break;
             case nameof(PlayerViewModel.PlayerGold):
                 _playerInfo.Gold = PlayerViewModel.PlayerGold;
                 break;
@@ -120,7 +124,8 @@ public class PlayerInformation : Singleton<PlayerInformation>
         DateTime kstTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, kstZone);
 
         // 하트 갯수
-        int Heart = 0;
+        //int Ticket = 0;
+        int Ticket = _playerInfo.TicketCount;
         // Item1
         int Item1 = 0;
         // Item2
@@ -132,15 +137,15 @@ public class PlayerInformation : Singleton<PlayerInformation>
         //sb.Append(DBDataManager.Instance.UserData["MemberID"]);
         sb.Append("1");
         sb.Append("||");
-        //sb.Append(PlayerViewModel.PlayerGold.ToString());
+        //sb.Append(_playerInfo.Gold.ToString());
         sb.Append("0");
         sb.Append("||");
         sb.Append(kstTime.ToString("HH:mm:ss"));    // HeartTime
         sb.Append("||");
-        sb.Append($"{Heart}/{Item1}/{Item2}");    // ItemCount
+        sb.Append($"{Ticket}/{Item1}/{Item2}");    // ItemCount
 
         MySQLManager.Instance.UpdateDB(sb.ToString());
-    }
+    } 
 
 
     private void PlayerDataSave()
