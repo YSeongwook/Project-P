@@ -30,7 +30,7 @@ public class MapGenerator : MonoBehaviour
     private void Awake()
     {
         _rectTransform = mapGridLayout.GetComponent<RectTransform>();
-        _grid = mapGridLayout.GetComponentInChildren<GridLayoutGroup>();
+        _grid = mapGridLayout.GetComponent<GridLayoutGroup>();
         checkPath = new PathFind();
 
         AddEvents();
@@ -78,7 +78,7 @@ public class MapGenerator : MonoBehaviour
         while (isLoop)
         {
             EventManager<StageEvent>.TriggerEvent(StageEvent.ResetTileGrid);
-            GenerateTiles();
+            GenerateTiles(); // 로비로 나간 후 동일한 스테이지 다시 선택 시 이 구문에서 에러 발생
             isLoop = IsCorrectAnswer();
         }        
     }
@@ -188,7 +188,7 @@ public class MapGenerator : MonoBehaviour
     // 타일 리셋
     private void DestroyAllTiles()
     {
-        foreach (Transform child in _grid.GetComponent<Transform>())
+        foreach (Transform child in _grid.transform)
         {
             Destroy(child.gameObject);
         }
