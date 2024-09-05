@@ -16,13 +16,13 @@ public class StageManager : Singleton<StageManager>
     {
         base.Awake();
         EventManager<UIEvents>.StartListening<int, int>(UIEvents.CreateStageButton, SetUpStages);
-        EventManager<StageEvent>.StartListening(StageEvent.StageClear, UnlockNextStage);  // 스테이지 클리어 후 다음 스테이지 해금
+        // EventManager<StageEvent>.StartListening(StageEvent.StageClear, UnlockNextStage);  // 스테이지 클리어 후 다음 스테이지 해금
     }
 
     private void OnDestroy()
     {
         EventManager<UIEvents>.StopListening<int, int>(UIEvents.CreateStageButton, SetUpStages);
-        EventManager<StageEvent>.StopListening(StageEvent.StageClear, UnlockNextStage);
+        // EventManager<StageEvent>.StopListening(StageEvent.StageClear, UnlockNextStage);
     }
 
     // 스테이지 클리어 후 다음 스테이지 해금

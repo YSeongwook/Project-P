@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text;
 using DataStruct;
 using EnumTypes;
 using EventLibrary;
@@ -81,6 +83,10 @@ public class PlayerInformation : Singleton<PlayerInformation>
                 //코인 삭제
                 _playerInfo.ERC = PlayerViewModel.PlayerERC;
                 break;
+            case nameof(PlayerViewModel.GameTickets):
+                //코인 삭제
+                _playerInfo.TicketCount = PlayerViewModel.GameTickets;
+                break;
             case nameof(PlayerViewModel.PlayerGold):
                 _playerInfo.Gold = PlayerViewModel.PlayerGold;
                 break;           
@@ -98,6 +104,9 @@ public class PlayerInformation : Singleton<PlayerInformation>
         // Player UI 반영
         EventManager<UIEvents>.TriggerEvent(UIEvents.GetPlayerInventoryResources, 
             PlayerViewModel.GameTickets, PlayerViewModel.PlayerGold, PlayerViewModel.PlayerERC);
+
+        // DB에 업데이트할 데이터
+        // UpdateDBData();
 
         PlayerDataSave();
     }
@@ -127,6 +136,43 @@ public class PlayerInformation : Singleton<PlayerInformation>
 
         PlayerDataSave(); // 데이터 저장
     }
+
+
+    public void UpdateDBData()
+    {
+        // StringBuilder 객체 생성
+        StringBuilder sb = new StringBuilder();
+
+        // 현재 UTC 시간을 가져옴
+        DateTime utcNow = DateTime.UtcNow;
+
+        // 한국 시간대 (UTC+9)로 변환
+        TimeZoneInfo kstZone = TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time");
+        DateTime kstTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, kstZone);
+
+        // 하트 갯수
+        //int Ticket = 0;
+        int Ticket = _playerInfo.TicketCount;
+        // Item1
+        int Item1 = 0;
+        // Item2
+        int Item2 = 0;
+
+        // 문자열 추가
+        sb.Append("Assets");
+        sb.Append("||");
+        //sb.Append(DBDataManager.Instance.UserData["MemberID"]);
+        sb.Append("1");
+        sb.Append("||");
+        //sb.Append(_playerInfo.Gold.ToString());
+        sb.Append("0");
+        sb.Append("||");
+        sb.Append(kstTime.ToString("HH:mm:ss"));    // HeartTime
+        sb.Append("||");
+        sb.Append($"{Ticket}/{Item1}/{Item2}");    // ItemCount
+
+        MySQLManager.Instance.UpdateDB(sb.ToString());
+    } 
 
 
     private void PlayerDataSave()

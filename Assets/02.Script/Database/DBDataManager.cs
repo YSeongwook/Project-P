@@ -19,6 +19,13 @@ public class DBDataManager : MonoBehaviour
         DBDataManager.Instance.UserAssetsData.Add("HeartTime", strArr[2]);
         DBDataManager.Instance.UserAssetsData.Add("ItemCount", strArr[3]);
         
+        "MapData" Key Value.
+        DBDataManager.Instance.MapData.Add("Chapter", strArr[0]);
+        DBDataManager.Instance.MapData.Add("Stage", strArr[1]);
+        DBDataManager.Instance.MapData.Add("MapID", strArr[2]);
+        DBDataManager.Instance.MapData.Add("TileValue", strArr[3]);
+        DBDataManager.Instance.MapData.Add("LimitCount", strArr[4]);
+        DBDataManager.Instance.MapData.Add("CreateTime", strArr[5]);
      */
 
     private static DBDataManager _instance;
@@ -26,7 +33,7 @@ public class DBDataManager : MonoBehaviour
     {
         get
         {
-            // ¸¸¾à ÀÎ½ºÅÏ½º°¡ nullÀÌ¸é, »õ·Î¿î GameManager ¿ÀºêÁ§Æ®¸¦ »ı¼º
+            // ë§Œì•½ ì¸ìŠ¤í„´ìŠ¤ê°€ nullì´ë©´, ìƒˆë¡œìš´ GameManager ì˜¤ë¸Œì íŠ¸ë¥¼ ìƒì„±
             if (_instance == null)
             {
                 _instance = FindObjectOfType<DBDataManager>();
@@ -37,7 +44,7 @@ public class DBDataManager : MonoBehaviour
                     _instance = singletonObject.AddComponent<DBDataManager>();
                     singletonObject.name = typeof(DBDataManager).ToString() + " (Singleton)";
 
-                    // GameManager ¿ÀºêÁ§Æ®°¡ ¾À ÀüÈ¯ ½Ã ÆÄ±«µÇÁö ¾Êµµ·Ï ¼³Á¤
+                    // GameManager ì˜¤ë¸Œì íŠ¸ê°€ ì”¬ ì „í™˜ ì‹œ íŒŒê´´ë˜ì§€ ì•Šë„ë¡ ì„¤ì •
                     DontDestroyOnLoad(singletonObject);
                 }
             }
@@ -47,6 +54,7 @@ public class DBDataManager : MonoBehaviour
 
     [SerializeField] public Dictionary<string, string> UserData;
     [SerializeField] public Dictionary<string, string> UserAssetsData;
+    [SerializeField] public Dictionary<string, string> MapData;
 
     private void Awake()
     {
@@ -77,6 +85,12 @@ public class DBDataManager : MonoBehaviour
                 break;
             case "Assets":
                 foreach (var str in UserAssetsData)
+                {
+                    TextCheck.text += $"{str.Key} / {str.Value}\n";
+                }
+                break;
+            case "MapData":
+                foreach (var str in MapData)
                 {
                     TextCheck.text += $"{str.Key} / {str.Value}\n";
                 }
