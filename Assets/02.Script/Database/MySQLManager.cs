@@ -291,6 +291,60 @@ public class MySQLManager : MonoBehaviour
         }
     }
 
+    public void UpdateDB(string str)
+    {
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            try
+            {
+                // str = "Assets||3666640951||NewNickname||NewProfilePictureURL";
+
+                // strArr[0]은 테이블명, strArr[1]은 회원번호, strArr[2]은 Gold, strArr[3]은 HeartTime, strArr[4]는 ItemCount
+                string[] strArr = str.Split("||");
+
+                string query = string.Empty;
+
+                conn.Open();
+
+                switch (strArr[0])
+                {
+                    case "Assets": // Kakao = 회원번호||이메일||닉네임||프로필사진URL
+                        query = $"UPDATE Assets SET Gold = @Gold, HeartTime = @HeartTime, ItemCount = @ItemCount WHERE MemberID = @MemberID";
+                        break;
+                    default:
+                        Debug.LogError("Invalid query type provided.");
+                        return;
+                }
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+
+                // Update문에 필요한 파라미터 바인딩
+                cmd.Parameters.AddWithValue("@MemberID", strArr[1]);
+                cmd.Parameters.AddWithValue("@Gold", strArr[2]);
+                cmd.Parameters.AddWithValue("@HeartTime", strArr[3]);
+                cmd.Parameters.AddWithValue("@ItemCount", strArr[4]);
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+                Debug.Log($"{rowsAffected} rows updated.");
+
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySqlPoolManager"))
+                {
+                    // 오류 무시하고 로깅만
+                    Debug.LogWarning("MySqlPoolManager 관련 오류가 발생했지만 무시합니다: " + ex.Message);
+                }
+                else
+                {
+                    // 다른 예외는 다시 던지거나 처리
+                    Debug.LogError("Failed to Read data: " + ex.Message);
+                    //throw;
+                }
+            }
+        }
+    }
+
     // Kotlin에서 넘겨받은 카카오톡 유저 데이터
     public void GetAndSetUserData(string userData)
     {
