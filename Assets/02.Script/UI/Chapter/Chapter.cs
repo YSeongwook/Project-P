@@ -1,9 +1,5 @@
-using DataStruct;
 using EnumTypes;
 using EventLibrary;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,12 +11,12 @@ public class Chapter : MonoBehaviour
 
     private void Awake()
     {
-        EventManager<DataEvents>.StartListening<int, int>(DataEvents.UpdateCurrentChapterAndStage, ChangedPlayerChpaterAndStage);
+        EventManager<DataEvents>.StartListening<int, int>(DataEvents.UpdateCurrentChapterAndStage, ChangedPlayerChapterAndStage);
     }
 
     private void OnDestroy()
     {
-        EventManager<DataEvents>.StopListening<int, int>(DataEvents.UpdateCurrentChapterAndStage, ChangedPlayerChpaterAndStage);
+        EventManager<DataEvents>.StopListening<int, int>(DataEvents.UpdateCurrentChapterAndStage, ChangedPlayerChapterAndStage);
     }
 
     private void Start()
@@ -63,7 +59,7 @@ public class Chapter : MonoBehaviour
     }
 
     // 플레이어 챕터 및 스테이지 해금
-    private void ChangedPlayerChpaterAndStage(int currentChapter, int currentStage)
+    private void ChangedPlayerChapterAndStage(int currentChapter, int currentStage)
     {
         // 현재 플레이어의 챕터 및 스테이지 가져오기
         int chapter = PlayerInformation.Instance.GetPlayerCurrentChapter();

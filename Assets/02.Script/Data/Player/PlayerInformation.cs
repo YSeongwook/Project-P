@@ -12,8 +12,8 @@ public class PlayerInformation : Singleton<PlayerInformation>
     [SerializeField] private string tempPlayerId;
     
     private PlayerInfo _playerInfo;
-    //private string PlayerCurrentChapter { get { return _playerInfo.CurrentChapter; } }
-    //private string PlayerCurrentStage { get { return _playerInfo.CurrentStage; } }
+    public string PlayerCurrentChapter { get { return _playerInfo.CurrentChapter; } }
+    public string PlayerCurrentStage { get { return _playerInfo.CurrentStage; } }
 
     protected new void Awake()
     {
@@ -101,6 +101,33 @@ public class PlayerInformation : Singleton<PlayerInformation>
 
         PlayerDataSave();
     }
+    
+    // 스테이지 해금 메서드 추가
+    public void UnlockStage(int chapter, int stage)
+    {
+        // 만약 스테이지가 이미 해금되지 않았다면 해금
+        if (int.Parse(_playerInfo.CurrentChapter) == chapter && int.Parse(_playerInfo.CurrentStage) < stage)
+        {
+            _playerInfo.CurrentStage = stage.ToString();
+            PlayerViewModel.RequestPlayerCurrentStageChanged(stage);
+            PlayerDataSave(); // 데이터 저장
+        }
+    }
+
+    // 현재 스테이지 갱신 메서드
+    public void UpdatePlayerStage(int chapter, int stage)
+    {
+        // 챕터 업데이트
+        PlayerViewModel.RequestPlayerCurrentChapterChanged(chapter);
+        PlayerViewModel.RequestPlayerCurrentStageChanged(stage);
+        
+        // 플레이어 정보에도 반영
+        _playerInfo.CurrentChapter = chapter.ToString();
+        _playerInfo.CurrentStage = stage.ToString();
+
+        PlayerDataSave(); // 데이터 저장
+    }
+
 
     private void PlayerDataSave()
     {

@@ -294,7 +294,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1637100486145242351}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   imagePackageIcon: {fileID: 6355687544289764790}
-  recTransform: {fileID: 0}
+  rectTransform: {fileID: 4366010726985956648}
   textPriceErc: {fileID: 4977363154947642275}
   textPriceGold: {fileID: 4134086602334844802}
   shineParticle: {fileID: 8916063052125483981}
@@ -491,7 +491,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6829064685183392903}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4804038341504584883}
+        m_TargetAssemblyTypeName: GoldBuyPopup, Assembly-CSharp
+        m_MethodName: PopUpOff
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1731724507241317477
 GameObject:
   m_ObjectHideFlags: 0
@@ -5828,7 +5840,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 185, y: -50}
-  m_SizeDelta: {x: 166.1068, y: 110.258}
+  m_SizeDelta: {x: 166.1068, y: 110.257996}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8763943853426582867
 CanvasRenderer:
