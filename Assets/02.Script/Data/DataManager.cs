@@ -236,6 +236,7 @@ public class DataManager : Singleton<DataManager>
         if (dataElement != null)
         {
             dataElement.SetAttributeValue("PlayerID", $"{inventory.PlayerID}");
+            dataElement.SetAttributeValue("TicketCount", $"{inventory.TicketCount}");
             dataElement.SetAttributeValue("Gold", inventory.Gold);
             dataElement.SetAttributeValue("ERC", inventory.ERC);
             dataElement.SetAttributeValue("CurrentChapter", inventory.CurrentChapter);

@@ -389,4 +389,27 @@ public class PathFind
             DebugLogger.Log($"{linktile.transform.name} : {linktile.GetTileInfo.RotateValue}");
         }
     }
+
+    public void GetRotationConditionSuccess(int minCount, List<TileNode> _pathTileList)
+    {
+        List<TileNode> tileNodes = new List<TileNode>();
+
+        int rotationCount = 0;
+
+        foreach(var tile in _tileGrid.Values)
+        {
+            if(tile.GetTileInfo.RoadShape != RoadShape.None)
+            {
+                tileNodes.Add(tile);
+            }
+        }
+
+        for(int i=0; i<tileNodes.Count; i++)
+        {
+            var correctRotateValue = tileNodes[i].GetTileInfo.RotateValue;
+            var checkTargetRotateValue = _pathTileList[i].GetTileInfo.RotateValue;
+
+
+        }
+    }
 }

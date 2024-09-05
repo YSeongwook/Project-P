@@ -168,33 +168,39 @@ public class MapGenerator : MonoBehaviour
     // 타일을 무작위로 회전시키되, 총 회전 수를 만족하도록 구현
     private void RandomlyRotateTilesForTotalRotations(int totalRotations, int currentRotationCount, List<TileNode> allTiles)
     {
-        int _currentRotationCount = currentRotationCount;
-        while (_currentRotationCount < totalRotations)
+        bool isLoop = true;
+        while(isLoop)
         {
-            // 모든 타일 중에서 랜덤한 타일을 선택
-            var randomTile = allTiles[Random.Range(0, allTiles.Count)];
+            int _currentRotationCount = currentRotationCount;
+            while (_currentRotationCount < totalRotations)
+            {
+                // 모든 타일 중에서 랜덤한 타일을 선택
+                var randomTile = allTiles[Random.Range(0, allTiles.Count)];
 
-            var rotateValue = randomTile.GetTileInfo.RotateValue;
-            rotateValue = (rotateValue + 1) % 4;
+                var rotateValue = randomTile.GetTileInfo.RotateValue;
+                rotateValue = (rotateValue + 1) % 4;
 
-            if (randomTile.GetTileInfo.GimmickShape == GimmickShape.Link)
-            {
-                EventManager<StageEvent>.TriggerEvent(StageEvent.SetRandomRotateLinkTile, rotateValue);
-            }
-            else
-            {
-                // 90도씩 무작위 회전
-                randomTile.SetRandomTileRotate(rotateValue);
-            }           
+                if (randomTile.GetTileInfo.GimmickShape == GimmickShape.Link)
+                {
+                    EventManager<StageEvent>.TriggerEvent(StageEvent.SetRandomRotateLinkTile, rotateValue);
+                }
+                else
+                {
+                    // 90도씩 무작위 회전
+                    randomTile.SetRandomTileRotate(rotateValue);
+                }
 
-            if(randomTile.GetTileInfo.RotateValue == 0)
-            {
-                _currentRotationCount--;
+                if (randomTile.GetTileInfo.RotateValue == 0)
+                {
+                    _currentRotationCount--;
+                }
+                else
+                {
+                    _currentRotationCount++;
+                }
             }
-            else
-            {
-                _currentRotationCount++;
-            }
+
+            isLoop = IsCorrectAnswer();
         }
     }
 
@@ -253,6 +259,11 @@ public class MapGenerator : MonoBehaviour
     {
         // 정답 확인 시 바로 클리어 되는 것이 아니라 연출 이후에 스테이지 클리어
         EventManager<StageEvent>.TriggerEvent(StageEvent.SortPathTileGrid);
+    }
+
+    private void CheckRotationCount(int minCount)
+    {
+
     }
 
     // 미션 성공
