@@ -3,6 +3,7 @@ using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -12,7 +13,9 @@ public class UI_PopUp_BuyItem : MonoBehaviour
     [FoldoutGroup("UI Prefab")] [SerializeField] private Image itemIcon;    //구매할 아이템의 아이콘 표시 UI
     [FoldoutGroup("UI Prefab")] [SerializeField] private TMP_Text textItemPrice;   //구매할 아이템의 가격 표시 UI
     [FoldoutGroup("UI Prefab")] [SerializeField] private TMP_Text textBuyItemCount;    //구매할 아이템의 갯수 표시 UI
-    
+    [FoldoutGroup("UI Prefab")][SerializeField] private TMP_Text textBuyItemName;    //구매할 아이템의 이름 표시 UI
+    [FoldoutGroup("UI Prefab")][SerializeField] private TMP_Text textDescription; //구매할 아이템의 설명 표시 UI
+
     private ItemData _data;     //구매할 아이템의 정보
     private float _buyItemCount; //구매할 아이템의 갯수
 
@@ -41,10 +44,26 @@ public class UI_PopUp_BuyItem : MonoBehaviour
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickChangeBuyItemCount);
     }
 
+    public void SetItemInfo(ItemData itemdata)
+    {
+        textBuyItemName.text = itemdata.Name;
+        textItemPrice.text = itemdata.GoldPrice.ToString();
+        textDescription.text = itemdata.Description;
+        if (itemdata.Image != null)
+        {
+            itemIcon.sprite = itemdata.Image;
+        }
+        else
+        {
+            Debug.LogWarning("PackageIcon is null!");
+        }
+    }
+
     //구매 창 PopUp On
     private void PopUpOn()
     {
         this.transform.parent.gameObject.SetActive(true);
+        Debug.Log("팝업창 여는 메서드 실행됨");
     }
 
     //구매 창 PopUp Off
@@ -57,6 +76,7 @@ public class UI_PopUp_BuyItem : MonoBehaviour
     private void SetBuyItem(ItemData item)
     {
         _data = item;
+        SetItemInfo(_data);
     }
 
     //구매 갯수 증가
