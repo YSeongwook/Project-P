@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
@@ -88,8 +87,7 @@ public class MapGenerator : MonoBehaviour
 
     // 스테이지 초기화
     private void InitializeStage(int chapter, int stage)
-    {
-        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
+    {        
         EventManager<StageEvent>.TriggerEvent(StageEvent.EnterStage);
         
         string fileName = $"{chapter}-{stage}";
@@ -270,7 +268,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, playerGold + plusGold);
 
         EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage, _currentChapter, _currentStage);
-        EventManager<StageEvent>.TriggerEvent(StageEvent.StageClear);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.StageClear, true);
 
         DebugLogger.Log("클리어");
     }
@@ -280,7 +278,7 @@ public class MapGenerator : MonoBehaviour
     {
         if (_limitCount <= 0)
         {
-            EventManager<StageEvent>.TriggerEvent(StageEvent.StageFail);
+            EventManager<StageEvent>.TriggerEvent(StageEvent.StageFail, true);
             DebugLogger.Log("실패");
         }
     }
@@ -339,4 +337,25 @@ public class MapGenerator : MonoBehaviour
         _tileList.Clear();   // 모든 타일이 삭제되면 저장하고 있던 리스트 초기화
     }
 
+    public void OnClick_NextStage()
+    {
+        if (PlayerInformation.Instance.PlayerViewModel.GameTickets <= 0) return;
+
+        // 티켓 사용
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
+
+        EventManager<StageEvent>.TriggerEvent(StageEvent.StageClear, false);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.NextStage, _currentChapter, _currentStage);
+    }
+
+    public void OnClick_ReStart()
+    {
+        if (PlayerInformation.Instance.PlayerViewModel.GameTickets <= 0) return;
+
+        // 티켓 사용
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
+
+        EventManager<StageEvent>.TriggerEvent(StageEvent.StageFail, false);
+        OpenNewStage(_currentChapter, _currentStage);
+    }
 }
