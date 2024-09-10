@@ -24,6 +24,9 @@ namespace EnumTypes
         ChangeScrollViewCenter,
         MissionSuccessPopUp,
         GameMessagePopUp,
+        OnClickNextButton,
+        OnClickRestartButton,
+        
     }
 
     public enum MiniGame

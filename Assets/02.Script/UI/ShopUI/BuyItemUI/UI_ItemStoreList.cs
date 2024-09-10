@@ -17,6 +17,11 @@ public class UI_ItemStoreList : MonoBehaviour
         AddEvent();
     }
 
+    private void Start()
+    {
+        GameObject.Find("Canvas_ItemShop").SetActive(false);
+    }
+
     private void OnDestroy()
     {
         RemoveEvent();
@@ -30,11 +35,6 @@ public class UI_ItemStoreList : MonoBehaviour
     private void RemoveEvent()
     {
         EventManager<UIEvents>.StopListening(UIEvents.OnCreateItemSlot, CreateItemSlot);
-    }
-
-    private void Start()
-    {
-        Canvas canvas = GetComponentInParent<Canvas>();
     }
 
     // 상점 아이템 List 나열

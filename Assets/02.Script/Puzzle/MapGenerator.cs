@@ -55,6 +55,8 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StartListening<int>(DataEvents.DecreaseLimitCount, LimitCountUpdate);
         EventManager<StageEvent>.StartListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
         EventManager<StageEvent>.StartListening(StageEvent.CheckMissionFail, CheckMissionFail);
+        EventManager<UIEvents>.StartListening(UIEvents.OnClickNextButton, StartNextStage);
+        EventManager<UIEvents>.StartListening(UIEvents.OnClickRestartButton, ReStartCurrentStage);
         checkPath.SetTileGridEvent(true);
     }
 
@@ -66,6 +68,8 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StopListening<int>(DataEvents.DecreaseLimitCount, LimitCountUpdate);
         EventManager<StageEvent>.StopListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
         EventManager<StageEvent>.StopListening(StageEvent.CheckMissionFail, CheckMissionFail);
+        EventManager<UIEvents>.StopListening(UIEvents.OnClickNextButton, StartNextStage);
+        EventManager<UIEvents>.StopListening(UIEvents.OnClickRestartButton, ReStartCurrentStage);
         checkPath.SetTileGridEvent(false);
     }
 
@@ -336,8 +340,8 @@ public class MapGenerator : MonoBehaviour
 
         _tileList.Clear();   // 모든 타일이 삭제되면 저장하고 있던 리스트 초기화
     }
-
-    public void OnClick_NextStage()
+    
+    public void StartNextStage()
     {
         if (PlayerInformation.Instance.PlayerViewModel.GameTickets <= 0) return;
 
@@ -348,7 +352,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<StageEvent>.TriggerEvent(StageEvent.NextStage, _currentChapter, _currentStage);
     }
 
-    public void OnClick_ReStart()
+    public void ReStartCurrentStage()
     {
         if (PlayerInformation.Instance.PlayerViewModel.GameTickets <= 0) return;
 

@@ -13,6 +13,8 @@ public class StageUI : MonoBehaviour
     [FoldoutGroup("Stage Clear Panel")] [SerializeField] private Button nextButton; // 다음 스테이지 버튼
     
     [FoldoutGroup("Stage Fail Panel")] [SerializeField] private GameObject stageFailPanel; // 스테이지 실패 패널
+    [FoldoutGroup("Stage Fail Panel")] [SerializeField] private Button exitButton; // 나가기 버튼
+    [FoldoutGroup("Stage Fail Panel")] [SerializeField] private Button restartButton; // 다시하기 버튼
     
     // 스테이지 메뉴 패널
     [FoldoutGroup("Stage Menu Panel")] [SerializeField] private TMP_Text limitCountText; // 제한 횟수 텍스트
@@ -69,6 +71,8 @@ public class StageUI : MonoBehaviour
     {
         lobbyButton.onClick.AddListener(OnClickExitButton);
         nextButton.onClick.AddListener(OnClickNextButton);
+        exitButton.onClick.AddListener(OnClickExitButton);
+        restartButton.onClick.AddListener(OnClickRestartButton);
     }
 
     // 버튼 이벤트 리스너 해제
@@ -76,6 +80,8 @@ public class StageUI : MonoBehaviour
     {
         lobbyButton.onClick.RemoveListener(OnClickExitButton);
         nextButton.onClick.RemoveListener(OnClickNextButton);
+        exitButton.onClick.RemoveListener(OnClickExitButton);
+        restartButton.onClick.RemoveListener(OnClickRestartButton);
     }
 
     // 제한 횟수 UI 업데이트
@@ -136,12 +142,11 @@ public class StageUI : MonoBehaviour
     // 스테이지 클리어 후 다음 버튼 클릭 시 다음 스테이지로 전환
     public void OnClickNextButton()
     {
-        // Todo: 다음 스테이지로 전환 이벤트 발생 후 현재 스테이지 닫은 후 다음 스테이지 로드
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickNextButton);
     }
 
     public void OnClickRestartButton()
     {
-        EventManager<StageEvent>.TriggerEvent(StageEvent.RestartStage);
-        // Todo: 재도전 이벤트 발생
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickRestartButton);
     }
 }

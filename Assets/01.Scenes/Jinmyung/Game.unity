@@ -4979,8 +4979,8 @@ RectTransform:
   m_Children:
   - {fileID: 1082939912}
   - {fileID: 47662019}
-  - {fileID: 380692057}
   - {fileID: 1969901155}
+  - {fileID: 380692057}
   m_Father: {fileID: 1531137856}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -7031,7 +7031,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2115973059
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7741,6 +7741,8 @@ MonoBehaviour:
   lobbyButton: {fileID: 2139105892}
   nextButton: {fileID: 444924573}
   stageFailPanel: {fileID: 1531137855}
+  exitButton: {fileID: 1969901156}
+  restartButton: {fileID: 380692058}
   limitCountText: {fileID: 125293670}
 --- !u!1 &2139105890
 GameObject:
