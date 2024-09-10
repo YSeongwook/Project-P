@@ -49,8 +49,8 @@ public class StageUI : MonoBehaviour
     {
         EventManager<StageEvent>.StartListening<int>(StageEvent.StartStage, UpdateLimitCount);
         EventManager<StageEvent>.StartListening(StageEvent.UseTurn, DecreaseLimitCount);
-        EventManager<StageEvent>.StartListening(StageEvent.StageClear, EnableStageClearPanel);
-        EventManager<StageEvent>.StartListening(StageEvent.StageFail, EnableStageFailPanel);
+        EventManager<StageEvent>.StartListening<bool>(StageEvent.StageClear, EnableStageClearPanel);
+        EventManager<StageEvent>.StartListening<bool>(StageEvent.StageFail, EnableStageFailPanel);
         EventManager<StageEvent>.StartListening(StageEvent.RecoveryLimitCount, IncreaseLimitCount);
     }
 
@@ -59,8 +59,8 @@ public class StageUI : MonoBehaviour
     {
         EventManager<StageEvent>.StopListening<int>(StageEvent.StartStage, UpdateLimitCount);
         EventManager<StageEvent>.StopListening(StageEvent.UseTurn, DecreaseLimitCount);
-        EventManager<StageEvent>.StopListening(StageEvent.StageClear, EnableStageClearPanel);
-        EventManager<StageEvent>.StopListening(StageEvent.StageFail, EnableStageFailPanel);
+        EventManager<StageEvent>.StopListening<bool>(StageEvent.StageClear, EnableStageClearPanel);
+        EventManager<StageEvent>.StopListening<bool>(StageEvent.StageFail, EnableStageFailPanel);
         EventManager<StageEvent>.StopListening(StageEvent.RecoveryLimitCount, IncreaseLimitCount);
     }
 
@@ -114,15 +114,15 @@ public class StageUI : MonoBehaviour
     }
 
     // 스테이지 클리어 패널 활성화
-    private void EnableStageClearPanel()
+    private void EnableStageClearPanel(bool enable)
     {
-        stageClearPanel.SetActive(true);
+        stageClearPanel.SetActive(enable);
     }
     
     // 스테이지 실패 패널 활성화
-    private void EnableStageFailPanel()
+    private void EnableStageFailPanel(bool enable)
     {
-        stageFailPanel.SetActive(true);
+        stageFailPanel.SetActive(enable);
     }
     
     // 나가기 버튼 클릭 시 스테이지 선택 화면으로 전환

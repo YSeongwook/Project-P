@@ -246,7 +246,7 @@ public class TileNode : MonoBehaviour
 
         IsCorrect = (_tile.RotateValue % calculatedValue) == (CorrectTileInfo.RotateValue % calculatedValue);
 
-        _background.enabled = !IsCorrect;
+        //_background.enabled = !IsCorrect;
 
         if (isCheckAble)
         {

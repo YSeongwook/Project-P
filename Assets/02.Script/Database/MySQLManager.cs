@@ -1,10 +1,6 @@
 using System;
-using System.Data;
-using System.Text;
-using DG.Tweening.Core.Easing;
 using MySql.Data.MySqlClient;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MySQLManager : MonoBehaviour

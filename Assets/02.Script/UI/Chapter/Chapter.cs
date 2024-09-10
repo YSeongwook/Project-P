@@ -12,11 +12,13 @@ public class Chapter : MonoBehaviour
     private void Awake()
     {
         EventManager<DataEvents>.StartListening<int, int>(DataEvents.UpdateCurrentChapterAndStage, ChangedPlayerChapterAndStage);
+        EventManager<StageEvent>.StartListening<int, int>(StageEvent.NextStage, OnClick_NextStage);
     }
 
     private void OnDestroy()
     {
         EventManager<DataEvents>.StopListening<int, int>(DataEvents.UpdateCurrentChapterAndStage, ChangedPlayerChapterAndStage);
+        EventManager<StageEvent>.StopListening<int, int>(StageEvent.NextStage, OnClick_NextStage);
     }
 
     private void Start()
@@ -88,5 +90,23 @@ public class Chapter : MonoBehaviour
 
         // 스테이지 UI - 해금된 스테이지가 화면 가운데에 위치
         EventManager<UIEvents>.TriggerEvent(UIEvents.ChangeScrollViewCenter, newStage);
+    }
+
+    private void OnClick_NextStage(int currentChapter, int currentStage)
+    {
+        if (_chapter != currentChapter) return;
+
+        var nextStage = currentStage + 1;
+        var nextChapter = currentChapter;
+        if(nextStage >= _maxStageCount && nextStage < 5)
+        {
+            nextStage = 1;
+            nextChapter = Mathf.Clamp(nextChapter + 1, 0, 5);
+        }
+
+        EventManager<DataEvents>.TriggerEvent(DataEvents.SelectStage, nextChapter, nextStage);
+
+        // 플레이어 아이템 게임 캔버스에 적용
+        EventManager<StageEvent>.TriggerEvent(StageEvent.SetPlayerItemInventoryList);
     }
 }
