@@ -390,26 +390,34 @@ public class PathFind
         }
     }
 
-    public void GetRotationConditionSuccess(int minCount, List<TileNode> _pathTileList)
+    public bool GetRotationConditionSuccess(int minCount, List<TileNode> _pathTileList)
     {
-        List<TileNode> tileNodes = new List<TileNode>();
-
-        int rotationCount = 0;
-
-        foreach(var tile in _tileGrid.Values)
+        int RotateCountValue = 0;
+        for(int i=0; i< _pathTileList.Count; i++)
         {
-            if(tile.GetTileInfo.RoadShape != RoadShape.None)
-            {
-                tileNodes.Add(tile);
-            }
-        }
-
-        for(int i=0; i<tileNodes.Count; i++)
-        {
-            var correctRotateValue = tileNodes[i].GetTileInfo.RotateValue;
+            var correctRotateValue = _pathTileList[i].CorrectTileInfo.RotateValue;
+            DebugLogger.Log($"1. {_pathTileList[i].transform.name} : {correctRotateValue}");
             var checkTargetRotateValue = _pathTileList[i].GetTileInfo.RotateValue;
+            DebugLogger.Log($"2. {_pathTileList[i].transform.name} : {checkTargetRotateValue}");
 
+            var disValue = 0;
+            switch (_pathTileList[i].GetTileInfo.RoadShape)
+            {
+                case RoadShape.Straight:
+                    disValue = (correctRotateValue - checkTargetRotateValue) % 2;
+                    break;
+                case RoadShape.Cross:
+                    disValue = 0;
+                    break;
+                default:
+                    disValue = Mathf.Abs(checkTargetRotateValue - correctRotateValue);
+                    break;
+            }
 
-        }
+            RotateCountValue += disValue;
+        }  
+        DebugLogger.Log(RotateCountValue);
+
+        return RotateCountValue > minCount;
     }
 }

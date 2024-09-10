@@ -173,7 +173,6 @@ public class TileNode : MonoBehaviour
     // 회전 명령 실행
     public void OnClickRotationTile()
     {
-        DebugLogger.Log($"{transform.name} 타일이 눌림");
 
         if (_tile.GimmickShape == GimmickShape.Link)
         {
@@ -234,7 +233,7 @@ public class TileNode : MonoBehaviour
 
         IsCorrect = (_tile.RotateValue % calculatedValue) == (CorrectTileInfo.RotateValue % calculatedValue);
 
-        _background.enabled = !IsCorrect;
+        //_background.enabled = !IsCorrect;
 
         if (isCheckAble)
         {

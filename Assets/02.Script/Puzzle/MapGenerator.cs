@@ -200,7 +200,8 @@ public class MapGenerator : MonoBehaviour
                 }
             }
 
-            isLoop = IsCorrectAnswer();
+            // Test
+            isLoop = IsCorrectAnswer() && checkPath.GetRotationConditionSuccess(5, allTiles);
         }
     }
 
@@ -259,11 +260,6 @@ public class MapGenerator : MonoBehaviour
     {
         // 정답 확인 시 바로 클리어 되는 것이 아니라 연출 이후에 스테이지 클리어
         EventManager<StageEvent>.TriggerEvent(StageEvent.SortPathTileGrid);
-    }
-
-    private void CheckRotationCount(int minCount)
-    {
-
     }
 
     // 미션 성공
