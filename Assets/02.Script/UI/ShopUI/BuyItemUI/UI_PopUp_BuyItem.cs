@@ -28,7 +28,7 @@ public class UI_PopUp_BuyItem : MonoBehaviour
 
     private void Start()
     {
-        transform.parent.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     private void OnDestroy()
@@ -62,14 +62,14 @@ public class UI_PopUp_BuyItem : MonoBehaviour
     //구매 창 PopUp On
     private void PopUpOn()
     {
-        this.transform.parent.gameObject.SetActive(true);
+        gameObject.SetActive(true);
         Debug.Log("팝업창 여는 메서드 실행됨");
     }
 
     //구매 창 PopUp Off
     public void PopUpOff()
     {
-        this.transform.parent.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     //구매할 아이템 초기화
