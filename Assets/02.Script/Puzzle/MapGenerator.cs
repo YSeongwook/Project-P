@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
@@ -140,7 +139,7 @@ public class MapGenerator : MonoBehaviour
             var tileNode = newTile.GetComponent<TileNode>();
             if (tileNode == null) continue;
 
-            tileNode._gimmick.SetScale(_tileSize);
+            tileNode.Gimmick.SetScale(_tileSize);
             tileNode.SetTileNodeData(tile);
 
             int tileShape = (int)tile.RoadShape;

@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 3337204635005266453}
   - component: {fileID: 8359268608342079662}
   - component: {fileID: 3736680049247101667}
+  - component: {fileID: 5961116883211345213}
   m_Layer: 5
   m_Name: Btn_Node
   m_TagString: Untagged
@@ -316,6 +317,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d86ec49ecad1c54b82ea08bb0e210d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5961116883211345213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4711707603068042305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93667b69b0b45f740864bfe1e796117e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationDuration: 0.5
+  Entrances: []
 --- !u!1 &5288984364160732559
 GameObject:
   m_ObjectHideFlags: 0

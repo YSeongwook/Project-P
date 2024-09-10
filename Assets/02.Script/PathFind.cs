@@ -26,7 +26,7 @@ public class PathFind
         EventManager<StageEvent>.StartListening(StageEvent.ResetTileGrid, ResetTileGrid);
         EventManager<StageEvent>.StartListening<Vector2, TileNode>(StageEvent.SetPathTileGridAdd, AddTileGrid);
         EventManager<StageEvent>.StartListening<float>(StageEvent.SetPathEndPoint, SetStartAndEndPoint);
-        EventManager<StageEvent>.StartListening(StageEvent.SortPathTileGrid, ChckTilePath);
+        EventManager<StageEvent>.StartListening(StageEvent.SortPathTileGrid, CheckTilePath);
         EventManager<PuzzleEvent>.StartListening<TileNode>(PuzzleEvent.Rotation, LinkTileRotate);
         EventManager<StageEvent>.StartListening<int>(StageEvent.SetRandomRotateLinkTile, SetLinkTileRandomRotate);
     }
@@ -36,7 +36,7 @@ public class PathFind
         EventManager<StageEvent>.StopListening(StageEvent.ResetTileGrid, ResetTileGrid);
         EventManager<StageEvent>.StopListening<Vector2, TileNode>(StageEvent.SetPathTileGridAdd, AddTileGrid);
         EventManager<StageEvent>.StopListening<float>(StageEvent.SetPathEndPoint, SetStartAndEndPoint);
-        EventManager<StageEvent>.StopListening(StageEvent.SortPathTileGrid, ChckTilePath);
+        EventManager<StageEvent>.StopListening(StageEvent.SortPathTileGrid, CheckTilePath);
         EventManager<PuzzleEvent>.StopListening<TileNode>(PuzzleEvent.Rotation, LinkTileRotate);
         EventManager<StageEvent>.StopListening<int>(StageEvent.SetRandomRotateLinkTile, SetLinkTileRandomRotate);
     }
@@ -101,7 +101,7 @@ public class PathFind
         }
     }
 
-    private void ChckTilePath()
+    private void CheckTilePath()
     {
         if (TilePathFind())
         {
@@ -365,9 +365,11 @@ public class PathFind
 
     private void LinkTileRotate(TileNode tile)
     {
+        RotationTile rotationTile = tile.transform.GetComponent<RotationTile>();
+        
         if (!_linkTiles.Contains(tile))
         {
-            tile.RotationTile(tile.GetTileInfo.RotateValue, true);
+            rotationTile.RotateTile(tile.GetTileInfo.RotateValue);
             return;
         }
 
