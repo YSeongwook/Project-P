@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.WebSockets;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using WebSocketSharp;
@@ -89,8 +90,8 @@ public class WebSocketClient : MonoBehaviour
 
     public void SendMessage()
     {
-        string nickName = DBDataManager.Instance.UserData["Nickname"];
-        //string nickName = "Name";
+        //string nickName = DBDataManager.Instance.UserData["Nickname"];
+        string nickName = "Name";
 
         string mess = $"{nickName} : {InputField_Text.text}";
 
@@ -109,7 +110,10 @@ public class WebSocketClient : MonoBehaviour
         GameObject newMessage = Instantiate(chatMessagePrefab, chatContent.transform);
 
         // 메시지 텍스트 설정
-        Text messageText = newMessage.GetComponentInChildren<Text>();
+        //Text messageText = newMessage.GetComponentInChildren<Text>();
+        //messageText.text = message;
+        // "Text_Chat" 오브젝트의 TextMeshPro 컴포넌트 찾기
+        TextMeshProUGUI messageText = newMessage.transform.Find("Text_Chat").GetComponent<TextMeshProUGUI>();
         messageText.text = message;
 
         // 메시지 추가 후 스크롤을 아래로 이동
