@@ -27,7 +27,7 @@ public class PathFind
         EventManager<StageEvent>.StartListening<Vector2, TileNode>(StageEvent.SetPathTileGridAdd, AddTileGrid);
         EventManager<StageEvent>.StartListening<float>(StageEvent.SetPathEndPoint, SetStartAndEndPoint);
         EventManager<StageEvent>.StartListening(StageEvent.SortPathTileGrid, CheckTilePath);
-        EventManager<PuzzleEvent>.StartListening<TileNode>(PuzzleEvent.Rotation, LinkTileRotate);
+        EventManager<PuzzleEvent>.StartListening<TileNode, bool>(PuzzleEvent.Rotation, LinkTileRotate);
         EventManager<StageEvent>.StartListening<int>(StageEvent.SetRandomRotateLinkTile, SetLinkTileRandomRotate);
     }
 
@@ -37,7 +37,7 @@ public class PathFind
         EventManager<StageEvent>.StopListening<Vector2, TileNode>(StageEvent.SetPathTileGridAdd, AddTileGrid);
         EventManager<StageEvent>.StopListening<float>(StageEvent.SetPathEndPoint, SetStartAndEndPoint);
         EventManager<StageEvent>.StopListening(StageEvent.SortPathTileGrid, CheckTilePath);
-        EventManager<PuzzleEvent>.StopListening<TileNode>(PuzzleEvent.Rotation, LinkTileRotate);
+        EventManager<PuzzleEvent>.StopListening<TileNode, bool>(PuzzleEvent.Rotation, LinkTileRotate);
         EventManager<StageEvent>.StopListening<int>(StageEvent.SetRandomRotateLinkTile, SetLinkTileRandomRotate);
     }
 
@@ -363,7 +363,7 @@ public class PathFind
         return connections;
     }
 
-    private void LinkTileRotate(TileNode tile)
+    private void LinkTileRotate(TileNode tile, bool isReverse)
     {
         RotationTile rotationTile = tile.transform.GetComponent<RotationTile>();
         
@@ -377,6 +377,15 @@ public class PathFind
         {
             linktile.SetLinkTileRotate(true);
         }
+
+        if (isReverse)
+        {
+            // 사용한 아이템의 수 감소 
+            EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.DecreaseItemCount, nameof(ItemID.I1002));
+            // 모든 타일들의 ReverseRotate 값 변화
+            EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetReverseRotate, false);
+        }
+
     }
 
     private void SetLinkTileRandomRotate(int rotateValue)

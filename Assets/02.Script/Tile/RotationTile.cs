@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -9,9 +10,27 @@ public class RotationTile : MonoBehaviour
     private bool _isRotating = false; // 현재 회전중인지 확인하는 플래그 변수
     private int _rotateValue = 0;  // 회전값을 각도 단위로 누적
 
+    private Transform _roadImage;
+    private Transform _HintImage;
+
+    private void Awake()
+    {
+        _roadImage = transform.GetChild(1);
+        _HintImage = transform.GetChild(3);
+    }
+
     private void Start()
     {
         _rotateValue = 0;  // 초기 회전 값을 0으로 설정
+    }
+
+    public void InitRotateTile(int rotateValue)
+    {
+        _rotateValue = rotateValue % 4;
+        float targetAngle = _rotateValue * RotationAngle;
+        Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
+        _roadImage.rotation = targetRotation;   // 직접적으로 회전값을 반영 - 길
+        _HintImage.rotation = targetRotation;   // - 힌트
     }
 
     public void RotateTile()
@@ -30,7 +49,9 @@ public class RotationTile : MonoBehaviour
         _rotateValue = rotateValue % 4;
         float targetAngle = _rotateValue * RotationAngle;
         Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
-        transform.rotation = targetRotation;  // 직접적으로 회전값을 반영
+        //_roadImage.rotation = targetRotation;  // 직접적으로 회전값을 반영
+
+        StartCoroutine(RotateOverTime(targetRotation, rotationDuration));
     }
 
     // 회전 보간 메서드
@@ -38,17 +59,17 @@ public class RotationTile : MonoBehaviour
     {
         _isRotating = true;
 
-        Quaternion startRotation = transform.rotation;
+        Quaternion startRotation = _roadImage.rotation;
         float elapsed = 0.0f;
 
         while (elapsed < duration)
         {
-            transform.rotation = Quaternion.Lerp(startRotation, endRotation, elapsed / duration);
+            _roadImage.rotation = Quaternion.Lerp(startRotation, endRotation, elapsed / duration);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        transform.rotation = endRotation;
+        _roadImage.rotation = endRotation;
         _isRotating = false;
     }
 }

@@ -56,6 +56,7 @@ public class TileNode : MonoBehaviour
     private RectTransform _rectTransform;
     private RectTransform _imageRoadRectTransform;
     private RectTransform _imageGimmickRectTransform;
+    private RectTransform _imageHintRectTransform;
     private Outline _backgroundOutline;
 
     private RotationTile _rotationTile; // 타일 회전 스크립트
@@ -113,6 +114,7 @@ public class TileNode : MonoBehaviour
 
         _imageRoadRectTransform = _imageRoad.GetComponent<RectTransform>();
         _imageGimmickRectTransform = _imageGimmick.GetComponent<RectTransform>();
+        _imageHintRectTransform = _imageHint.GetComponent<RectTransform>();
 
         _rotationTile = GetComponent<RotationTile>();
     }
@@ -122,6 +124,8 @@ public class TileNode : MonoBehaviour
     {
         _tile = tile;
         CorrectTileInfo = tile;
+
+        DebugLogger.Log($"{transform.name} : {CorrectTileInfo.RotateValue}");
 
         IsCorrect = false;
 
@@ -138,8 +142,8 @@ public class TileNode : MonoBehaviour
 
         if (_rotationTile != null)
         {
-            _rotationTile.RotateTile(_tile.RotateValue);  // 회전 로직 RotationTile에 위임
-            CheckAnswer(false);
+            _rotationTile.InitRotateTile(_tile.RotateValue);  // 회전 로직 RotationTile에 위임
+            //CheckAnswer(false);
         }
 
         //RandomTileRotate();
@@ -165,7 +169,7 @@ public class TileNode : MonoBehaviour
         if (_rotationTile != null)
         {
             _rotationTile.RotateTile(rotateValue);  // 회전 로직 RotationTile에 위임
-            CheckAnswer(false);
+            //CheckAnswer(false);
         }
     }
 
@@ -176,7 +180,7 @@ public class TileNode : MonoBehaviour
             _tile.RotateValue = (_tile.RotateValue + 3) % 4;
 
             // 모든 타일들의 ReverseRotate 값 변화
-            EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetReverseRotate, false);
+            //EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetReverseRotate, false);
         }
         else
         {
@@ -193,16 +197,14 @@ public class TileNode : MonoBehaviour
     // 회전 명령 실행
     public void OnClickRotationTile()
     {
-        DebugLogger.Log($"{transform.name} 타일이 눌림");
-        
-        if (_rotationTile != null)
+        if (_rotationTile != null && !_isHint)
         {
             _rotationTile.RotateTile();  // 회전 로직 RotationTile에 위임
         }
 
-        if (_tile.GimmickShape == GimmickShape.Link)
+        if (_tile.GimmickShape == GimmickShape.Link && !_isHint)
         {
-            EventManager<PuzzleEvent>.TriggerEvent(PuzzleEvent.Rotation, this);
+            EventManager<PuzzleEvent>.TriggerEvent(PuzzleEvent.Rotation, this, _isReverseRotate);
             return;
         }
 
@@ -224,30 +226,12 @@ public class TileNode : MonoBehaviour
             _tile.RotateValue = (_tile.RotateValue + 1) % 4;
             EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
         }
-        
+
         CheckAnswer(true);
     }
 
     private void CheckAnswer(bool isCheckAble)
     {
-        int calculatedValue = 1;
-        switch (_tile.RoadShape)
-        {
-            case RoadShape.Straight:
-                calculatedValue = 2;
-                break;
-            case RoadShape.Cross:
-                calculatedValue = 1;
-                break;
-            default:
-                calculatedValue = 4;
-                break;
-        }
-
-        IsCorrect = (_tile.RotateValue % calculatedValue) == (CorrectTileInfo.RotateValue % calculatedValue);
-
-        //_background.enabled = !IsCorrect;
-
         if (isCheckAble)
         {
             // MapGenerator의 CheckAnswer 이벤트 실행
