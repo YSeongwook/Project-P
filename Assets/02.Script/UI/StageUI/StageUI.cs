@@ -18,6 +18,12 @@ public class StageUI : MonoBehaviour
     
     // 스테이지 메뉴 패널
     [FoldoutGroup("Stage Menu Panel")] [SerializeField] private TMP_Text limitCountText; // 제한 횟수 텍스트
+    [FoldoutGroup("Stage Menu Panel")] [SerializeField] private Button menuExitButton; // 스테이지 나가기 버튼
+    [FoldoutGroup("Stage Menu Panel")] [SerializeField] private Button settingButton; // 설정 버튼
+    [FoldoutGroup("Stage Menu Panel")] [SerializeField] private Button shopButton; // 상점 버튼
+    
+    [FoldoutGroup("Exit Alert Panel")] [SerializeField] private GameObject exitAlertPanel; // 나가기 확인 패널
+    [FoldoutGroup("Exit Alert Panel")] [SerializeField] private Button okayButton; // 확인 버튼
 
     private Canvas _canvas;
     private int _limitCount;
@@ -73,6 +79,8 @@ public class StageUI : MonoBehaviour
         nextButton.onClick.AddListener(OnClickNextButton);
         exitButton.onClick.AddListener(OnClickExitButton);
         restartButton.onClick.AddListener(OnClickRestartButton);
+        menuExitButton.onClick.AddListener(OnClickInGameExitButton);
+        okayButton.onClick.AddListener(OnClickOkayButton);
     }
 
     // 버튼 이벤트 리스너 해제
@@ -82,6 +90,8 @@ public class StageUI : MonoBehaviour
         nextButton.onClick.RemoveListener(OnClickNextButton);
         exitButton.onClick.RemoveListener(OnClickExitButton);
         restartButton.onClick.RemoveListener(OnClickRestartButton);
+        menuExitButton.onClick.RemoveListener(OnClickInGameExitButton);
+        okayButton.onClick.RemoveListener(OnClickOkayButton);
     }
 
     // 제한 횟수 UI 업데이트
@@ -113,10 +123,16 @@ public class StageUI : MonoBehaviour
     // 스테이지 선택 화면으로 돌아가기
     private void ReturnSelectStage()
     {
-        // 스테이지 성공, 실패 패널, 스테이지 UI 비활성화
+        // 스테이지 성공, 실패 패널, 스테이지 UI, 나가기 확인 창 비활성화
         stageClearPanel.SetActive(false);
         stageFailPanel.SetActive(false);
+        exitAlertPanel.SetActive(false);
         _canvas.enabled = false;
+    }
+
+    private void EnableExitAlertPanel(bool enable)
+    {
+        exitAlertPanel.SetActive(enable);
     }
 
     // 스테이지 클리어 패널 활성화
@@ -129,6 +145,18 @@ public class StageUI : MonoBehaviour
     private void EnableStageFailPanel(bool enable)
     {
         stageFailPanel.SetActive(enable);
+    }
+
+    public void OnClickInGameExitButton()
+    {
+        EnableExitAlertPanel(true);
+    }
+
+    public void OnClickOkayButton()
+    {
+        EventManager<StageEvent>.TriggerEvent(StageEvent.ReturnSelectStage);
+        
+        ReturnSelectStage();
     }
     
     // 나가기 버튼 클릭 시 스테이지 선택 화면으로 전환
