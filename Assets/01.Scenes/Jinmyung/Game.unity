@@ -3105,6 +3105,10 @@ PrefabInstance:
       propertyPath: m_ChildControlWidth
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2740639033088226304, guid: 34a6870e96b60a449a98f11bf1ef3536, type: 3}
+      propertyPath: m_ChildControlHeight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4076765656835050653, guid: 34a6870e96b60a449a98f11bf1ef3536, type: 3}
       propertyPath: m_Vertical
       value: 1

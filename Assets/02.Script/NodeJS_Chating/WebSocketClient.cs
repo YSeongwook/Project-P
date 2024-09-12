@@ -15,7 +15,8 @@ public class WebSocketClient : MonoBehaviour
 
     [Header("MalPongsun")]
     public GameObject chatContent; // Content 오브젝트
-    public GameObject chatMessagePrefab; // 채팅 메시지 프리팹
+    public GameObject chatMessagePrefab_own; // 채팅 메시지 프리팹
+    public GameObject chatMessagePrefab_other; // 채팅 메시지 프리팹
 
     private Queue<Action> mainThreadQueue = new Queue<Action>();
 
@@ -106,8 +107,14 @@ public class WebSocketClient : MonoBehaviour
 
     public void AddChatMessage(string message)
     {
+
+
+        // 내껀지 아닌지 판단
         // 프리팹 인스턴스 생성
-        GameObject newMessage = Instantiate(chatMessagePrefab, chatContent.transform);
+        GameObject newMessage;
+
+        if (true) newMessage = Instantiate(chatMessagePrefab_own, chatContent.transform);
+        else newMessage = Instantiate(chatMessagePrefab_other, chatContent.transform);
 
         // 메시지 텍스트 설정
         //Text messageText = newMessage.GetComponentInChildren<Text>();
