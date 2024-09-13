@@ -29,6 +29,8 @@ public class StageUI : MonoBehaviour
     private Canvas _canvas;
     private int _limitCount;
 
+    private bool isLastStage;
+
     private void Awake()
     {
         _canvas = GetComponent<Canvas>();
@@ -61,6 +63,7 @@ public class StageUI : MonoBehaviour
         EventManager<StageEvent>.StartListening<bool>(StageEvent.StageClear, EnableStageClearPanel);
         EventManager<StageEvent>.StartListening<bool>(StageEvent.StageFail, EnableStageFailPanel);
         EventManager<StageEvent>.StartListening(StageEvent.RecoveryLimitCount, IncreaseLimitCount);
+        EventManager<StageEvent>.StartListening<bool>(StageEvent.LastStage, SetLastStage);
     }
 
     // 이벤트 리스너 해제
@@ -71,6 +74,7 @@ public class StageUI : MonoBehaviour
         EventManager<StageEvent>.StopListening<bool>(StageEvent.StageClear, EnableStageClearPanel);
         EventManager<StageEvent>.StopListening<bool>(StageEvent.StageFail, EnableStageFailPanel);
         EventManager<StageEvent>.StopListening(StageEvent.RecoveryLimitCount, IncreaseLimitCount);
+        EventManager<StageEvent>.StopListening<bool>(StageEvent.LastStage, SetLastStage);
     }
 
     // 버튼 이벤트 리스너 등록
@@ -142,6 +146,11 @@ public class StageUI : MonoBehaviour
     private void EnableStageClearPanel(bool enable)
     {
         stageClearPanel.SetActive(enable);
+
+        if( enable )
+        {
+            LastStageClear(isLastStage);
+        }
     }
     
     // 스테이지 실패 패널 활성화
@@ -184,5 +193,27 @@ public class StageUI : MonoBehaviour
     public void OnClickRestartButton()
     {
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickRestartButton);
+    }
+
+    private void LastStageClear(bool isLast)
+    {
+        var rectTransform = lobbyButton.GetComponent<RectTransform>();
+        if (isLast)
+        {
+            rectTransform.anchoredPosition = new Vector2(0, 120);
+        }
+        else
+        {
+            rectTransform.anchoredPosition = new Vector2(-180, 120);
+        }
+
+        nextButton.gameObject.SetActive(!isLast);
+    }
+
+    private void SetLastStage(bool isLast)
+    {
+        if (isLast == isLastStage) return;
+        
+        isLastStage = isLast;
     }
 }

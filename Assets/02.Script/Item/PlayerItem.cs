@@ -16,6 +16,7 @@ public class PlayerItem : MonoBehaviour
     private void Awake()
     {
         Btn_ItemSlot = GetComponent<Button>();
+        Btn_ItemSlot.onClick.AddListener(OnClick_UseItem);
 
         AddEvent();
     }
@@ -66,6 +67,6 @@ public class PlayerItem : MonoBehaviour
     public void OnClick_UseItem()
     {
         // 아이템 사용
-        EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.UseItem, data.ItemID);
+        EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.UseItem, this.data.ItemID);
     }
 }

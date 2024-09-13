@@ -26,7 +26,7 @@ namespace EnumTypes
         GameMessagePopUp,
         OnClickNextButton,
         OnClickRestartButton,
-        
+        ActiveMiniGameUI,
     }
 
     public enum MiniGame
@@ -91,6 +91,7 @@ namespace EnumTypes
         LoadInventoryItem,
         SetPlayerItemInventoryList,
         NextStage,
+        LastStage,
     }
     
     public enum PuzzleEvent
@@ -112,6 +113,7 @@ namespace EnumTypes
         SetEnableButton,
         SetReverseRotate,
         SetHint,
+        RecoveryTicketCountAfterGameClear,
     }
 
     public class EnumTypes : MonoBehaviour

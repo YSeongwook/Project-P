@@ -26,6 +26,8 @@ public class MapGenerator : MonoBehaviour
     private int _currentChapter;
     private int _currentStage;
 
+    private bool _lastStage;
+
     private PathFind checkPath; // 디버거
 
     private void Awake()
@@ -53,7 +55,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StartListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StartListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
         EventManager<DataEvents>.StartListening<int>(DataEvents.DecreaseLimitCount, LimitCountUpdate);
-        EventManager<StageEvent>.StartListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
+        EventManager<StageEvent>.StartListening(StageEvent.MissionSuccess, CheckMissionClear);
         EventManager<StageEvent>.StartListening(StageEvent.CheckMissionFail, CheckMissionFail);
         EventManager<UIEvents>.StartListening(UIEvents.OnClickNextButton, StartNextStage);
         EventManager<UIEvents>.StartListening(UIEvents.OnClickRestartButton, ReStartCurrentStage);
@@ -66,7 +68,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<DataEvents>.StopListening(DataEvents.CheckAnswer, CheckAnswer);
         EventManager<DataEvents>.StopListening<RectTransform, TileNode>(DataEvents.SetTileGrid, SetTileMapPositionGrid);
         EventManager<DataEvents>.StopListening<int>(DataEvents.DecreaseLimitCount, LimitCountUpdate);
-        EventManager<StageEvent>.StopListening(StageEvent.MissionSuccess, HandleCorrectAnswer);
+        EventManager<StageEvent>.StopListening(StageEvent.MissionSuccess, CheckMissionClear);
         EventManager<StageEvent>.StopListening(StageEvent.CheckMissionFail, CheckMissionFail);
         EventManager<UIEvents>.StopListening(UIEvents.OnClickNextButton, StartNextStage);
         EventManager<UIEvents>.StopListening(UIEvents.OnClickRestartButton, ReStartCurrentStage);
@@ -106,7 +108,7 @@ public class MapGenerator : MonoBehaviour
         _tileList = new List<Tile>(newTileList);
         _currentChapter = chapter;
         _currentStage = stage;
-        
+
         SetupGridSize();
     }
 
@@ -265,7 +267,7 @@ public class MapGenerator : MonoBehaviour
     }
 
     // 미션 성공
-    private void HandleCorrectAnswer()
+    private void CheckMissionClear()
     {
         float playerGold = PlayerInformation.Instance.PlayerViewModel.PlayerGold;
         float plusGold = _currentChapter * 50;
@@ -273,6 +275,10 @@ public class MapGenerator : MonoBehaviour
 
         EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage, _currentChapter, _currentStage);
         EventManager<StageEvent>.TriggerEvent(StageEvent.StageClear, true);
+
+        // 디버깅용
+        // 클리어하면 입장권 1개 제공
+        EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.RecoveryTicketCountAfterGameClear);
 
         DebugLogger.Log("클리어");
     }
@@ -320,25 +326,6 @@ public class MapGenerator : MonoBehaviour
     private void SetTileMapPositionGrid(RectTransform rectTransform, TileNode tileNode)
     {
         EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathTileGridAdd, rectTransform, tileNode);
-    }
-
-    // 타일 리셋
-    private void DestroyAllTile()
-    {
-        int childCount = transform.childCount;
-        if (childCount == 0)
-        {
-            DebugLogger.Log("삭제할 타일이 없습니다.");
-            return;
-        }
-
-        for(int i = childCount-1; i>=0; i--)
-        {
-            Transform child = transform.GetChild(i);
-            Destroy(child.gameObject);
-        }
-
-        _tileList.Clear();   // 모든 타일이 삭제되면 저장하고 있던 리스트 초기화
     }
     
     public void StartNextStage()

@@ -62,6 +62,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.UseItem, UseItem);
         EventManager<StageEvent>.StartListening(StageEvent.SetPlayerItemInventoryList, SetGamePlayerItem);
         EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.DecreaseItemCount, DecreaseItemCount);
+        EventManager<InventoryItemEvent>.StartListening(InventoryItemEvent.RecoveryTicketCountAfterGameClear, RechargeGameTicket);
     }
 
     private void RemoveEvents()
@@ -75,6 +76,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.UseItem, UseItem);
         EventManager<StageEvent>.StopListening(StageEvent.SetPlayerItemInventoryList, SetGamePlayerItem);
         EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.DecreaseItemCount, DecreaseItemCount);
+        EventManager<InventoryItemEvent>.StopListening(InventoryItemEvent.RecoveryTicketCountAfterGameClear, RechargeGameTicket);
     }
 
     //Gold와 ERC 초기화
