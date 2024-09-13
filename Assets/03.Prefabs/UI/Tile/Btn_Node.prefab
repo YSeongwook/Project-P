@@ -181,6 +181,7 @@ GameObject:
   - component: {fileID: 8359268608342079662}
   - component: {fileID: 3736680049247101667}
   - component: {fileID: 5961116883211345213}
+  - component: {fileID: 3420849097384718163}
   m_Layer: 5
   m_Name: Btn_Node
   m_TagString: Untagged
@@ -232,7 +233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -330,7 +331,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationDuration: 0.5
-  Entrances: []
+--- !u!114 &3420849097384718163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4711707603068042305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 566bb58cfae1c5b4aa3554800d6eb82a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 21300000, guid: 0f6e5021063504f43a2234e14b54a07c, type: 3}
+  - {fileID: 21300000, guid: 7c32d5f3d26150849ab148150d248e56, type: 3}
 --- !u!1 &5288984364160732559
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,7 +405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

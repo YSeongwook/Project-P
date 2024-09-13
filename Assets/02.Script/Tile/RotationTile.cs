@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class RotationTile : MonoBehaviour
 {
@@ -8,6 +10,13 @@ public class RotationTile : MonoBehaviour
     private const float RotationAngle = -90f;  // 음수로 설정하여 시계 방향으로 회전
     private bool _isRotating = false; // 현재 회전중인지 확인하는 플래그 변수
     private int _rotateValue = 0;  // 회전값을 각도 단위로 누적
+
+    private Transform _roadImage;
+
+    private void Awake()
+    {
+        _roadImage = transform.GetChild(1);
+    }
 
     private void Start()
     {
@@ -30,7 +39,7 @@ public class RotationTile : MonoBehaviour
         _rotateValue = rotateValue % 4;
         float targetAngle = _rotateValue * RotationAngle;
         Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
-        transform.rotation = targetRotation;  // 직접적으로 회전값을 반영
+        _roadImage.rotation = targetRotation;  // 직접적으로 회전값을 반영
     }
 
     // 회전 보간 메서드
@@ -38,17 +47,17 @@ public class RotationTile : MonoBehaviour
     {
         _isRotating = true;
 
-        Quaternion startRotation = transform.rotation;
+        Quaternion startRotation = _roadImage.rotation;
         float elapsed = 0.0f;
 
         while (elapsed < duration)
         {
-            transform.rotation = Quaternion.Lerp(startRotation, endRotation, elapsed / duration);
+            _roadImage.rotation = Quaternion.Lerp(startRotation, endRotation, elapsed / duration);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        transform.rotation = endRotation;
+        _roadImage.rotation = endRotation;
         _isRotating = false;
     }
 }
