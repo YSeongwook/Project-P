@@ -15,6 +15,8 @@ public class PathFind
 
     private float CellSize;
 
+    private bool isMiniGameStage;
+
     public void SetTileGridEvent(bool isRegister)
     {
         if (isRegister) AddEvents();
@@ -29,6 +31,7 @@ public class PathFind
         EventManager<StageEvent>.StartListening(StageEvent.SortPathTileGrid, CheckTilePath);
         EventManager<PuzzleEvent>.StartListening<TileNode, bool>(PuzzleEvent.Rotation, LinkTileRotate);
         EventManager<StageEvent>.StartListening<int>(StageEvent.SetRandomRotateLinkTile, SetLinkTileRandomRotate);
+        EventManager<UIEvents>.StartListening<bool>(UIEvents.ActiveMiniGameUI, SetMiniGameStage);
     }
 
     private void RemoveEvents()
@@ -39,6 +42,7 @@ public class PathFind
         EventManager<StageEvent>.StopListening(StageEvent.SortPathTileGrid, CheckTilePath);
         EventManager<PuzzleEvent>.StopListening<TileNode, bool>(PuzzleEvent.Rotation, LinkTileRotate);
         EventManager<StageEvent>.StopListening<int>(StageEvent.SetRandomRotateLinkTile, SetLinkTileRandomRotate);
+        EventManager<UIEvents>.StopListening<bool>(UIEvents.ActiveMiniGameUI, SetMiniGameStage);
     }
 
     private void ResetTileGrid()
@@ -105,6 +109,12 @@ public class PathFind
     {
         if (TilePathFind())
         {
+            if (isMiniGameStage)
+            {
+                //미니 게임 화면 등장
+                DebugLogger.Log("MiniGame On");
+            }
+            else
             // 하나 이상의 startPoint가 모든 endPoint와 연결된 경우
             EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
         }
@@ -430,5 +440,12 @@ public class PathFind
         DebugLogger.Log(RotateCountValue);
 
         return RotateCountValue > minCount;
+    }
+
+    private void SetMiniGameStage(bool isMiniGameStage)
+    {
+        if (this.isMiniGameStage == isMiniGameStage) return;
+
+        this.isMiniGameStage = isMiniGameStage;
     }
 }

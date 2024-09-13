@@ -94,6 +94,8 @@ public class TileNode : MonoBehaviour
 
         if (_tile.Type == TileType.Road)
             EventManager<DataEvents>.TriggerEvent(DataEvents.SetTileGrid, this);
+
+        DebugLogger.Log($"{transform.name} : {_tile.RotateValue}");
     }
 
     private void Initialize()
@@ -124,8 +126,6 @@ public class TileNode : MonoBehaviour
     {
         _tile = tile;
         CorrectTileInfo = tile;
-
-        DebugLogger.Log($"{transform.name} : {CorrectTileInfo.RotateValue}");
 
         IsCorrect = false;
 
@@ -168,7 +168,7 @@ public class TileNode : MonoBehaviour
 
         if (_rotationTile != null)
         {
-            _rotationTile.RotateTile(rotateValue);  // 회전 로직 RotationTile에 위임
+            _rotationTile.RandomRotateTile(rotateValue);  // 회전 로직 RotationTile에 위임
             //CheckAnswer(false);
         }
     }
@@ -190,7 +190,7 @@ public class TileNode : MonoBehaviour
         if (_rotationTile != null)
         {
             _rotationTile.RotateTile(_tile.RotateValue);  // 회전 로직 RotationTile에 위임
-            CheckAnswer(false);
+            //CheckAnswer(false);
         }
     }
 
@@ -227,17 +227,18 @@ public class TileNode : MonoBehaviour
             EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
         }
 
-        CheckAnswer(true);
+        DebugLogger.Log($"{transform.name} : {_tile.RotateValue}");
+        //CheckAnswer(true);
     }
 
-    private void CheckAnswer(bool isCheckAble)
-    {
-        if (isCheckAble)
-        {
-            // MapGenerator의 CheckAnswer 이벤트 실행
-            EventManager<DataEvents>.TriggerEvent(DataEvents.CheckAnswer);
-        }
-    }
+    //private void CheckAnswer(bool isCheckAble)
+    //{
+    //    if (isCheckAble)
+    //    {
+    //        // MapGenerator의 CheckAnswer 이벤트 실행
+    //        EventManager<DataEvents>.TriggerEvent(DataEvents.CheckAnswer);
+    //    }
+    //}
 
     private void SetReverse(bool isReverse)
     {

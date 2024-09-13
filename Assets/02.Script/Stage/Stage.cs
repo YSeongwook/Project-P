@@ -6,7 +6,10 @@ using UnityEngine.UI;
 public class Stage : MonoBehaviour
 {
     [SerializeField] private int stageNumber;
-    private int _chapter; 
+    private int _chapter;
+
+    private bool isLastStage;
+    private bool isMiniGameStage;
     
     private Button _btnStage;
     private Image _lock;
@@ -36,6 +39,10 @@ public class Stage : MonoBehaviour
 
         // 플레이어 아이템 게임 캔버스에 적용
         EventManager<StageEvent>.TriggerEvent(StageEvent.SetPlayerItemInventoryList);
+
+        // 맵이 생성될때, isLastStage 설정
+        EventManager<StageEvent>.TriggerEvent(StageEvent.LastStage, isLastStage);
+        EventManager<UIEvents>.TriggerEvent(UIEvents.ActiveMiniGameUI, isMiniGameStage);
     }
 
     public void OnClickStageButton()
@@ -47,5 +54,18 @@ public class Stage : MonoBehaviour
     {
         _btnStage.interactable = isEnable;
         _lock.enabled = !isEnable;
+    }
+
+    public void SetLastStage(bool isLastStage)
+    {
+        if (this.isLastStage != isLastStage)
+        {
+            this.isLastStage = isLastStage;
+        }
+    }
+
+    public void SetMiniGameStage(bool isMiniGameStage)
+    {
+        this.isMiniGameStage = isMiniGameStage;
     }
 }

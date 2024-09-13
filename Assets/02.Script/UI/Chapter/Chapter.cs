@@ -63,7 +63,7 @@ public class Chapter : MonoBehaviour
     // 플레이어 챕터 및 스테이지 해금
     private void ChangedPlayerChapterAndStage(int currentChapter, int currentStage)
     {
-        // 현재 플레이어의 챕터 및 스테이지 가져오기
+        // 플레이어의 해금된 챕터 및 스테이지 가져오기
         int chapter = PlayerInformation.Instance.GetPlayerCurrentChapter();
         int stage = PlayerInformation.Instance.GetPlayerCurrentStage();
 
