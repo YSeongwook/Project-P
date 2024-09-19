@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using DataStruct;
 using EnumTypes;
 using EventLibrary;
@@ -10,7 +11,6 @@ public class UI_ItemStoreList : MonoBehaviour
 {
     [SerializeField] private GameObject[] itemList;
     private Dictionary<string, ItemData> _itemDataDictionary;
-
 
     private void Awake()
     {
@@ -41,14 +41,11 @@ public class UI_ItemStoreList : MonoBehaviour
     private void CreateItemSlot()
     {
         _itemDataDictionary = DataManager.Instance.GetItemInfoDatas();
-
         int count = 0;
-        foreach (var itemData in _itemDataDictionary.Values)
+        foreach (var itemslot in _itemDataDictionary.Values)
         {
-            GameObject itemSlot = itemList[count++];
-            Item_Basic itemSlotData = itemSlot.GetComponent<Item_Basic>();
-            itemSlotData.SetItemInfo(itemData);
-            //count++;
+            Item_Basic item = itemList[count++].GetComponent<Item_Basic>();
+            item.SetItemInfo(itemslot);
         }
     }
 }

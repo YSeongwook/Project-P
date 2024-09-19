@@ -23,19 +23,19 @@ public class UI_PopUp_BuyItem : MonoBehaviour
     {
         EventManager<UIEvents>.StartListening(UIEvents.OnClickEnableItemBuyPopup, PopUpOn);
         EventManager<UIEvents>.StartListening(UIEvents.OnClickChangeBuyItemCount, UpdateBuyItemText);
-        EventManager<DataEvents>.StartListening<ItemData>(DataEvents.OnItemDataLoad, SetBuyItem);
+        EventManager<DataEvents>.StartListening<ItemData>(DataEvents.OnItemPopupDataLoad, SetBuyItem);
     }
 
     private void Start()
     {
-        transform.parent.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     private void OnDestroy()
     {
         EventManager<UIEvents>.StopListening(UIEvents.OnClickEnableItemBuyPopup, PopUpOn);
         EventManager<UIEvents>.StopListening(UIEvents.OnClickChangeBuyItemCount, UpdateBuyItemText);
-        EventManager<DataEvents>.StopListening<ItemData>(DataEvents.OnItemDataLoad, SetBuyItem);
+        EventManager<DataEvents>.StopListening<ItemData>(DataEvents.OnItemPopupDataLoad, SetBuyItem);
     }
 
     private void OnEnable()
@@ -62,14 +62,13 @@ public class UI_PopUp_BuyItem : MonoBehaviour
     //구매 창 PopUp On
     private void PopUpOn()
     {
-        this.transform.parent.gameObject.SetActive(true);
-        Debug.Log("팝업창 여는 메서드 실행됨");
+        gameObject.SetActive(true);
     }
 
     //구매 창 PopUp Off
     public void PopUpOff()
     {
-        this.transform.parent.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     //구매할 아이템 초기화
