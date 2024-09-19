@@ -229,6 +229,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 47662018}
   m_CullTransparentMesh: 1
+--- !u!114 &79233249 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4076765656835050653, guid: 34a6870e96b60a449a98f11bf1ef3536, type: 3}
+  m_PrefabInstance: {fileID: 1146313985}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &91885421
 GameObject:
   m_ObjectHideFlags: 0
@@ -3102,6 +3113,18 @@ PrefabInstance:
       value: SendMessage
       objectReference: {fileID: 0}
     - target: {fileID: 2740639033088226304, guid: 34a6870e96b60a449a98f11bf1ef3536, type: 3}
+      propertyPath: m_Spacing
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 2740639033088226304, guid: 34a6870e96b60a449a98f11bf1ef3536, type: 3}
+      propertyPath: m_Padding.m_Top
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2740639033088226304, guid: 34a6870e96b60a449a98f11bf1ef3536, type: 3}
+      propertyPath: m_Padding.m_Bottom
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2740639033088226304, guid: 34a6870e96b60a449a98f11bf1ef3536, type: 3}
       propertyPath: m_ChildControlWidth
       value: 1
       objectReference: {fileID: 0}
@@ -3132,6 +3155,10 @@ PrefabInstance:
     - target: {fileID: 4277409034308305430, guid: 34a6870e96b60a449a98f11bf1ef3536, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -210
+      objectReference: {fileID: 0}
+    - target: {fileID: 4555277462769262657, guid: 34a6870e96b60a449a98f11bf1ef3536, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4555277462769262657, guid: 34a6870e96b60a449a98f11bf1ef3536, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -3183,7 +3210,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5980282919262285697, guid: 34a6870e96b60a449a98f11bf1ef3536, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6407719170568768597, guid: 34a6870e96b60a449a98f11bf1ef3536, type: 3}
       propertyPath: m_AnchorMax.x
@@ -5498,6 +5525,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1469490325}
   m_CullTransparentMesh: 1
+--- !u!223 &1475675852 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 2313844532303823922, guid: 34a6870e96b60a449a98f11bf1ef3536, type: 3}
+  m_PrefabInstance: {fileID: 1146313985}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1487471491
 GameObject:
   m_ObjectHideFlags: 0
@@ -5953,6 +5985,14 @@ PrefabInstance:
       value: WebSocketManager
       objectReference: {fileID: 0}
     - target: {fileID: 5719748235891412537, guid: 4042e1ef673a8794f9e115b81ec7b6b2, type: 3}
+      propertyPath: chatCanvas
+      value: 
+      objectReference: {fileID: 1475675852}
+    - target: {fileID: 5719748235891412537, guid: 4042e1ef673a8794f9e115b81ec7b6b2, type: 3}
+      propertyPath: scrollRect
+      value: 
+      objectReference: {fileID: 79233249}
+    - target: {fileID: 5719748235891412537, guid: 4042e1ef673a8794f9e115b81ec7b6b2, type: 3}
       propertyPath: chatContent
       value: 
       objectReference: {fileID: 1146313990}
@@ -5964,6 +6004,14 @@ PrefabInstance:
       propertyPath: chatMessagePrefab
       value: 
       objectReference: {fileID: 5589548075903918339, guid: f89c3349ac5ab79409835ca5249b46ce, type: 3}
+    - target: {fileID: 5719748235891412537, guid: 4042e1ef673a8794f9e115b81ec7b6b2, type: 3}
+      propertyPath: chatMessagePrefab_own
+      value: 
+      objectReference: {fileID: 5589548075903918339, guid: f89c3349ac5ab79409835ca5249b46ce, type: 3}
+    - target: {fileID: 5719748235891412537, guid: 4042e1ef673a8794f9e115b81ec7b6b2, type: 3}
+      propertyPath: chatMessagePrefab_other
+      value: 
+      objectReference: {fileID: 3348472446305650556, guid: 870d7e20f86eaa644b4ce679d3138281, type: 3}
     - target: {fileID: 7804081327363900855, guid: 4042e1ef673a8794f9e115b81ec7b6b2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 540.0001
