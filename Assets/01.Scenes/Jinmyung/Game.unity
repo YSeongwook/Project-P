@@ -8180,6 +8180,12 @@ MonoBehaviour:
   exitButton: {fileID: 1969901156}
   restartButton: {fileID: 380692058}
   limitCountText: {fileID: 125293670}
+  menuExitButton: {fileID: 0}
+  settingButton: {fileID: 0}
+  shopButton: {fileID: 0}
+  exitAlertPanel: {fileID: 0}
+  okayButton: {fileID: 0}
+  cancelButton: {fileID: 0}
 --- !u!1 &2139105890
 GameObject:
   m_ObjectHideFlags: 0

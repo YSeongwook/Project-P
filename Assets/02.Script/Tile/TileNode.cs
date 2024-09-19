@@ -1,6 +1,8 @@
 using System.Collections;
+using DG.Tweening;
 using EnumTypes;
 using EventLibrary;
+using Org.BouncyCastle.X509;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -59,6 +61,7 @@ public class TileNode : MonoBehaviour
     private RectTransform _imageGimmickRectTransform;
     private RectTransform _imageHintRectTransform;
     private Outline _backgroundOutline;
+    private DOTweenAnimation tweenAnimation;
 
     private RotationTile _rotationTile; // 타일 회전 스크립트
 
@@ -120,6 +123,7 @@ public class TileNode : MonoBehaviour
         _imageHintRectTransform = _imageHint.GetComponent<RectTransform>();
 
         _rotationTile = GetComponent<RotationTile>();
+        tweenAnimation = GetComponent<DOTweenAnimation>();
     }
 
     // 타일 정보 삽입
@@ -268,5 +272,10 @@ public class TileNode : MonoBehaviour
         yield return new WaitForSeconds(5f);
 
         _imageHint.enabled = false;
+    }
+
+    public void StartPathAnimation()
+    {
+        tweenAnimation.DOPlay();
     }
 }

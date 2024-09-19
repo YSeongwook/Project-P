@@ -109,14 +109,22 @@ public class PathFind
     {
         if (TilePathFind())
         {
-            if (isMiniGameStage)
+            foreach (var path in _PathTileList.Values)
             {
-                //미니 게임 화면 등장
-                DebugLogger.Log("MiniGame On");
+                foreach (var item in path)
+                {
+                    item.Value.StartPathAnimation();
+                }
             }
-            else
-            // 하나 이상의 startPoint가 모든 endPoint와 연결된 경우
-            EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
+
+            //if (isMiniGameStage)
+            //{
+            //    //미니 게임 화면 등장
+            //    DebugLogger.Log("MiniGame On");
+            //}
+            //else
+            //// 하나 이상의 startPoint가 모든 endPoint와 연결된 경우
+            //EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
         }
         else
         {
