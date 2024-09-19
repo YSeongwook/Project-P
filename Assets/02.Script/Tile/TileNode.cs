@@ -274,8 +274,11 @@ public class TileNode : MonoBehaviour
         _imageHint.enabled = false;
     }
 
+    // Scale 애니메이션 실행
     public void StartPathAnimation()
     {
         tweenAnimation.DOPlay();
     }
+
+
 }

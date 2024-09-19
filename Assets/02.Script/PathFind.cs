@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using EnumTypes;
 using EventLibrary;
 using UnityEngine;
@@ -109,22 +110,38 @@ public class PathFind
     {
         if (TilePathFind())
         {
+            Sequence animationSequence = DOTween.Sequence();
+
             foreach (var path in _PathTileList.Values)
             {
-                foreach (var item in path)
+                foreach (var item in path.Reverse())
                 {
-                    item.Value.StartPathAnimation();
+                    // 애니메이션을 시퀀스에 추가
+                    animationSequence.AppendCallback(() => item.Value.StartPathAnimation());
+                    // 각 타일의 애니메이션 시간만큼 지연을 추가 (예: 1초)
+                    animationSequence.AppendInterval(0.3f);
                 }
             }
 
-            //if (isMiniGameStage)
-            //{
-            //    //미니 게임 화면 등장
-            //    DebugLogger.Log("MiniGame On");
-            //}
-            //else
-            //// 하나 이상의 startPoint가 모든 endPoint와 연결된 경우
-            //EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
+            animationSequence.OnComplete(() =>
+            {
+                DOVirtual.DelayedCall(1f, () =>
+                {
+                    if (isMiniGameStage)
+                    {
+                        //미니 게임 화면 등장
+                        DebugLogger.Log("MiniGame On");
+                    }
+                    else
+                    {
+                        // 하나 이상의 startPoint가 모든 endPoint와 연결된 경우
+                        EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
+                    }
+                });
+                
+            });
+
+            animationSequence.Play();
         }
         else
         {
