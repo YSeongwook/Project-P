@@ -2,22 +2,21 @@ using UnityEngine;
 
 public class Fish : DropHandler
 {
-    private RectTransform rectTransform;
+    private RectTransform _rectTransform;
+    private Collider2D _collider;
 
-    private Collider2D collider;
-
-    public bool isClearAble {  get; private set; }
+    public bool IsClearAble {  get; private set; }
 
     private void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
-        collider = GetComponent<Collider2D>();
+        _rectTransform = GetComponent<RectTransform>();
+        _collider = GetComponent<Collider2D>();
     }
 
     private void OnEnable()
     {
-        collider.enabled = true;
-        isClearAble = false;
+        _collider.enabled = true;
+        IsClearAble = false;
 
         RandomSpawn();
     }
@@ -27,13 +26,13 @@ public class Fish : DropHandler
         var randomX = Random.Range(-380f, 380f);
         var randomY = Random.Range(-275f, -880f);
 
-        rectTransform.localPosition = new Vector2(randomX, randomY);
+        _rectTransform.localPosition = new Vector2(randomX, randomY);
     }
 
-    public void SetClearAble(bool SetAble)
+    public void SetClearAble(bool setAble)
     {
-        isClearAble = SetAble;
+        IsClearAble = setAble;
 
-        DebugLogger.Log($"{gameObject.name} : {isClearAble}");
+        DebugLogger.Log($"{gameObject.name} : {IsClearAble}");
     }
 }

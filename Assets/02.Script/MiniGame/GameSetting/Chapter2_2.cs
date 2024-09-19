@@ -79,7 +79,7 @@ public class Chapter2_2 : MonoBehaviour
         foreach(var  fish in fishLists)
         {
             if (fish == null) continue;
-            if (!fish.isClearAble) 
+            if (!fish.IsClearAble) 
                 isClear = false;
         }
 

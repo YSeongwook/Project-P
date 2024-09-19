@@ -6,26 +6,26 @@ public class Rice : MonoBehaviour
     [FoldoutGroup("Sliced")][SerializeField] private GameObject Sliced_Bottom;
     [FoldoutGroup("Sliced")][SerializeField] private GameObject Sliced_Top;
 
-    private Vector2 originPos_Bottom;
-    private Vector2 originPos_Top;
+    private Vector2 _originPosBottom;
+    private Vector2 _originPosTop;
 
-    private Collider2D collider;
+    private Collider2D _collider;
 
     public bool isSlices { get; private set; }
 
     private void Awake()
     {
-        collider = GetComponent<Collider2D>();
-        originPos_Bottom = Sliced_Bottom.transform.position;
-        originPos_Top = Sliced_Top.transform.position;
+        _collider = GetComponent<Collider2D>();
+        _originPosBottom = Sliced_Bottom.transform.position;
+        _originPosTop = Sliced_Top.transform.position;
     }
 
     private void OnEnable()
     {
-        Sliced_Bottom.transform.position = originPos_Bottom;
-        Sliced_Top.transform.position = originPos_Top;
+        Sliced_Bottom.transform.position = _originPosBottom;
+        Sliced_Top.transform.position = _originPosTop;
         Sliced_Top.transform.rotation = Quaternion.identity;
-        collider.enabled = true;
+        _collider.enabled = true;
         isSlices = false;
     }
 
@@ -33,11 +33,11 @@ public class Rice : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Vector2 diretion = (collision.transform.position - transform.position).normalized;
-            var roatateDir = diretion.x > 0 ? 1 : -1;
+            Vector2 direction = (collision.transform.position - transform.position).normalized;
+            var rotateDir = direction.x > 0 ? 1 : -1;
             Sliced_Top.transform.position += new Vector3(0, 15f);
-            Sliced_Top.transform.rotation = Quaternion.Euler(0,0, roatateDir * 15f);
-            collider.enabled = false;
+            Sliced_Top.transform.rotation = Quaternion.Euler(0,0, rotateDir * 15f);
+            _collider.enabled = false;
             isSlices = true;
         }
     }

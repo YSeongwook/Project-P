@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Net.WebSockets;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,8 +9,7 @@ using WebSocket = WebSocketSharp.WebSocket;
 
 public class WebSocketClient : MonoBehaviour
 {
-    [Header("Websocket")]
-    public WebSocket ws;
+    [Header("Websocket")] public WebSocket ws;
     [SerializeField] private InputField InputField_Text;
 
     [Header("MalPongsun")]
@@ -20,7 +19,7 @@ public class WebSocketClient : MonoBehaviour
 
     private Queue<Action> mainThreadQueue = new Queue<Action>();
 
-    void Start()
+    private void Start()
     {
         // WebSocket 서버에 연결
         ws = new WebSocket("ws://3.38.178.218:8080");
@@ -31,7 +30,7 @@ public class WebSocketClient : MonoBehaviour
             if (e.IsBinary)
             {
                 // 바이트 데이터를 UTF-8 문자열로 변환
-                string message = System.Text.Encoding.UTF8.GetString(e.RawData);
+                string message = Encoding.UTF8.GetString(e.RawData);
                 Debug.Log("Received from server (binary): " + message);
                 //AddChatMessage(message);
 
@@ -59,7 +58,7 @@ public class WebSocketClient : MonoBehaviour
         //ws.Send("Hello, Server!");
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         // 큐에 저장된 작업을 메인 스레드에서 처리
         while (mainThreadQueue.Count > 0)
@@ -69,7 +68,7 @@ public class WebSocketClient : MonoBehaviour
         }
     }
 
-    void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
         // 응용 프로그램 종료 시 WebSocket 연결 닫기
         if (ws != null)
@@ -81,13 +80,11 @@ public class WebSocketClient : MonoBehaviour
     public void SendMessageToServer(string message)
     {
         // 서버로 메시지 전송
-        if (ws != null && ws.ReadyState == WebSocketSharp.WebSocketState.Open)
+        if (ws != null && ws.ReadyState == WebSocketState.Open)
         {
             ws.Send(message);
         }
     }
-
-
 
     public void SendMessage()
     {
@@ -107,8 +104,6 @@ public class WebSocketClient : MonoBehaviour
 
     public void AddChatMessage(string message)
     {
-
-
         // 내껀지 아닌지 판단
         // 프리팹 인스턴스 생성
         GameObject newMessage;
