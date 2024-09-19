@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1214814136927556400}
   - component: {fileID: 6384669503924513982}
   m_Layer: 5
-  m_Name: Speech_Bubble_White
+  m_Name: Speech_Bubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -284,7 +284,7 @@ GameObject:
   - component: {fileID: 3663525862748912356}
   - component: {fileID: 2103034681212647782}
   m_Layer: 5
-  m_Name: Group_UserID/Tme
+  m_Name: Group_UserID_Tme
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
