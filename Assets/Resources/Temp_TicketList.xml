@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Temp_TicketList>
+  <dataCategory>
+    <data TicketID="T1001" TicketCount ="X 1" GoldPrice="1000" Image="Ticketx1" />
+    <data TicketID="T1002" TicketCount ="X 5" GoldPrice="4000" Image="Ticketx5" />
+    <data TicketID="T1003" TicketCount ="X 15" GoldPrice="10000" Image="Ticketx15" />
+  </dataCategory>
+</Temp_TicketList>

@@ -11,6 +11,7 @@ public enum DataType
 {
     Item,
     GoldPackage,
+    Ticket,
     PlayerInven,
     TileMap
 }
@@ -20,8 +21,10 @@ public class DataManager : Singleton<DataManager>
     #region LoadData
     public Dictionary<string, ItemData> LoadedItemDataList { get; private set; }
     public Dictionary<string, GoldPackageData> LoadedGoldPackageDataList { get; private set; }
+    public Dictionary<string, TicketData> LoadTicketDataList { get; private set; }
     public Dictionary<string, PlayerInfo> LoadedPlayerInventoryList { get; private set; }
     public Dictionary<string, StageGameMapInfoTable> LoadedTileMapTable { get; private set; }
+
 
     public Dictionary<string, List<Tile>> LoadedTileMapList { get; private set; } = new Dictionary<string, List<Tile>>();
 
@@ -31,6 +34,7 @@ public class DataManager : Singleton<DataManager>
     {
         textAssetDic.Add(DataType.Item, Resources.Load("Temp_ItemList") as TextAsset);
         textAssetDic.Add(DataType.GoldPackage, Resources.Load("Temp_PackageList") as TextAsset);
+        textAssetDic.Add(DataType.Ticket, Resources.Load("Temp_TicketList") as TextAsset);
         textAssetDic.Add(DataType.PlayerInven, Resources.Load("Temp_PlayerInventory") as TextAsset);
     }
 
@@ -39,6 +43,7 @@ public class DataManager : Singleton<DataManager>
         ReadTileMapTableData();
         ReadDatas(DataType.Item);
         ReadDatas(DataType.GoldPackage);
+        ReadDatas(DataType.Ticket);
         ReadDatas(DataType.PlayerInven);
     }
 
@@ -57,6 +62,9 @@ public class DataManager : Singleton<DataManager>
                 break;
             case DataType.GoldPackage:
                 FileType_GoldPackageData(xmlAsset);
+                break;
+            case DataType.Ticket:
+                FileType_TicketData(xmlAsset);
                 break;
             case DataType.PlayerInven:
                 FileType_PlayerInventoryData(xmlAsset);
@@ -177,6 +185,24 @@ public class DataManager : Singleton<DataManager>
         }
     }
 
+    private void FileType_TicketData(XDocument xmlAsset)
+    {
+        LoadTicketDataList = new Dictionary<string, TicketData>();
+
+        foreach (var data in xmlAsset.Descendants("data"))
+        {
+            TicketData ticket = new TicketData();
+            ticket.TicketID = data.Attribute(nameof(ticket.TicketID)).Value;
+            ticket.TicketCount = data.Attribute(nameof(ticket.TicketCount)).Value;
+            ticket.GoldPrice = float.Parse(data.Attribute(nameof(ticket.GoldPrice)).Value);
+            string imageName = data.Attribute(nameof(ticket.Image)).Value;
+            ticket.Image = Resources.Load<Sprite>($"TicketImages/{imageName}");
+
+            LoadTicketDataList.Add(ticket.TicketID, ticket);
+        }
+    }
+
+
     private void FileType_PlayerInventoryData(XDocument xmlAsset)
     {
         LoadedPlayerInventoryList = new Dictionary<string, PlayerInfo>();
@@ -274,6 +300,11 @@ public class DataManager : Singleton<DataManager>
         return LoadedGoldPackageDataList;
     }
 
+    public Dictionary<string, TicketData> GetTicketInfoDatas()
+    {
+        return LoadTicketDataList;
+    }
+
     public Dictionary<string, PlayerInfo> GetPlayerInventoryDatas()
     {
         return LoadedPlayerInventoryList;
@@ -322,6 +353,7 @@ public class DataManager : Singleton<DataManager>
     {
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnCreateItemSlot);
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnCreateGoldPackageSlot);
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnCreateTicketSlot);
         EventManager<DataEvents>.TriggerEvent(DataEvents.OnUserInformationLoad);
     }
 }

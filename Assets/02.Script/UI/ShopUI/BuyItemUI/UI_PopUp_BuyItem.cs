@@ -23,7 +23,7 @@ public class UI_PopUp_BuyItem : MonoBehaviour
     {
         EventManager<UIEvents>.StartListening(UIEvents.OnClickEnableItemBuyPopup, PopUpOn);
         EventManager<UIEvents>.StartListening(UIEvents.OnClickChangeBuyItemCount, UpdateBuyItemText);
-        EventManager<DataEvents>.StartListening<ItemData>(DataEvents.OnItemDataLoad, SetBuyItem);
+        EventManager<DataEvents>.StartListening<ItemData>(DataEvents.OnItemPopupDataLoad, SetBuyItem);
     }
 
     private void Start()
@@ -35,7 +35,7 @@ public class UI_PopUp_BuyItem : MonoBehaviour
     {
         EventManager<UIEvents>.StopListening(UIEvents.OnClickEnableItemBuyPopup, PopUpOn);
         EventManager<UIEvents>.StopListening(UIEvents.OnClickChangeBuyItemCount, UpdateBuyItemText);
-        EventManager<DataEvents>.StopListening<ItemData>(DataEvents.OnItemDataLoad, SetBuyItem);
+        EventManager<DataEvents>.StopListening<ItemData>(DataEvents.OnItemPopupDataLoad, SetBuyItem);
     }
 
     private void OnEnable()
@@ -63,7 +63,6 @@ public class UI_PopUp_BuyItem : MonoBehaviour
     private void PopUpOn()
     {
         gameObject.SetActive(true);
-        Debug.Log("팝업창 여는 메서드 실행됨");
     }
 
     //구매 창 PopUp Off

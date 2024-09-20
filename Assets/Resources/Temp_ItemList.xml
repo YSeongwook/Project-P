@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Temp_ItemList>
   <dataCategory>
-    <data ItemID="I1001" Name="회전횟수증가" Description="회전 횟수가 5회 증가합니다." GoldPrice="1000" ERCPrice="0.5" Image="RotateAdd" />
-    <data ItemID="I1002" Name="역방향회전" Description="회전방향이 반대로 바뀝니다." GoldPrice="1000" ERCPrice="0.8" Image="RotateReverse" />
-    <data ItemID="I1003" Name="Hint" Description="게임 힌트." GoldPrice="1000" ERCPrice="0.8" Image="RotateReverse" />
+    <data ItemID="I1001" Name="회전횟수 증가" Description="회전 횟수가 5회 증가합니다." GoldPrice="1000" ERCPrice="0.5" Image="RotateAdd" />
+    <data ItemID="I1002" Name="역방향 회전" Description="회전방향이 반대로 바뀝니다." GoldPrice="1000" ERCPrice="0.8" Image="RotateReverse" />
+    <data ItemID="I1003" Name="아이템 강화" Description="아이템이 강화됩니다." GoldPrice="1000" ERCPrice="0.8" Image="ItemEnhancement" />
   </dataCategory>
 </Temp_ItemList>

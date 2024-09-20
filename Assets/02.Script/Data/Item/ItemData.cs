@@ -34,6 +34,14 @@ namespace DataStruct
         public string CurrentStage;
     }
 
+    public struct TicketData
+    {
+        public string TicketID;
+        public string TicketCount;
+        public float GoldPrice;
+        public Sprite Image;
+    }
+
 
     public struct StageGameMapInfoTable
     {
