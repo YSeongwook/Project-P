@@ -97,9 +97,7 @@ public class TileNode : MonoBehaviour
             _imageGimmick.enabled = false;
 
         if (_tile.Type == TileType.Road)
-            EventManager<DataEvents>.TriggerEvent(DataEvents.SetTileGrid, this);
-
-        DebugLogger.Log($"{transform.name} : {_tile.RotateValue}");
+            EventManager<DataEvents>.TriggerEvent(DataEvents.SetTileGrid, this);        
     }
 
     private void Initialize()
@@ -148,6 +146,7 @@ public class TileNode : MonoBehaviour
         if (_rotationTile != null)
         {
             _rotationTile.InitRotateTile(_tile.RotateValue);  // 회전 로직 RotationTile에 위임
+            DebugLogger.Log($"{transform.name} : {_tile.RotateValue}");
             //CheckAnswer(false);
         }
 
@@ -202,11 +201,6 @@ public class TileNode : MonoBehaviour
     // 회전 명령 실행
     public void OnClickRotationTile()
     {
-        if (_rotationTile != null && !_isHint)
-        {
-            _rotationTile.RotateTile();  // 회전 로직 RotationTile에 위임
-        }
-
         if (_tile.GimmickShape == GimmickShape.Link && !_isHint)
         {
             EventManager<PuzzleEvent>.TriggerEvent(PuzzleEvent.Rotation, this, _isReverseRotate);
@@ -230,6 +224,11 @@ public class TileNode : MonoBehaviour
         {
             _tile.RotateValue = (_tile.RotateValue + 1) % 4;
             EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
+        }
+
+        if (_rotationTile != null && !_isHint)
+        {
+            _rotationTile.RotateTile(_tile.RotateValue);  // 회전 로직 RotationTile에 위임
         }
 
         DebugLogger.Log($"{transform.name} : {_tile.RotateValue}");
