@@ -14,16 +14,19 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/01.Scenes/Inseok/Inseok_Chat.unity
     guid: a15810c2658e9234ba055ed661348a76
-  - enabled: 0
+  - enabled: 1
     path: Assets/01.Scenes/Inseok/Login.unity
     guid: cb02670d16be0b64db22be31786ad572
+  - enabled: 1
+    path: Assets/01.Scenes/Seongwook/Game.unity
+    guid: 6683ade257ff05744a9d02788b609390
   - enabled: 0
     path: Assets/01.Scenes/Jinmyung/Jinmyung.unity
     guid: 12534f8e6f147954db50df04fa738cf3
   - enabled: 0
     path: Assets/01.Scenes/Jinmyung/MiniGameTest.unity
     guid: e971ff5f5461e924cbad84de7bcdfcc1
-  - enabled: 1
+  - enabled: 0
     path: Assets/01.Scenes/Seongwook/VibrateTest.unity
     guid: 2f9ec6cc2ec530148bc4f35061558e4e
   m_configObjects: {}
