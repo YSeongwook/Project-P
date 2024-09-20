@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Net;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.Universal;
 
 public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IDragHandler
 {
@@ -21,7 +18,7 @@ public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandle
     private void Awake()
     {
         canvas = GetComponentInParent<Canvas>();
-        trailRenderer = lineObject.GetComponent<TrailRenderer>();
+        trailRenderer = lineObject.GetComponent<TrailRenderer>();        
     }
 
     private void OnDisable()
@@ -32,6 +29,13 @@ public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandle
     private void Start()
     {
         ParticleCamera.GetComponent<RectTransform>().position = canvas.GetComponent<RectTransform>().position + new Vector3(0,0,-30f);
+
+        var mainCamera = Camera.main.GetComponent<UniversalAdditionalCameraData>();
+        if(mainCamera != null )
+        {
+            mainCamera.cameraStack.Add(ParticleCamera);
+        }
+
         AdjustCameraToCanvas();
     }
 

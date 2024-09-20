@@ -232,17 +232,10 @@ public class TileNode : MonoBehaviour
         }
 
         DebugLogger.Log($"{transform.name} : {_tile.RotateValue}");
-        //CheckAnswer(true);
+
+        // 진동 발생
     }
 
-    //private void CheckAnswer(bool isCheckAble)
-    //{
-    //    if (isCheckAble)
-    //    {
-    //        // MapGenerator의 CheckAnswer 이벤트 실행
-    //        EventManager<DataEvents>.TriggerEvent(DataEvents.CheckAnswer);
-    //    }
-    //}
 
     private void SetReverse(bool isReverse)
     {

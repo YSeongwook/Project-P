@@ -33,6 +33,9 @@ namespace EnumTypes
     {
         Catch,
         PoliceGameOver,
+        FeedCountChanged,
+        ActiveMiniGame,
+        DisActiveMiniGame,
     }
 
     public enum DataEvents

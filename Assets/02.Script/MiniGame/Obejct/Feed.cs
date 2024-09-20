@@ -1,3 +1,5 @@
+using EnumTypes;
+using EventLibrary;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -35,9 +37,10 @@ public class Feed : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         if (RectTransformUtility.RectangleContainsScreenPoint(cowRectTransform, eventData.position, _canvas.worldCamera))
         {
             // 소에게 여물을 준 것으로 처리
-            Debug.Log("소에게 여물을 주었습니다!");
+            EventManager<MiniGame>.TriggerEvent(MiniGame.FeedCountChanged);
+            DebugLogger.Log("소에게 여물을 주었습니다!");
             // 여물 오브젝트를 비활성화하거나 제거
-            gameObject.SetActive(false);
+            gameObject.SetActive(false);          
         }
         else
         {

@@ -119,7 +119,7 @@ public class PathFind
                     // 애니메이션을 시퀀스에 추가
                     animationSequence.AppendCallback(() => item.Value.StartPathAnimation());
                     // 각 타일의 애니메이션 시간만큼 지연을 추가 (예: 1초)
-                    animationSequence.AppendInterval(0.3f);
+                    animationSequence.AppendInterval(0.2f);
                 }
             }
 
@@ -131,6 +131,8 @@ public class PathFind
                     {
                         //미니 게임 화면 등장
                         DebugLogger.Log("MiniGame On");
+
+
                     }
                     else
                     {

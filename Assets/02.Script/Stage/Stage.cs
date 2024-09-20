@@ -19,7 +19,7 @@ public class Stage : MonoBehaviour
         _btnStage = GetComponent<Button>();
         _lock = transform.GetChild(0).GetComponent<Image>();
     }
-    
+
     public void SetStageNumber(int chapter, int number)
     {
         _chapter = chapter;

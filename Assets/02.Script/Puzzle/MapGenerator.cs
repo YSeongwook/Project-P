@@ -357,4 +357,9 @@ public class MapGenerator : MonoBehaviour
     {
         _isTutorial = isTutorialStage;
     }
+
+    private void OpenMiniGame()
+    {
+        EventManager<MiniGame>.TriggerEvent(MiniGame.ActiveMiniGame, _currentChapter, _currentStage);
+    }
 }
