@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using TMPro;
@@ -88,10 +89,17 @@ public class WebSocketClient : MonoBehaviour
 
     public void SendMessage()
     {
-        //string nickName = DBDataManager.Instance.UserData["Nickname"];
-        string nickName = "Name";
+        string nickName = DBDataManager.Instance.UserData["Nickname"];
+        //string nickName = "Name";
 
-        string mess = $"{nickName} : {InputField_Text.text}";
+        // 한국 시간대(KST) 설정
+        TimeZoneInfo kstZone = TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time");
+        DateTime koreanTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, kstZone);
+
+        // 현재 한국 시간 (예: 2024-09-19 14:30:00)
+        string currentTime = koreanTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+        string mess = $"{nickName}/|||/{InputField_Text.text}/|||/{currentTime}";
 
         if (false == mess.IsNullOrEmpty())
         {
@@ -99,29 +107,38 @@ public class WebSocketClient : MonoBehaviour
             //Debug.Log(mess);
             InputField_Text.text = "";
         }
-        
     }
 
     public void AddChatMessage(string message)
     {
+        string[] strArr = message.Split("/|||/");
+
+        string nickName = strArr[0];
+        string context = strArr[1];
+        string time = strArr[2];
+
         // 내껀지 아닌지 판단
         // 프리팹 인스턴스 생성
         GameObject newMessage;
 
-        if (true) newMessage = Instantiate(chatMessagePrefab_own, chatContent.transform);
+        if (nickName.Equals(DBDataManager.Instance.UserData["Nickname"])) newMessage = Instantiate(chatMessagePrefab_own, chatContent.transform);
         else newMessage = Instantiate(chatMessagePrefab_other, chatContent.transform);
 
-        // 메시지 텍스트 설정
-        //Text messageText = newMessage.GetComponentInChildren<Text>();
-        //messageText.text = message;
+
         // "Text_Chat" 오브젝트의 TextMeshPro 컴포넌트 찾기
-        TextMeshProUGUI messageText = newMessage.transform.Find("Text_Chat").GetComponent<TextMeshProUGUI>();
-        messageText.text = message;
+        TextMeshProUGUI nickNameText = newMessage.transform.Find("Speech_Bubble/Group_UserID_Tme/Text_UserID").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI messageText = newMessage.transform.Find("Speech_Bubble/Text_Chat").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI timeText = newMessage.transform.Find("Speech_Bubble/Group_UserID_Tme/Text_Time").GetComponent<TextMeshProUGUI>();
+
+        nickNameText.text = nickName;
+        messageText.text = context;
+        timeText.text = time;
 
         // 메시지 추가 후 스크롤을 아래로 이동
         Canvas.ForceUpdateCanvases();
+        
         ScrollRect scrollRect = chatContent.GetComponentInParent<ScrollRect>();
         scrollRect.verticalNormalizedPosition = 0f;
-    }
 
+    }
 }
