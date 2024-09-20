@@ -26,7 +26,7 @@ public class MapGenerator : MonoBehaviour
     private int _currentChapter;
     private int _currentStage;
 
-    private bool _lastStage;
+    private bool _isTutorial;
 
     private PathFind checkPath; // 디버거
 
@@ -59,6 +59,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<StageEvent>.StartListening(StageEvent.CheckMissionFail, CheckMissionFail);
         EventManager<UIEvents>.StartListening(UIEvents.OnClickNextButton, StartNextStage);
         EventManager<UIEvents>.StartListening(UIEvents.OnClickRestartButton, ReStartCurrentStage);
+        EventManager<StageEvent>.StartListening<bool>(StageEvent.TutorialStage, SetTutotialStage);
         checkPath.SetTileGridEvent(true);
     }
 
@@ -72,6 +73,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<StageEvent>.StopListening(StageEvent.CheckMissionFail, CheckMissionFail);
         EventManager<UIEvents>.StopListening(UIEvents.OnClickNextButton, StartNextStage);
         EventManager<UIEvents>.StopListening(UIEvents.OnClickRestartButton, ReStartCurrentStage);
+        EventManager<StageEvent>.StopListening<bool>(StageEvent.TutorialStage, SetTutotialStage);
         checkPath.SetTileGridEvent(false);
     }
 
@@ -224,7 +226,8 @@ public class MapGenerator : MonoBehaviour
 
         FinalizeStage();
 
-        RandomlyRotateTilesForTotalRotations(_limitCount, 0, _pathTileList);
+        if(!_isTutorial)
+            RandomlyRotateTilesForTotalRotations(_limitCount, 0, _pathTileList);
     }
 
     // 스테이지 생성 완료 후 처리
@@ -348,5 +351,10 @@ public class MapGenerator : MonoBehaviour
 
         EventManager<StageEvent>.TriggerEvent(StageEvent.StageFail, false);
         OpenNewStage(_currentChapter, _currentStage);
+    }
+
+    private void SetTutotialStage(bool isTutorialStage)
+    {
+        _isTutorial = isTutorialStage;
     }
 }

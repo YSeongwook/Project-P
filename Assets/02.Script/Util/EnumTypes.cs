@@ -92,6 +92,7 @@ namespace EnumTypes
         SetPlayerItemInventoryList,
         NextStage,
         LastStage,
+        TutorialStage,
     }
     
     public enum PuzzleEvent
