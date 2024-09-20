@@ -17,8 +17,9 @@ public class ChapterButton : MonoBehaviour
 
     public void OnClickCloseChapterButton()
     {
-        gameObject.transform.DOLocalMove(new Vector3(1315, 0, 0), 1f).SetEase(Ease.InOutQuad, 0.5f, 0.3f);
-        closeChapterBtn.SetActive(false);
+        gameObject.transform.DOLocalMove(new Vector3(1315, 0, 0), 1f)
+            .SetEase(Ease.InOutQuad, 0.5f, 0.3f)
+            .OnComplete(() => closeChapterBtn.SetActive(false));  // 애니메이션 완료 후 closeChapterBtn 비활성화
     }
 
     public void OnClickOpenChapter1()
