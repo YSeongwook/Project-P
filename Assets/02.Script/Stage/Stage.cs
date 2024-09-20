@@ -8,8 +8,8 @@ public class Stage : MonoBehaviour
     [SerializeField] private int stageNumber;
     private int _chapter;
 
-    private bool isLastStage;
-    private bool isMiniGameStage;
+    private bool _isLastStage;
+    private bool _isMiniGameStage;
     
     private Button _btnStage;
     private Image _lock;
@@ -26,7 +26,6 @@ public class Stage : MonoBehaviour
         stageNumber = number;
     }
     
-    // Todo: 스테이지 입장 메서드 생성해서 스테이지 클리어 후 다음 스테이지 입장 시 사용
     private void OpenStage()
     {
         if(PlayerInformation.Instance.PlayerViewModel.GameTickets <= 0)
@@ -41,8 +40,8 @@ public class Stage : MonoBehaviour
         EventManager<StageEvent>.TriggerEvent(StageEvent.SetPlayerItemInventoryList);
 
         // 맵이 생성될때, isLastStage 설정
-        EventManager<StageEvent>.TriggerEvent(StageEvent.LastStage, isLastStage);
-        EventManager<UIEvents>.TriggerEvent(UIEvents.ActiveMiniGameUI, isMiniGameStage);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.LastStage, _isLastStage);
+        EventManager<UIEvents>.TriggerEvent(UIEvents.ActiveMiniGameUI, _isMiniGameStage);
     }
 
     public void OnClickStageButton()
@@ -58,14 +57,14 @@ public class Stage : MonoBehaviour
 
     public void SetLastStage(bool isLastStage)
     {
-        if (this.isLastStage != isLastStage)
+        if (this._isLastStage != isLastStage)
         {
-            this.isLastStage = isLastStage;
+            this._isLastStage = isLastStage;
         }
     }
 
     public void SetMiniGameStage(bool isMiniGameStage)
     {
-        this.isMiniGameStage = isMiniGameStage;
+        this._isMiniGameStage = isMiniGameStage;
     }
 }

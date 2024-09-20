@@ -174,7 +174,6 @@ public class PlayerInformation : Singleton<PlayerInformation>
         MySQLManager.Instance.UpdateDB(sb.ToString());
     } 
 
-
     private void PlayerDataSave()
     {
         // Player Inventory Data XML로 Save
@@ -257,6 +256,4 @@ public class PlayerInformation : Singleton<PlayerInformation>
     {
         return int.Parse(_playerInfo.CurrentStage);
     }
-
-
 }

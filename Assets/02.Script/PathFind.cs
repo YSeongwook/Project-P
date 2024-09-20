@@ -108,6 +108,9 @@ public class PathFind
 
     private void CheckTilePath()
     {
+        // 길고 약한 진동 발생
+        EventManager<VibrateEvents>.TriggerEvent(VibrateEvents.LongWeak);
+        
         if (TilePathFind())
         {
             Sequence animationSequence = DOTween.Sequence();

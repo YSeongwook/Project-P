@@ -93,6 +93,14 @@ namespace EnumTypes
         NextStage,
         LastStage,
     }
+
+    public enum VibrateEvents
+    {
+        ShortWeak,
+        ShortStrong,
+        LongWeak,
+        LongStrong,
+    }
     
     public enum PuzzleEvent
     {

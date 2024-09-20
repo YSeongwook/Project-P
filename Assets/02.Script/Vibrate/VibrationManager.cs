@@ -1,37 +1,61 @@
-using UnityEngine;
+using EnumTypes;
+using EventLibrary;
+using VibrationUtility;
+// 진동 유틸리티 네임스페이스 추가
 
-public class VibrationManager : MonoBehaviour
+public class VibrationManager : Singleton<VibrationManager>
 {
-    // 특정 시간과 강도로 진동 발생
-    public void Vibrate(long milliseconds, int amplitude)
+    protected override void Awake()
     {
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-            AndroidJavaObject vibrator = currentActivity.Call<AndroidJavaObject>("getSystemService", "vibrator");
+        base.Awake();
+        VibrationUtil.Init(); // 진동 유틸리티 초기화
+        RegisterEvents(); // 이벤트 등록
+    }
+    
+    private void OnDestroy()
+    {
+        RemoveEvents();
+    }
 
-            if (vibrator.Call<bool>("hasVibrator"))
-            {
-                // Android OS 버전 체크
-                AndroidJavaClass androidOsBuildVersion = new AndroidJavaClass("android.os.Build$VERSION");
-                int sdkInt = androidOsBuildVersion.GetStatic<int>("SDK_INT");
+    private void RegisterEvents()
+    {
+        // 이벤트 리스너 등록
+        EventManager<VibrateEvents>.StartListening(VibrateEvents.ShortWeak, VibrateShortWeak);
+        EventManager<VibrateEvents>.StartListening(VibrateEvents.ShortStrong, VibrateShortStrong);
+        EventManager<VibrateEvents>.StartListening(VibrateEvents.LongWeak, VibrateLongWeak);
+        EventManager<VibrateEvents>.StartListening(VibrateEvents.LongStrong, VibrateLongStrong);
+    }
 
-                if (sdkInt >= 26) // Android API 26 이상
-                {
-                    AndroidJavaClass vibrationEffectClass = new AndroidJavaClass("android.os.VibrationEffect");
-                    AndroidJavaObject vibrationEffect = vibrationEffectClass.CallStatic<AndroidJavaObject>("createOneShot", milliseconds, amplitude);
-                    vibrator.Call("vibrate", vibrationEffect);
-                }
-                else // Android API 26 이하
-                {
-                    vibrator.Call("vibrate", milliseconds);
-                }
-            }
-        }
-        else
-        {
-            Handheld.Vibrate(); // 다른 플랫폼에서는 기본 진동
-        }
+    private void RemoveEvents()
+    {
+        // 이벤트 리스너 해제
+        EventManager<VibrateEvents>.StopListening(VibrateEvents.ShortWeak, VibrateShortWeak);
+        EventManager<VibrateEvents>.StopListening(VibrateEvents.ShortStrong, VibrateShortStrong);
+        EventManager<VibrateEvents>.StopListening(VibrateEvents.LongWeak, VibrateLongWeak);
+        EventManager<VibrateEvents>.StopListening(VibrateEvents.LongStrong, VibrateLongStrong); 
+    }
+
+    // 짧고 약한 진동
+    private void VibrateShortWeak()
+    {
+        VibrationUtil.Vibrate(VibrationType.Light, 0.5f); // 0.5f 진동 강도
+    }
+
+    // 짧고 강한 진동
+    private void VibrateShortStrong()
+    {
+        VibrationUtil.Vibrate(VibrationType.Heavy, 1.0f); // 최대 강도
+    }
+
+    // 길고 약한 진동
+    private void VibrateLongWeak()
+    {
+        VibrationUtil.VibrateCustomized(new long[] { 0, 500 }, new int[] { 0, 50 }); // 0.5초 진동, 약한 강도
+    }
+
+    // 길고 강한 진동
+    private void VibrateLongStrong()
+    {
+        VibrationUtil.VibrateCustomized(new long[] { 0, 500 }, new int[] { 0, 200 }); // 0.5초 진동, 강한 강도
     }
 }

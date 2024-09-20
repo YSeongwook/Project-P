@@ -2,7 +2,6 @@ using System.Collections;
 using DG.Tweening;
 using EnumTypes;
 using EventLibrary;
-using Org.BouncyCastle.X509;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -202,6 +201,9 @@ public class TileNode : MonoBehaviour
     // 회전 명령 실행
     public void OnClickRotationTile()
     {
+        // 짧은 진동 발생
+        EventManager<VibrateEvents>.TriggerEvent(VibrateEvents.ShortWeak);
+        
         if (_rotationTile != null && !_isHint)
         {
             _rotationTile.RotateTile();  // 회전 로직 RotationTile에 위임

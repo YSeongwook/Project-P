@@ -10,7 +10,7 @@ public class StageManager : Singleton<StageManager>
     [SerializeField] private Transform contentTransform;
     [SerializeField] private DynamicObjectSelector objectSelector;
 
-    private GameObject[] stages;
+    private GameObject[] _stages;
 
     protected new void Awake()
     {
@@ -62,13 +62,13 @@ public class StageManager : Singleton<StageManager>
             Destroy(child.gameObject);
         }
 
-        stages = new GameObject[stageCount];
+        _stages = new GameObject[stageCount];
         List<RectTransform> itemRects = new List<RectTransform>();
 
         for (int i = 0; i < stageCount; i++)
         {
-            stages[i] = Instantiate(stagePrefab, contentTransform);
-            var stage = stages[i].GetComponent<Stage>();
+            _stages[i] = Instantiate(stagePrefab, contentTransform);
+            var stage = _stages[i].GetComponent<Stage>();
             if (stage == null) continue;
             stage.name = $"Stage{i + 1}";
 
@@ -81,13 +81,13 @@ public class StageManager : Singleton<StageManager>
             stage.ButtonActivate(buttonActive);
             stage.SetLastStage(i == stageCount-1);
 
-            TMP_Text stageText = stages[i].GetComponentInChildren<TMP_Text>();
+            TMP_Text stageText = _stages[i].GetComponentInChildren<TMP_Text>();
             if (stageText != null)
             {
                 stageText.text = (i + 1).ToString();
             }
 
-            itemRects.Add(stages[i].GetComponent<RectTransform>());
+            itemRects.Add(_stages[i].GetComponent<RectTransform>());
         }
 
         objectSelector.SetUpItems(itemRects);

@@ -119,6 +119,7 @@ public class MapGenerator : MonoBehaviour
         DebugLogger.Log(errorMessage);
     }
 
+    // Todo: 4x4이면 타일 크기 줄이고, 7x7이면 타일 크기 키우기
     // 그리드 사이즈 설정
     private void SetupGridSize()
     {
@@ -308,7 +309,7 @@ public class MapGenerator : MonoBehaviour
                 _tileSize = 320;
                 break;
             case 4:
-                _tileSize = 270;
+                _tileSize = 250;
                 break;
             case 5:
                 _tileSize = 220;
@@ -317,7 +318,7 @@ public class MapGenerator : MonoBehaviour
                 _tileSize = 170;
                 break;
             case 7:
-                _tileSize = 120;
+                _tileSize = 150;
                 break;
         }
     }
