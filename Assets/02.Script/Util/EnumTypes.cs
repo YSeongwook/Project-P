@@ -33,6 +33,9 @@ namespace EnumTypes
     {
         Catch,
         PoliceGameOver,
+        FeedCountChanged,
+        ActiveMiniGame,
+        DisActiveMiniGame,
     }
 
     public enum DataEvents
@@ -92,6 +95,7 @@ namespace EnumTypes
         SetPlayerItemInventoryList,
         NextStage,
         LastStage,
+        TutorialStage,
     }
 
     public enum VibrateEvents

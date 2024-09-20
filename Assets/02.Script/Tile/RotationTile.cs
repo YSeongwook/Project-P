@@ -11,7 +11,7 @@ public class RotationTile : MonoBehaviour
 
     private const float RotationAngle = -90f;  // 음수로 설정하여 시계 방향으로 회전
     private bool _isRotating = false; // 현재 회전중인지 확인하는 플래그 변수
-    private int _rotateValue = 0;  // 회전값을 각도 단위로 누적
+    private int _rotateValue;  // 회전값을 각도 단위로 누적
 
     private Transform _roadImage;
     private Transform _HintImage;
@@ -32,11 +32,13 @@ public class RotationTile : MonoBehaviour
 
     public void InitRotateTile(int rotateValue)
     {
-        _rotateValue = rotateValue % 4;
+        _rotateValue = rotateValue;
         float targetAngle = _rotateValue * RotationAngle;
         Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
         _roadImage.rotation = targetRotation;   // 직접적으로 회전값을 반영 - 길
         _HintImage.rotation = targetRotation;   // - 힌트
+
+        DebugLogger.Log($"2. {transform.name} : {_rotateValue}");
     }
 
     public void RotateTile()

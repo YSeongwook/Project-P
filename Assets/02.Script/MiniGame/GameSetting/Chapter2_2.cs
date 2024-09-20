@@ -1,3 +1,5 @@
+using EnumTypes;
+using EventLibrary;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -65,12 +67,22 @@ public class Chapter2_2 : MonoBehaviour
     private void GameOver()
     {
         DebugLogger.Log($"Clear 실패");
+
+        EventManager<MiniGame>.TriggerEvent(MiniGame.DisActiveMiniGame);
+
+        EventManager<StageEvent>.TriggerEvent(StageEvent.StageFail, true);
     }
 
     private void GameClear()
     {
         // 디버그 용
         DebugLogger.Log($"게임 클리어 : {isGameClear}");
+
+        EventManager<MiniGame>.TriggerEvent(MiniGame.DisActiveMiniGame);
+
+        EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
+
+        // 맵 이미지 변경
     }
 
     private bool CheckGameClear()

@@ -96,9 +96,7 @@ public class TileNode : MonoBehaviour
             _imageGimmick.enabled = false;
 
         if (_tile.Type == TileType.Road)
-            EventManager<DataEvents>.TriggerEvent(DataEvents.SetTileGrid, this);
-
-        DebugLogger.Log($"{transform.name} : {_tile.RotateValue}");
+            EventManager<DataEvents>.TriggerEvent(DataEvents.SetTileGrid, this);        
     }
 
     private void Initialize()
@@ -147,6 +145,7 @@ public class TileNode : MonoBehaviour
         if (_rotationTile != null)
         {
             _rotationTile.InitRotateTile(_tile.RotateValue);  // 회전 로직 RotationTile에 위임
+            DebugLogger.Log($"{transform.name} : {_tile.RotateValue}");
             //CheckAnswer(false);
         }
 
@@ -234,18 +233,16 @@ public class TileNode : MonoBehaviour
             EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
         }
 
+        if (_rotationTile != null && !_isHint)
+        {
+            _rotationTile.RotateTile(_tile.RotateValue);  // 회전 로직 RotationTile에 위임
+        }
+
         DebugLogger.Log($"{transform.name} : {_tile.RotateValue}");
-        //CheckAnswer(true);
+
+        // 진동 발생
     }
 
-    //private void CheckAnswer(bool isCheckAble)
-    //{
-    //    if (isCheckAble)
-    //    {
-    //        // MapGenerator의 CheckAnswer 이벤트 실행
-    //        EventManager<DataEvents>.TriggerEvent(DataEvents.CheckAnswer);
-    //    }
-    //}
 
     private void SetReverse(bool isReverse)
     {

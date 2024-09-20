@@ -1,0 +1,320 @@
+fileFormatVersion: 2
+guid: 4d416d6b17899a847aec4bdd1a2b8881
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: MS_Rocky_1
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 241
+        width: 110
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 687d9ff9a1ce2f946bfb661d12e1ffa2
+      internalID: 1812392939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MS_Rocky_2
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 243
+        width: 110
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e302e40e660b4784aada53cbcf9ced42
+      internalID: 1085118750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MS_Rocky_3
+      rect:
+        serializedVersion: 2
+        x: 229
+        y: 241
+        width: 110
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48c4a867c1668374d8ffea9a5984838a
+      internalID: 974913620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MS_Rocky_4
+      rect:
+        serializedVersion: 2
+        x: 346
+        y: 244
+        width: 110
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5586d208c5465294ab4283fa3cd426f7
+      internalID: -1724403788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MS_Rocky_5
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 122
+        width: 110
+        height: 90
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a65521f506be59409f320d28684a7f4
+      internalID: -8165738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MS_Rocky_6
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 169
+        width: 110
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee6a57630dc350c43b278235bf81d217
+      internalID: 1859573218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MS_Rocky_7
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 116
+        width: 110
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c95f08d52a973b646828bffe82d18171
+      internalID: -1770757224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: affaae04c263e5b4f8b3d7765cc10018
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      MS_Rocky_1: 1812392939
+      MS_Rocky_2: 1085118750
+      MS_Rocky_3: 974913620
+      MS_Rocky_4: -1724403788
+      MS_Rocky_5: -8165738
+      MS_Rocky_6: 1859573218
+      MS_Rocky_7: -1770757224
+      Microsoft Office Rocky_0: 1050258571
+      Microsoft Office Rocky_10: -1286937623
+      Microsoft Office Rocky_11: 1098867466
+      Microsoft Office Rocky_12: -823203228
+      Microsoft Office Rocky_13: 49518724
+      Microsoft Office Rocky_14: -393750109
+      Microsoft Office Rocky_15: -1879949873
+      Microsoft Office Rocky_16: 1440480452
+      Microsoft Office Rocky_17: -1791402356
+      Microsoft Office Rocky_2: 914450444
+      Microsoft Office Rocky_20: 1927194281
+      Microsoft Office Rocky_21: 1675726598
+      Microsoft Office Rocky_22: 1128718365
+      Microsoft Office Rocky_23: -1001425498
+      Microsoft Office Rocky_25: 1709570145
+      Microsoft Office Rocky_26: 1328362829
+      Microsoft Office Rocky_27: -2086882334
+      Microsoft Office Rocky_28: 1691235518
+      Microsoft Office Rocky_29: 658048628
+      Microsoft Office Rocky_30: -776830640
+      Microsoft Office Rocky_31: -259479591
+      Microsoft Office Rocky_32: -977168304
+      Microsoft Office Rocky_33: -596359758
+      Microsoft Office Rocky_34: -1105215422
+      Microsoft Office Rocky_35: 1088118070
+      Microsoft Office Rocky_36: -507840044
+      Microsoft Office Rocky_37: 2027300453
+      Microsoft Office Rocky_38: -359481109
+      Microsoft Office Rocky_39: 1969194138
+      Microsoft Office Rocky_4: -711959304
+      Microsoft Office Rocky_40: 1069023920
+      Microsoft Office Rocky_41: 1866140212
+      Microsoft Office Rocky_42: -894643092
+      Microsoft Office Rocky_43: 1350052774
+      Microsoft Office Rocky_44: 267149961
+      Microsoft Office Rocky_45: 1475839636
+      Microsoft Office Rocky_7: 684124735
+      Microsoft Office Rocky_8: 1688379433
+      Microsoft Office Rocky_9: -805257340
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

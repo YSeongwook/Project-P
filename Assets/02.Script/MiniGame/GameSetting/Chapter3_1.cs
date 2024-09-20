@@ -94,10 +94,14 @@ public class Chapter3_1 : MonoBehaviour
 
     private void GameOver()
     {
-        Text_CatchCount.text = "Clear 실패";
+        //Text_CatchCount.text = "Clear 실패";
         isEnd = true;
 
         StopCoroutine(gameCoroutine);
+
+        EventManager<MiniGame>.TriggerEvent(MiniGame.DisActiveMiniGame);
+
+        EventManager<StageEvent>.TriggerEvent(StageEvent.StageFail, true);
     }
 
     private void GameClear()
@@ -105,6 +109,31 @@ public class Chapter3_1 : MonoBehaviour
         Text_CatchCount.text = "Clear";
         isEnd = true;
         // 디버그 용
+        EventManager<MiniGame>.TriggerEvent(MiniGame.DisActiveMiniGame);
+
+        EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
+        // 맵 이미지 변경
     }
 
+
+    //private void GameOver()
+    //{
+    //    DebugLogger.Log($"Clear 실패");
+
+    //    EventManager<MiniGame>.TriggerEvent(MiniGame.DisActiveMiniGame);
+
+    //    EventManager<StageEvent>.TriggerEvent(StageEvent.StageFail, true);
+    //}
+
+    //private void GameClear()
+    //{
+    //     디버그 용
+    //    DebugLogger.Log($"게임 클리어 : {isGameClear}");
+
+    //    EventManager<MiniGame>.TriggerEvent(MiniGame.DisActiveMiniGame);
+
+    //    EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
+
+    //     맵 이미지 변경
+    //}
 }
