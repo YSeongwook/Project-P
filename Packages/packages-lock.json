@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.isdororok.vibrationutility": {
+      "version": "https://github.com/pktony/VibrationForAndroidiOS-Unity.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "d7b4b6500f105886a8d8608ae0a77a9cafff5a9b"
+    },
     "com.nobi.roundedcorners": {
       "version": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",
       "depth": 0,
