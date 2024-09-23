@@ -99,6 +99,7 @@ namespace EnumTypes
         NextStage,
         LastStage,
         TutorialStage,
+        GameEnd,
     }
 
     public enum VibrateEvents
