@@ -95,9 +95,13 @@ public class PlayerInformation : Singleton<PlayerInformation>
                 break;
             case nameof(PlayerViewModel.CurrentChapter):
                 _playerInfo.CurrentChapter = PlayerViewModel.CurrentChapter.ToString();
+                EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateLobby);
+                // Todo: 이벤트 발생 후 LobbyManager에서 스테이지 검사 및 로비 배경 변경
                 break;
             case nameof(PlayerViewModel.CurrentStage):
                 _playerInfo.CurrentStage = PlayerViewModel.CurrentStage.ToString();
+                EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateLobby);
+                // Todo: 이벤트 발생 후 LobbyManager에서 스테이지 검사 및 로비 배경 변경
                 break;
         }
 
