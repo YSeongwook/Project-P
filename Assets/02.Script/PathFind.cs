@@ -117,6 +117,8 @@ public class PathFind
         
         if (TilePathFind())
         {
+            EventManager<StageEvent>.TriggerEvent(StageEvent.GameEnd, true);
+
             Sequence animationSequence = DOTween.Sequence();
 
             foreach (var path in _PathTileList.Values)

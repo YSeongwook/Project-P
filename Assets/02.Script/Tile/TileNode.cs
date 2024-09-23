@@ -68,6 +68,7 @@ public class TileNode : MonoBehaviour
 
     private bool _isReverseRotate;
     private bool _isHint;
+    private bool _isEnd;
 
     private void Awake()
     {
@@ -75,17 +76,20 @@ public class TileNode : MonoBehaviour
 
         EventManager<InventoryItemEvent>.StartListening<bool>(InventoryItemEvent.SetReverseRotate, SetReverse);
         EventManager<InventoryItemEvent>.StartListening<bool>(InventoryItemEvent.SetHint, UseHintItem);
+        EventManager<StageEvent>.StartListening<bool>(StageEvent.GameEnd, SetGameEnd);
     }
 
     private void OnDestroy()
     {
         EventManager<InventoryItemEvent>.StopListening<bool>(InventoryItemEvent.SetReverseRotate, SetReverse);
         EventManager<InventoryItemEvent>.StopListening<bool>(InventoryItemEvent.SetHint, UseHintItem);
+        EventManager<StageEvent>.StopListening<bool>(StageEvent.GameEnd, SetGameEnd);
     }
 
     private void OnEnable()
     {
         _isReverseRotate = false;
+        _isEnd = false;
     }
 
     private void Start()
@@ -200,13 +204,15 @@ public class TileNode : MonoBehaviour
     // 회전 명령 실행
     public void OnClickRotationTile()
     {
+        if (_isEnd) return;
+
         // 짧은 진동 발생
         EventManager<VibrateEvents>.TriggerEvent(VibrateEvents.ShortWeak);
         
-        if (_rotationTile != null && !_isHint)
-        {
-            _rotationTile.RotateTile();  // 회전 로직 RotationTile에 위임
-        }
+        //if (_rotationTile != null && !_isHint)
+        //{
+        //    _rotationTile.RotateTile();  // 회전 로직 RotationTile에 위임
+        //}
 
         if (_tile.GimmickShape == GimmickShape.Link && !_isHint)
         {
@@ -272,5 +278,10 @@ public class TileNode : MonoBehaviour
     public void StartPathAnimation()
     {
         tweenAnimation.DOPlay();
+    }
+
+    private void SetGameEnd(bool isEnd)
+    {
+        this._isEnd = isEnd;
     }
 }

@@ -70,7 +70,7 @@ public class StageManager : Singleton<StageManager>
             _stages[i] = Instantiate(stagePrefab, contentTransform);
             var stage = _stages[i].GetComponent<Stage>();
             if (stage == null) continue;
-            stage.name = $"Stage{i + 1}";
+            stage.name = $"Stage {i + 1}";
 
             stage.SetStageNumber(chapter, i + 1);
             int playerChapter = PlayerInformation.Instance.GetPlayerCurrentChapter();
@@ -82,7 +82,7 @@ public class StageManager : Singleton<StageManager>
             stage.SetLastStage(i == stageCount-1);
 
             // 미니 게임 스테이지 인지 확인
-            stage.SetMiniGameStage((i+1) % 5 ==0);
+            stage.SetMiniGameStage((i+1) % 10 == 0);
 
             TMP_Text stageText = _stages[i].GetComponentInChildren<TMP_Text>();
             if (stageText != null)

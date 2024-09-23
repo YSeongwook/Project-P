@@ -45,6 +45,8 @@ public class RotationTile : MonoBehaviour
 
         _rotationQueue.Enqueue(_rotateValue);
 
+        DebugLogger.Log($"3. {transform.name} : {_rotateValue}");
+
         if (_isRotating) return; // 이미 회전 중인 타일의 경우 다시 클릭해도 회전 되지 않는다.
         StartCoroutine(ProcessRotationQueue());
         //StartCoroutine(RotateOverTime(targetRotation, rotationDuration));
