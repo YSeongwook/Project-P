@@ -30,6 +30,7 @@ public class UI_PopUp_BuyTicket : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
+    
     public void SetItemInfo(TicketData ticket)
     {
         textTicketPrice.text = ticket.GoldPrice.ToString();
@@ -42,7 +43,6 @@ public class UI_PopUp_BuyTicket : MonoBehaviour
         {
             Debug.LogWarning("ticketImage is null!");
         }
-
     }
 
     private void PopUpOn()
@@ -50,12 +50,9 @@ public class UI_PopUp_BuyTicket : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-
     private void SetBuyItem(TicketData ticket)
     {
         _data = ticket;
         SetItemInfo(_data);
     }
-
-
 }

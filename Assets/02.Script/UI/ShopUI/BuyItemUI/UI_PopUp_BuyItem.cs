@@ -3,9 +3,7 @@ using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class UI_PopUp_BuyItem : MonoBehaviour

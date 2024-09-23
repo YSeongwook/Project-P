@@ -16,12 +16,7 @@ public class UI_ItemStoreList : MonoBehaviour
     {
         AddEvent();
     }
-
-    private void Start()
-    {
-        GameObject.Find("Canvas_ItemShop").SetActive(false);
-    }
-
+    
     private void OnDestroy()
     {
         RemoveEvent();
