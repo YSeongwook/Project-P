@@ -149,7 +149,6 @@ public class TileNode : MonoBehaviour
         if (_rotationTile != null)
         {
             _rotationTile.InitRotateTile(_tile.RotateValue);  // 회전 로직 RotationTile에 위임
-            DebugLogger.Log($"{transform.name} : {_tile.RotateValue}");
             //CheckAnswer(false);
         }
 

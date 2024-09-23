@@ -1,3 +1,6 @@
+using System;
+using EnumTypes;
+using EventLibrary;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,29 +9,22 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private Sprite[] lobbySprites; // 각 단계별 스프라이트 배열
     [SerializeField] private Image backgroundImage; // 배경 이미지
 
+    private void Awake()
+    {
+        EventManager<DataEvents>.StartListening(DataEvents.UpdateLobby, UpdateLobbyBackground);
+        EventManager<DataEvents>.StartListening(DataEvents.UpdateLobby, UpdateLobbyBackground);
+    }
+
     // Awake에서 호출 시 Null 에러
     private void Start()
     {
         // 게임 시작 시 로비 배경 업데이트
         UpdateLobbyBackground();
-        
-        // PlayerViewModel이 속성이 변경될 때마다 이벤트 등록
-        PlayerInformation.Instance.PlayerViewModel.PropertyChanged += OnPlayerPropertyChanged;
     }
 
     private void OnDestroy()
     {
         // 이벤트 핸들러 해제
-        PlayerInformation.Instance.PlayerViewModel.PropertyChanged -= OnPlayerPropertyChanged;
-    }
-
-    // PlayerViewModel의 속성이 변경될 때 호출되는 메서드
-    private void OnPlayerPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(PlayerViewModel.CurrentStage) || e.PropertyName == nameof(PlayerViewModel.CurrentChapter))
-        {
-            UpdateLobbyBackground();
-        }
     }
 
     // 현재 챕터와 스테이지에 따라 로비 배경 이미지를 변경하는 메서드
@@ -45,6 +41,7 @@ public class LobbyManager : MonoBehaviour
             if (spriteIndex >= 0 && spriteIndex < lobbySprites.Length)
             {
                 backgroundImage.sprite = lobbySprites[spriteIndex];
+                DebugLogger.Log("로비 배경 변경");
             }
             else
             {

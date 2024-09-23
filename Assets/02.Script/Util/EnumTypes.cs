@@ -68,6 +68,7 @@ namespace EnumTypes
         SetTileGrid,
         DecreaseLimitCount,
         SavePlayerData,
+        UpdateLobby,
     }
 
     public enum GoldEvent
