@@ -4,13 +4,14 @@ using UnityEngine.UI;
 public class LobbyManager : MonoBehaviour
 {
     [SerializeField] private Sprite[] lobbySprites; // 각 단계별 스프라이트 배열
-    [SerializeField] private Image backgroundImage; // 배경 이미지를 변경할 SpriteRenderer
+    [SerializeField] private Image backgroundImage; // 배경 이미지
 
-    private void Awake()
+    // Awake에서 호출 시 Null 에러
+    private void Start()
     {
         // 게임 시작 시 로비 배경 업데이트
         UpdateLobbyBackground();
-
+        
         // PlayerViewModel이 속성이 변경될 때마다 이벤트 등록
         PlayerInformation.Instance.PlayerViewModel.PropertyChanged += OnPlayerPropertyChanged;
     }
