@@ -80,6 +80,7 @@ public class RotationTile : MonoBehaviour
             float targetAngle = _rotateValue * RotationAngle;  // 음수로 시계 방향 회전
             Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
 
+            DebugLogger.Log(targetRotation);
             yield return StartCoroutine(RotateOverTime(targetRotation, rotationDuration));
         }
 
