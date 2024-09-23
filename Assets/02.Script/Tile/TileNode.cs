@@ -238,7 +238,7 @@ public class TileNode : MonoBehaviour
             _rotationTile.RotateTile(_tile.RotateValue);  // 회전 로직 RotationTile에 위임
         }
 
-        DebugLogger.Log($"{transform.name} : {_tile.RotateValue}");
+        //DebugLogger.Log($"{transform.name} : {_tile.RotateValue}");
 
         // 진동 발생
     }

@@ -109,7 +109,7 @@ public class PathFind
     private void CheckTilePath()
     {
         // 길고 약한 진동 발생
-        EventManager<VibrateEvents>.TriggerEvent(VibrateEvents.LongWeak);
+        //EventManager<VibrateEvents>.TriggerEvent(VibrateEvents.LongWeak);
         
         if (TilePathFind())
         {
@@ -128,22 +128,37 @@ public class PathFind
 
             animationSequence.OnComplete(() =>
             {
+                DebugLogger.Log("애니메이션 완료");
+
+                //if (isMiniGameStage)
+                //{
+                //    //미니 게임 화면 등장
+                //    DebugLogger.Log("MiniGame On");
+                //}
+                //else
+                //{
+                //    DebugLogger.Log("3. 완료");
+                //    // 하나 이상의 startPoint가 모든 endPoint와 연결된 경우
+                //    EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
+                //}
+
                 DOVirtual.DelayedCall(1f, () =>
                 {
+                    DebugLogger.Log("2. 완료");
+
                     if (isMiniGameStage)
                     {
                         //미니 게임 화면 등장
                         DebugLogger.Log("MiniGame On");
-
-
                     }
                     else
                     {
+                        DebugLogger.Log("3. 완료");
                         // 하나 이상의 startPoint가 모든 endPoint와 연결된 경우
                         EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
                     }
                 });
-                
+
             });
 
             animationSequence.Play();
@@ -477,5 +492,7 @@ public class PathFind
         if (this.isMiniGameStage == isMiniGameStage) return;
 
         this.isMiniGameStage = isMiniGameStage;
+
+        DebugLogger.Log($"{isMiniGameStage}");
     }
 }
