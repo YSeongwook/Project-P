@@ -108,8 +108,12 @@ public class PathFind
 
     private void CheckTilePath()
     {
-        // 길고 약한 진동 발생
-        EventManager<VibrateEvents>.TriggerEvent(VibrateEvents.LongWeak);
+        // 모바일 환경에서만 진동 발생
+        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            // 길고 약한 진동 발생
+            EventManager<VibrateEvents>.TriggerEvent(VibrateEvents.LongWeak);
+        }
         
         if (TilePathFind())
         {

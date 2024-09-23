@@ -47,7 +47,7 @@ public class LobbyManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("스프라이트 인덱스 범위를 벗어났습니다.");
+                DebugLogger.LogError("스프라이트 인덱스 범위를 벗어났습니다.");
             }
         }
     }
@@ -71,24 +71,24 @@ public class LobbyManager : MonoBehaviour
     // 챕터와 스테이지에 맞는 스프라이트 인덱스를 반환하는 메서드
     private int GetSpriteIndex(int chapter, int stage)
     {
-        if (chapter == 1 && stage == 10) return 0;
+        if (chapter == 1 && stage == 10) return 1;
         if (chapter == 2)
         {
-            if (stage == 10) return 1;
-            if (stage == 20) return 2;
-            if (stage == 30) return 3;
+            if (stage == 10) return 2;
+            if (stage == 20) return 3;
+            if (stage == 30) return 4;
         }
         if (chapter == 3)
         {
-            if (stage == 10) return 4;
-            if (stage == 20) return 5;
-            if (stage == 30) return 6;
+            if (stage == 10) return 5;
+            if (stage == 20) return 6;
+            if (stage == 30) return 7;
         }
         if (chapter == 4)
         {
-            if (stage == 10) return 7;
-            if (stage == 20) return 8;
-            if (stage == 30) return 9;
+            if (stage == 10) return 8;
+            if (stage == 20) return 9;
+            if (stage == 30) return 10;
         }
 
         return -1; // 스프라이트가 없는 경우

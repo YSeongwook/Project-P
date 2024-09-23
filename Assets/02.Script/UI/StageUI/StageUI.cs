@@ -112,6 +112,7 @@ public class StageUI : MonoBehaviour
     private void DecreaseLimitCount()
     {
         _limitCount -= 1;
+        if (_limitCount <= 0) _limitCount = 0;
         limitCountText.text = $"{_limitCount}";
 
         EventManager<DataEvents>.TriggerEvent(DataEvents.DecreaseLimitCount, _limitCount);

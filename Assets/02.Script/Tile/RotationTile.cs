@@ -37,8 +37,6 @@ public class RotationTile : MonoBehaviour
         Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
         _roadImage.rotation = targetRotation;   // 직접적으로 회전값을 반영 - 길
         _HintImage.rotation = targetRotation;   // - 힌트
-
-        DebugLogger.Log($"2. {transform.name} : {_rotateValue}");
     }
 
     public void RotateTile()
