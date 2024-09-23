@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class ChapterButton : MonoBehaviour
 {
+    [SerializeField] private GameObject selectChapterBtn;
     [SerializeField] private GameObject closeChapterBtn;
     [SerializeField] private GameObject chapter1Stage;
     [SerializeField] private GameObject chapter2Stage;
@@ -19,8 +20,13 @@ public class ChapterButton : MonoBehaviour
     {
         gameObject.transform.DOLocalMove(new Vector3(1315, 0, 0), 1f)
             .SetEase(Ease.InOutQuad, 0.5f, 0.3f)
-            .OnComplete(() => closeChapterBtn.SetActive(false));  // 애니메이션 완료 후 closeChapterBtn 비활성화
+            .OnComplete(() => 
+            {
+                closeChapterBtn.SetActive(false);    // closeChapterBtn 비활성화
+                selectChapterBtn.SetActive(true);    // selectChapterBtn 활성화
+            });
     }
+
 
     public void OnClickOpenChapter1()
     {

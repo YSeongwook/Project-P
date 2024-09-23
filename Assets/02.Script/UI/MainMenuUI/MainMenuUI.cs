@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour
 {
-    [FoldoutGroup("Panel")] [SerializeField] private GameObject chapterPanel; // 스테이지 선택 패널
     [FoldoutGroup("Panel")] [SerializeField] private GameObject shopPanel; // 상점 패널
+    [FoldoutGroup("Panel")] [SerializeField] private GameObject chapterPanel; // 스테이지 선택 패널
     
     [FoldoutGroup("Main Under Buttons")] [SerializeField] private Button socialButton; // 소셜 버튼
     [FoldoutGroup("Main Under Buttons")] [SerializeField] private Button chapterButton; // 챕터 버튼
