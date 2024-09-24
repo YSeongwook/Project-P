@@ -1,6 +1,7 @@
 using System;
 using EnumTypes;
 using EventLibrary;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,10 +10,14 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private Sprite[] lobbySprites; // 각 단계별 스프라이트 배열
     [SerializeField] private Image backgroundImage; // 배경 이미지
 
+    private Canvas _canvas;
+
     private void Awake()
     {
+        _canvas = backgroundImage.GetComponentInParent<Canvas>();
+
         EventManager<DataEvents>.StartListening(DataEvents.UpdateLobby, UpdateLobbyBackground);
-        EventManager<DataEvents>.StartListening(DataEvents.UpdateLobby, UpdateLobbyBackground);
+        EventManager<StageEvent>.StartListening<bool>(StageEvent.SetMiniGame, SetLobbyUI);
     }
 
     // Awake에서 호출 시 Null 에러
@@ -25,6 +30,8 @@ public class LobbyManager : MonoBehaviour
     private void OnDestroy()
     {
         // 이벤트 핸들러 해제
+        EventManager<DataEvents>.StopListening(DataEvents.UpdateLobby, UpdateLobbyBackground);
+        EventManager<StageEvent>.StopListening<bool>(StageEvent.SetMiniGame, SetLobbyUI);
     }
 
     // 현재 챕터와 스테이지에 따라 로비 배경 이미지를 변경하는 메서드
@@ -90,5 +97,10 @@ public class LobbyManager : MonoBehaviour
         }
 
         return -1; // 스프라이트가 없는 경우
+    }
+
+    private void SetLobbyUI(bool SetEnable)
+    {
+        _canvas.enabled = SetEnable;
     }
 }

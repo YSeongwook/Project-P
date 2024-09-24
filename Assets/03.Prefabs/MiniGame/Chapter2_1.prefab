@@ -31,8 +31,8 @@ RectTransform:
   m_LocalScale: {x: 0.2140625, y: 0.2140625, z: 0.2140625}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1776034399922307796}
   - {fileID: 5254261850104201116}
+  - {fileID: 1776034399922307796}
   - {fileID: 5471703479147643877}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2083,7 +2083,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a888a01aa0cdbc34c90134321b07613c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ParticleCamera: {fileID: 2890461765542922615}
   bladeCollider: {fileID: 2407493261162108666}
   minSliceVelocity: 0.01
   lineObject: {fileID: 7723967081642424976}

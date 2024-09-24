@@ -39,6 +39,7 @@ namespace EnumTypes
         ActiveMiniGame,
         DisActiveMiniGame,
         StartMiniGame,
+        MiniGameEnd,
     }
 
     public enum DataEvents
@@ -102,6 +103,7 @@ namespace EnumTypes
         LastStage,
         TutorialStage,
         GameEnd,
+        SetMiniGame,
     }
 
     public enum VibrateEvents

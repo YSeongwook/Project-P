@@ -64,6 +64,7 @@ public class StageUI : MonoBehaviour
         EventManager<StageEvent>.StartListening<bool>(StageEvent.StageFail, EnableStageFailPanel);
         EventManager<StageEvent>.StartListening(StageEvent.RecoveryLimitCount, IncreaseLimitCount);
         EventManager<StageEvent>.StartListening<bool>(StageEvent.LastStage, SetLastStage);
+        EventManager<StageEvent>.StartListening<bool>(StageEvent.SetMiniGame, SetStageUI);
     }
 
     // 이벤트 리스너 해제
@@ -75,6 +76,7 @@ public class StageUI : MonoBehaviour
         EventManager<StageEvent>.StopListening<bool>(StageEvent.StageFail, EnableStageFailPanel);
         EventManager<StageEvent>.StopListening(StageEvent.RecoveryLimitCount, IncreaseLimitCount);
         EventManager<StageEvent>.StopListening<bool>(StageEvent.LastStage, SetLastStage);
+        EventManager<StageEvent>.StopListening<bool>(StageEvent.SetMiniGame, SetStageUI);
     }
 
     // 버튼 이벤트 리스너 등록
@@ -152,12 +154,16 @@ public class StageUI : MonoBehaviour
         {
             LastStageClear(isLastStage);
         }
+
+        EventManager<StageEvent>.TriggerEvent(StageEvent.SetMiniGame, true);
     }
     
     // 스테이지 실패 패널 활성화
     private void EnableStageFailPanel(bool enable)
     {
         stageFailPanel.SetActive(enable);
+
+        EventManager<StageEvent>.TriggerEvent(StageEvent.SetMiniGame, true);
     }
 
     public void OnClickInGameExitButton()
@@ -216,5 +222,10 @@ public class StageUI : MonoBehaviour
         if (isLast == isLastStage) return;
         
         isLastStage = isLast;
+    }
+
+    private void SetStageUI(bool setEnable)
+    {
+        _canvas.enabled = setEnable;
     }
 }

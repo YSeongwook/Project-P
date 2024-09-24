@@ -57,5 +57,7 @@ public class MiniGameManager : Singleton<MiniGameManager>
         {
             game.gameObject.SetActive(false);
         }
+
+        //EventManager<StageEvent>.TriggerEvent(StageEvent.SetMiniGame, true);
     }
 }

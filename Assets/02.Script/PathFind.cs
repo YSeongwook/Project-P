@@ -143,6 +143,8 @@ public class PathFind
                     if (isMiniGameStage)
                     {
                         DebugLogger.Log("MiniGame On");
+                        // 로비와 Stage UI Disable
+                        EventManager<StageEvent>.TriggerEvent(StageEvent.SetMiniGame, false);
                         //미니 게임 화면 등장
                         EventManager<MiniGame>.TriggerEvent(MiniGame.StartMiniGame);
                     }
