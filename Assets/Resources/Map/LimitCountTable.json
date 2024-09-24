@@ -1,0 +1,27 @@
+{
+  "M1001": {
+    "MapID": "M1001",
+    "FileName": "1-1",
+    "LimitCount": 30
+  },
+  "M1002": {
+    "MapID": "M1002",
+    "FileName": "1-2",
+    "LimitCount": 30
+  },
+  "M1003": {
+    "MapID": "M1003",
+    "FileName": "1-3",
+    "LimitCount": 30
+  },
+  "M1004": {
+    "MapID": "M1004",
+    "FileName": "1-4",
+    "LimitCount": 30
+  },
+  "M1005": {
+    "MapID": "M1005",
+    "FileName": "1-5",
+    "LimitCount": 15
+  }
+}

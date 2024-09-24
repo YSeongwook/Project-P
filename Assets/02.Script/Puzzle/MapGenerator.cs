@@ -60,6 +60,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<UIEvents>.StartListening(UIEvents.OnClickNextButton, StartNextStage);
         EventManager<UIEvents>.StartListening(UIEvents.OnClickRestartButton, ReStartCurrentStage);
         EventManager<StageEvent>.StartListening<bool>(StageEvent.TutorialStage, SetTutotialStage);
+        EventManager<MiniGame>.StartListening(MiniGame.StartMiniGame, OpenMiniGame);
         checkPath.SetTileGridEvent(true);
     }
 
@@ -74,6 +75,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<UIEvents>.StopListening(UIEvents.OnClickNextButton, StartNextStage);
         EventManager<UIEvents>.StopListening(UIEvents.OnClickRestartButton, ReStartCurrentStage);
         EventManager<StageEvent>.StopListening<bool>(StageEvent.TutorialStage, SetTutotialStage);
+        EventManager<MiniGame>.StopListening(MiniGame.StartMiniGame, OpenMiniGame);
         checkPath.SetTileGridEvent(false);
     }
 

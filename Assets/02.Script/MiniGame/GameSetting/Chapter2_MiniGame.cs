@@ -16,6 +16,7 @@ public class Chapter2_MiniGame : MonoBehaviour
     [SerializeField] private float SetTimer;
     private float timer;
 
+    private Coroutine _miniGame;
     private bool isGameClear;
 
     private void OnEnable()
@@ -25,12 +26,13 @@ public class Chapter2_MiniGame : MonoBehaviour
         RiceObjects.Clear();
 
         SetRiceObejct();
+
+        _miniGame = StartCoroutine(StartTimer());
     }
 
-    private void Start()
+    private void OnDisable()
     {
-        
-        StartCoroutine(StartTimer());
+        StopCoroutine(_miniGame);
     }
 
     private void SetRiceObejct()
