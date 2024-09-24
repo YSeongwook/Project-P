@@ -56,7 +56,7 @@ public class Chapter : MonoBehaviour
 
         EventManager<UIEvents>.TriggerEvent(UIEvents.CreateStageButton, _chapter, _maxStageCount);
 
-
+        
         EventManager<UIEvents>.TriggerEvent(UIEvents.ChangeScrollViewCenter, 1);
 
         EventManager<StageEvent>.TriggerEvent(StageEvent.TutorialStage, _chapter == 1);
