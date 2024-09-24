@@ -7,8 +7,7 @@ using UnityEngine;
 public class MiniGameManager : Singleton<MiniGameManager>
 {
     [FoldoutGroup("Mini Game Canvas List")]
-    [SerializeField]
-    private List<Canvas> miniGameList;
+    [SerializeField] private List<Canvas> miniGameList;
 
     protected new void Awake()
     {

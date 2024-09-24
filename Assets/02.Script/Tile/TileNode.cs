@@ -284,4 +284,11 @@ public class TileNode : MonoBehaviour
     {
         this._isEnd = isEnd;
     }
+
+    public void SetStartEndSize()
+    {
+        // 좌우, 상하 여백을 40씩 줄이기
+        _imageGimmickRectTransform.offsetMin = new Vector2(40, 40); // 좌, 하단에서 40만큼 안쪽으로
+        _imageGimmickRectTransform.offsetMax = new Vector2(-40, -40); // 우, 상단에서 40만큼 안쪽으로
+    }
 }

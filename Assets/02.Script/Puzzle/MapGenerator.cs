@@ -173,10 +173,13 @@ public class MapGenerator : MonoBehaviour
             if (tileShape == 5)
             {
                 tileNode.SetTileGimmickImage(gimmickList[gimmickList.Count - 2]);
+                tileNode.SetStartEndSize();
+                // todo: 크기 조절
             }
             else if (tileShape == 6)
             {
                 tileNode.SetTileGimmickImage(gimmickList[gimmickList.Count - 1]);
+                tileNode.SetStartEndSize();
             }
                 
         }
