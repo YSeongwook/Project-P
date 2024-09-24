@@ -374,5 +374,14 @@ public class MapGenerator : MonoBehaviour
     private void OpenMiniGame()
     {
         EventManager<MiniGame>.TriggerEvent(MiniGame.ActiveMiniGame, _currentChapter, _currentStage);
+
+        StartCoroutine(StartMiniGame());    
+    }
+
+    IEnumerator StartMiniGame()
+    {
+        yield return new WaitForSeconds(3f);
+
+        EventManager<MiniGame>.TriggerEvent(MiniGame.SetStartTrigger, true);
     }
 }

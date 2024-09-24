@@ -16,17 +16,20 @@ public class Chapter3_1 : MonoBehaviour
 
     private Coroutine gameCoroutine;
     private bool isEnd;
+    private bool isGameStart;
 
     private void Awake()
     {
         EventManager<MiniGame>.StartListening(MiniGame.Catch, Cautch);
         EventManager<MiniGame>.StartListening(MiniGame.PoliceGameOver, GameOver);
+        EventManager<MiniGame>.StartListening<bool>(MiniGame.SetStartTrigger, SetGameStart);
     }
 
     private void OnDestroy()
     {
         EventManager<MiniGame>.StopListening(MiniGame.Catch, Cautch);
         EventManager<MiniGame>.StopListening(MiniGame.PoliceGameOver, GameOver);
+        EventManager<MiniGame>.StopListening<bool>(MiniGame.SetStartTrigger, SetGameStart);
     }
 
     private void OnEnable()
@@ -34,8 +37,14 @@ public class Chapter3_1 : MonoBehaviour
         thiefList.Clear();
         CautchCount = 0;
         isEnd = false;
+        Text_CatchCount.text = $"{CautchCount}";
 
-        SetThiefList();
+        SetThiefList();        
+    }
+
+    private void OnDisable()
+    {
+        isEnd = true;
     }
 
     private void SetThiefList()
@@ -46,11 +55,6 @@ public class Chapter3_1 : MonoBehaviour
             if (thief == null) continue;
             thiefList.Add(thief);
         }
-    }
-
-    private void Start()
-    {
-        gameCoroutine = StartCoroutine(StartTimer());
     }
 
 
@@ -115,25 +119,13 @@ public class Chapter3_1 : MonoBehaviour
         // 맵 이미지 변경
     }
 
+    private void SetGameStart(bool isGameStart)
+    {
+        if (!isGameStart) return;
+        var canvas = transform.GetComponentInParent<Canvas>();
+        if (canvas == null) return;
+        if (!canvas.gameObject.activeSelf) return;
 
-    //private void GameOver()
-    //{
-    //    DebugLogger.Log($"Clear 실패");
-
-    //    EventManager<MiniGame>.TriggerEvent(MiniGame.DisActiveMiniGame);
-
-    //    EventManager<StageEvent>.TriggerEvent(StageEvent.StageFail, true);
-    //}
-
-    //private void GameClear()
-    //{
-    //     디버그 용
-    //    DebugLogger.Log($"게임 클리어 : {isGameClear}");
-
-    //    EventManager<MiniGame>.TriggerEvent(MiniGame.DisActiveMiniGame);
-
-    //    EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
-
-    //     맵 이미지 변경
-    //}
+        gameCoroutine = StartCoroutine(StartTimer());
+    }
 }

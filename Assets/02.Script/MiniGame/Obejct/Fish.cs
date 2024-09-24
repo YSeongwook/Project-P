@@ -1,4 +1,7 @@
+using EnumTypes;
+using EventLibrary;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Fish : DropHandler
 {
@@ -6,17 +9,26 @@ public class Fish : DropHandler
     private Collider2D _collider;
 
     public bool IsClearAble {  get; private set; }
+    private bool isGameStart;
 
     private void Awake()
     {
         _rectTransform = GetComponent<RectTransform>();
         _collider = GetComponent<Collider2D>();
+
+        EventManager<MiniGame>.StartListening<bool>(MiniGame.SetStartTrigger, SetGameStart);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager<MiniGame>.StopListening<bool>(MiniGame.SetStartTrigger, SetGameStart);
     }
 
     private void OnEnable()
     {
         _collider.enabled = true;
         IsClearAble = false;
+        isGameStart = false;
 
         RandomSpawn();
     }
@@ -34,5 +46,33 @@ public class Fish : DropHandler
         IsClearAble = setAble;
 
         DebugLogger.Log($"{gameObject.name} : {IsClearAble}");
+    }
+
+    private void SetGameStart(bool isGameStart)
+    {
+        if (!isGameStart) return;
+
+        this.isGameStart = isGameStart;
+    }
+
+    public override void OnBeginDrag(PointerEventData eventData)
+    {
+        if (!isGameStart) return;
+
+        base.OnBeginDrag(eventData);
+    }
+
+    public override void OnDrag(PointerEventData eventData)
+    {
+        if (!isGameStart) return;
+        
+        base.OnDrag(eventData);
+    }
+
+    public override void OnEndDrag(PointerEventData eventData)
+    {
+        if (!isGameStart) return;
+        
+        base.OnEndDrag(eventData);
     }
 }

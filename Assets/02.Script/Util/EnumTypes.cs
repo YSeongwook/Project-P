@@ -39,7 +39,8 @@ namespace EnumTypes
         ActiveMiniGame,
         DisActiveMiniGame,
         StartMiniGame,
-        MiniGameEnd,
+        MiniGameEnd,        
+        SetStartTrigger,
     }
 
     public enum DataEvents
