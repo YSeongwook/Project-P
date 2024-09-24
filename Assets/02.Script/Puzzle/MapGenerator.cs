@@ -168,6 +168,16 @@ public class MapGenerator : MonoBehaviour
             {
                 tileNode.SetTileGimmickImage(gimmickList[GimmickShape - 1]);
             }
+            
+            // 시작 지점이거나 종료 지점인 경우 
+            if (tileShape == 5)
+            {
+                tileNode.SetTileGimmickImage(gimmickList[gimmickList.Count - 2]);
+            }
+            else if (tileShape == 6)
+            {
+                tileNode.SetTileGimmickImage(gimmickList[gimmickList.Count - 1]);
+            }
                 
         }
 
