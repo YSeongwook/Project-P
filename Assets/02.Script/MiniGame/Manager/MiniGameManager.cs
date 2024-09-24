@@ -44,7 +44,9 @@ public class MiniGameManager : Singleton<MiniGameManager>
 
     private void ActiveMiniGameCanvas(int chapter, int stage)
     {
-        var index = (chapter - 2) * 3 + (stage / 10);
+        //var index = (chapter - 2) * 3 + (stage / 10);
+        // 디버깅 모드
+        var index = (stage - 1);
 
         miniGameList[index].gameObject.SetActive(true);
     }

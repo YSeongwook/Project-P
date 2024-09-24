@@ -38,6 +38,7 @@ namespace EnumTypes
         FeedCountChanged,
         ActiveMiniGame,
         DisActiveMiniGame,
+        StartMiniGame,
     }
 
     public enum DataEvents

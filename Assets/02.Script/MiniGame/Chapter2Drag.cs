@@ -4,7 +4,7 @@ using UnityEngine.Rendering.Universal;
 
 public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IDragHandler
 {
-    public Camera ParticleCamera;
+    private Camera ParticleCamera;
     public Collider2D bladeCollider;
 
     public float minSliceVelocity = 0.01f;
@@ -17,6 +17,7 @@ public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandle
 
     private void Awake()
     {
+        ParticleCamera = Camera.main;
         canvas = GetComponentInParent<Canvas>();
         trailRenderer = lineObject.GetComponent<TrailRenderer>();        
     }
@@ -28,13 +29,13 @@ public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandle
 
     private void Start()
     {
-        ParticleCamera.GetComponent<RectTransform>().position = canvas.GetComponent<RectTransform>().position + new Vector3(0,0,-30f);
-
-        var mainCamera = Camera.main.GetComponent<UniversalAdditionalCameraData>();
-        if(mainCamera != null )
-        {
-            mainCamera.cameraStack.Add(ParticleCamera);
-        }
+        //ParticleCamera.GetComponent<RectTransform>().position = canvas.GetComponent<RectTransform>().position + new Vector3(0,0,-30f);
+        ParticleCamera.transform.position = canvas.transform.position + new Vector3(0,0,-30f);
+        //var mainCamera = Camera.main.GetComponent<UniversalAdditionalCameraData>();
+        //if(mainCamera != null )
+        //{
+        //    mainCamera.cameraStack.Add(ParticleCamera);
+        //}
 
         AdjustCameraToCanvas();
     }
