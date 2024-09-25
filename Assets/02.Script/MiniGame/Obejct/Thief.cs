@@ -9,6 +9,8 @@ using UnityEngine.UI;
 public class Thief : MonoBehaviour, IPointerClickHandler
 {
     private Image image;
+    private GameObject _effect;
+
     public bool isAppear {  get; private set; }
 
     private float Timer;
@@ -16,11 +18,13 @@ public class Thief : MonoBehaviour, IPointerClickHandler
     private void Awake()
     {
         image = transform.GetChild(0).GetComponent<Image>();
+        _effect = transform.GetChild(2).gameObject;
     }
 
     private void Start()
     {
         Caught();
+        _effect.gameObject.SetActive(false);
     }
 
     IEnumerator Appering()
@@ -32,7 +36,9 @@ public class Thief : MonoBehaviour, IPointerClickHandler
             Timer -= Time.deltaTime;
             if(Timer <= 0)
             {
-                Caught();
+                image.enabled = false;
+                isAppear = false;
+
                 continue;
             }
         }
@@ -54,6 +60,7 @@ public class Thief : MonoBehaviour, IPointerClickHandler
     {
         image.enabled = false;
         isAppear = false;
+        _effect.SetActive(true);
     }
 
     public void OnPointerClick(PointerEventData eventData)

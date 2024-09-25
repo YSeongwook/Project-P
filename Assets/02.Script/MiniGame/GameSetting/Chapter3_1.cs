@@ -69,13 +69,7 @@ public class Chapter3_1 : MonoBehaviour
             if (isEnd) yield break;
 
             AppearThief();
-        }
-
-        if (CautchCount >= SetEndCount)
-        {
-            GameClear();
-            yield break;
-        }
+        }        
     }
 
     private void AppearThief()
@@ -92,8 +86,11 @@ public class Chapter3_1 : MonoBehaviour
 
         Text_CatchCount.text = $"{CautchCount}";
 
-        if (CautchCount >= SetEndCount) 
-            isEnd = true;
+        if (CautchCount >= SetEndCount)
+        {
+            StopCoroutine(gameCoroutine);
+            GameClear();
+        }
     }
 
     private void GameOver()
