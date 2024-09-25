@@ -970,6 +970,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas_Livestock
       objectReference: {fileID: 0}
+    - target: {fileID: 4319559725714560784, guid: 5a5e0269ada7a40419da893b08deb10c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8003414711968118951, guid: 5a5e0269ada7a40419da893b08deb10c, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1301,7 +1305,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5479599960266601933, guid: 526e9c45c8987f249ba2d89be5be8cc2, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5601881625420705065, guid: 526e9c45c8987f249ba2d89be5be8cc2, type: 3}
       propertyPath: ParticleCamera
@@ -1391,8 +1395,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4787140852012462680, guid: 526e9c45c8987f249ba2d89be5be8cc2, type: 3}
+    - target: {fileID: 8456095730411200658, guid: 526e9c45c8987f249ba2d89be5be8cc2, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 096949526733a1843963ad86976ca196, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

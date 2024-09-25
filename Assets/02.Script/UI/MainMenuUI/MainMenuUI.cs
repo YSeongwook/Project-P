@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour
 {
+    [FoldoutGroup("Panel")] [SerializeField] private GameObject socialPanel; // 소셜 패널
     [FoldoutGroup("Panel")] [SerializeField] private GameObject shopPanel; // 상점 패널
     [FoldoutGroup("Panel")] [SerializeField] private GameObject chapterPanel; // 스테이지 선택 패널
     
@@ -23,12 +24,14 @@ public class MainMenuUI : MonoBehaviour
 
     private void AddButtonEvents()
     {
+        socialButton.onClick.AddListener(OnClickSocialButton);
         chapterButton.onClick.AddListener(OnClickChapterButton);
         shopButton.onClick.AddListener(OnClickShopButton);
     }
     
     private void RemoveButtonEvents()
     {
+        socialButton.onClick.RemoveListener(OnClickSocialButton);
         chapterButton.onClick.RemoveListener(OnClickChapterButton);
         shopButton.onClick.RemoveListener(OnClickShopButton);
     }
@@ -38,6 +41,13 @@ public class MainMenuUI : MonoBehaviour
         bool isActive = gameObject.activeSelf;
         
         gameObject.SetActive(!isActive);
+    }
+
+    private void ToggleSocialPanel()
+    {
+        bool isActive = socialPanel.activeSelf;
+        
+        socialPanel.SetActive(!isActive);
     }
 
     private void ToggleSelectStagePanel()
@@ -52,6 +62,11 @@ public class MainMenuUI : MonoBehaviour
         bool isActive = shopPanel.activeSelf;
         
         shopPanel.SetActive(!isActive);
+    }
+
+    private void OnClickSocialButton()
+    {
+        ToggleSocialPanel();
     }
 
     private void OnClickChapterButton()

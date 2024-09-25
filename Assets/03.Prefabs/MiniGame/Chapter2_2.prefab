@@ -369,7 +369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8f26a0eb13f9d4891f14ae196d47fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ParticleCamera: {fileID: 0}
+  particleCamera: {fileID: 0}
 --- !u!1 &2200795390658681987
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,7 +439,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 096949526733a1843963ad86976ca196, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -588,7 +588,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8f26a0eb13f9d4891f14ae196d47fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ParticleCamera: {fileID: 0}
+  particleCamera: {fileID: 0}
 --- !u!1 &5286793427913318463
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,7 +713,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8f26a0eb13f9d4891f14ae196d47fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ParticleCamera: {fileID: 0}
+  particleCamera: {fileID: 0}
 --- !u!1 &5479599960266601933
 GameObject:
   m_ObjectHideFlags: 0
@@ -1103,7 +1103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8f26a0eb13f9d4891f14ae196d47fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ParticleCamera: {fileID: 0}
+  particleCamera: {fileID: 0}
 --- !u!1 &8966874732372218433
 GameObject:
   m_ObjectHideFlags: 0
