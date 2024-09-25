@@ -49,7 +49,7 @@ public class MapDownloadManager : MonoBehaviour
 
         // 없음
 
-        SceneManager.LoadScene("Jinmyung");
+        SceneManager.LoadScene("Game");
     }
 
 }
