@@ -15,18 +15,32 @@ public class Chapter2_2 : MonoBehaviour
     private List<Fish> fishLists = new List<Fish>();
     private bool isGameClear;
 
+    private Coroutine _miniGame;
+
+    private void Awake()
+    {
+        EventManager<MiniGame>.StartListening<bool>(MiniGame.SetStartTrigger, SetGameStart);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager<MiniGame>.StartListening<bool>(MiniGame.SetStartTrigger, SetGameStart);
+    }
+
     private void OnEnable()
     {
         fishLists.Clear();
         isGameClear = false;
         timer = SetTimer;
+        Text_timer.text = timer.ToString();
 
-        SetCameraToFish();
+        SetCameraToFish();        
     }
 
-    private void Start()
+    private void OnDisable()
     {
-        StartCoroutine(StartTimer());
+        if(_miniGame ==  null) return;
+        StopCoroutine(_miniGame);
     }
 
     private void SetCameraToFish()
@@ -96,5 +110,17 @@ public class Chapter2_2 : MonoBehaviour
         }
 
         return isClear;
+    }
+
+    private void SetGameStart(bool isGameStart)
+    {
+        if (!isGameStart) return;
+        var canvas = transform.GetComponentInParent<Canvas>();
+        if (canvas == null) return;
+        if (!canvas.gameObject.activeSelf) return;
+
+        DebugLogger.Log(canvas.gameObject.name + " : " + !canvas.gameObject.activeSelf);
+
+        _miniGame = StartCoroutine(StartTimer());
     }
 }

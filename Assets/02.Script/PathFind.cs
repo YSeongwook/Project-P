@@ -134,15 +134,10 @@ public class PathFind
 
             animationSequence.OnComplete(() =>
             {
-                DebugLogger.Log("애니메이션 완료");
-
                 DOVirtual.DelayedCall(1f, () =>
                 {
-                    DebugLogger.Log("2. 완료");
-
                     if (isMiniGameStage)
                     {
-                        DebugLogger.Log("MiniGame On");
                         // 로비와 Stage UI Disable
                         EventManager<StageEvent>.TriggerEvent(StageEvent.SetMiniGame, false);
                         //미니 게임 화면 등장
@@ -150,7 +145,6 @@ public class PathFind
                     }
                     else
                     {
-                        DebugLogger.Log("3. 완료");
                         // 하나 이상의 startPoint가 모든 endPoint와 연결된 경우
                         EventManager<StageEvent>.TriggerEvent(StageEvent.MissionSuccess);
                     }

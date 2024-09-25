@@ -1,3 +1,4 @@
+using System;
 using EnumTypes;
 using EventLibrary;
 using UnityEngine;
@@ -5,11 +6,19 @@ using UnityEngine.EventSystems;
 
 public class Feed : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public RectTransform cowRectTransform; // 소의 RectTransform
+    
+    public bool IsClearAble {  get; private set; }
+    
     private RectTransform _rectTransform;
     private Canvas _canvas;
     private Vector2 _originalPosition;
+    private bool _isGameStart;
 
-    public RectTransform cowRectTransform; // 소의 RectTransform
+    private void Awake()
+    {
+        EventManager<MiniGame>.StartListening<bool>(MiniGame.SetStartTrigger, SetGameStart);
+    }
 
     private void Start()
     {
@@ -17,14 +26,43 @@ public class Feed : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         _canvas = GetComponentInParent<Canvas>();
         _originalPosition = _rectTransform.anchoredPosition;
     }
+    
+    private void OnEnable()
+    {
+        IsClearAble = false;
+        _isGameStart = false;
+    }
+
+    private void OnDestroy()
+    {
+        EventManager<MiniGame>.StopListening<bool>(MiniGame.SetStartTrigger, SetGameStart);
+    }
+    
+    public void SetClearAble(bool setAble)
+    {
+        IsClearAble = setAble;
+
+        DebugLogger.Log($"{gameObject.name} : {IsClearAble}");
+    }
+
+    private void SetGameStart(bool isGameStart)
+    {
+        if (!isGameStart) return;
+
+        this._isGameStart = isGameStart;
+    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         // 드래그 시작 시
+        
+        if (!_isGameStart) return;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!_isGameStart) return;
+        
         // 드래그 중
         if (_canvas == null) return;
 

@@ -1,10 +1,8 @@
 using EnumTypes;
 using EventLibrary;
-using Org.BouncyCastle.X509;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Chapter2_MiniGame : MonoBehaviour
@@ -19,19 +17,30 @@ public class Chapter2_MiniGame : MonoBehaviour
     private Coroutine _miniGame;
     private bool isGameClear;
 
+    private void Awake()
+    {
+        EventManager<MiniGame>.StartListening<bool>(MiniGame.SetStartTrigger, SetGameStart);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager<MiniGame>.StopListening<bool>(MiniGame.SetStartTrigger, SetGameStart);
+    }
+
     private void OnEnable()
     {
         isGameClear = false;
         timer = SetTimer;
+        Text_timer.text = timer.ToString();
+
         RiceObjects.Clear();
 
-        SetRiceObejct();
-
-        _miniGame = StartCoroutine(StartTimer());
+        SetRiceObejct();        
     }
 
     private void OnDisable()
     {
+        if(_miniGame == null) return;
         StopCoroutine(_miniGame);
     }
 
@@ -100,5 +109,15 @@ public class Chapter2_MiniGame : MonoBehaviour
         }
 
         return isClear;
+    }
+
+    private void SetGameStart(bool isGameStart)
+    {
+        if (!isGameStart) return;
+        var canvas = transform.GetComponentInParent<Canvas>();
+        if (canvas == null) return;
+        if (!canvas.gameObject.activeSelf) return;
+
+        _miniGame = StartCoroutine(StartTimer());
     }
 }
