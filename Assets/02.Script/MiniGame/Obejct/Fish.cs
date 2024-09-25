@@ -1,5 +1,6 @@
 using EnumTypes;
 using EventLibrary;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -65,8 +66,8 @@ public class Fish : DropHandler
     public override void OnDrag(PointerEventData eventData)
     {
         if (!_isGameStart) return;
-        
-        base.OnDrag(eventData);
+
+        _rectTransform.position = eventData.position;
     }
 
     public override void OnEndDrag(PointerEventData eventData)
