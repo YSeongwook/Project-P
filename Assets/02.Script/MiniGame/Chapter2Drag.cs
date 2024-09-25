@@ -1,7 +1,7 @@
-using DG.Tweening;
+using EnumTypes;
+using EventLibrary;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Rendering.Universal;
 
 public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IDragHandler
 {
@@ -11,16 +11,24 @@ public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandle
     public float minSliceVelocity = 0.01f;
     public GameObject lineObject;
     private TrailRenderer trailRenderer;
-
     private Canvas canvas;
 
     public Vector3 direction { get; private set; }
+
+    private bool isGameStart;
 
     private void Awake()
     {
         ParticleCamera = Camera.main;
         canvas = GetComponentInParent<Canvas>();
-        trailRenderer = lineObject.GetComponent<TrailRenderer>();        
+        trailRenderer = lineObject.GetComponent<TrailRenderer>();
+
+        EventManager<MiniGame>.StartListening<bool>(MiniGame.SetStartTrigger, SetGameStart);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager<MiniGame>.StopListening<bool>(MiniGame.SetStartTrigger, SetGameStart);
     }
 
     private void OnDisable()
@@ -43,16 +51,22 @@ public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandle
 
     public void OnDrag(PointerEventData eventData)
     {
+        if(!isGameStart) return;
+
         Drag(eventData);
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (!isGameStart) return;
+
         StartSlicing(eventData);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (!isGameStart) return;
+
         StopSlicing();
     }
 
@@ -99,4 +113,8 @@ public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandle
         ParticleCamera.aspect = aspectRatio;
     }
 
+    void SetGameStart(bool isGameStart)
+    {   
+        this.isGameStart = isGameStart;
+    }
 }
