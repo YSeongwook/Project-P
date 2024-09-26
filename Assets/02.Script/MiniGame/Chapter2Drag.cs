@@ -97,7 +97,11 @@ public class Chapter2Drag : MonoBehaviour, IPointerUpHandler, IPointerDownHandle
 
     private void UpdateBladePosition(PointerEventData eventData)
     {
-        bladeCollider.transform.position = eventData.position;
+        Vector3 touchPosition = eventData.position;
+        touchPosition.z = ParticleCamera.transform.position.z;
+        var worldPosition = ParticleCamera.ScreenToWorldPoint(touchPosition);
+
+        bladeCollider.transform.position = worldPosition;
         //lineObject.transform.position = bladeCollider.transform.position + new Vector3(0,0,-0.1f);
         lineObject.transform.position = bladeCollider.transform.position + new Vector3(0,0,-10f);
     }
