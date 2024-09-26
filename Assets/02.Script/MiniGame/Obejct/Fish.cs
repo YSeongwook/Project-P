@@ -59,13 +59,13 @@ public class Fish : DropHandler
     {
         if (!_isGameStart) return;
 
-        base.OnBeginDrag(eventData);
+        //base.OnBeginDrag(eventData);
     }
 
     public override void OnDrag(PointerEventData eventData)
     {
         if (!_isGameStart) return;
-
+        
         _rectTransform.position = eventData.position;
     }
 
@@ -73,6 +73,6 @@ public class Fish : DropHandler
     {
         if (!_isGameStart) return;
         
-        base.OnEndDrag(eventData);
+        //base.OnEndDrag(eventData);
     }
 }
