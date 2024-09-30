@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4371190599355953283}
   - component: {fileID: 8935291521203846554}
   - component: {fileID: 7892053128872392410}
+  - component: {fileID: 7764856191225541803}
   m_Layer: 0
   m_Name: NetPlayer
   m_TagString: Untagged
@@ -87,6 +88,28 @@ MonoBehaviour:
   positionSensitivity: 0.01
   rotationSensitivity: 0.01
   scaleSensitivity: 0.01
+--- !u!195 &7764856191225541803
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353002871387855351}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &5064380931712919582
 GameObject:
   m_ObjectHideFlags: 0
