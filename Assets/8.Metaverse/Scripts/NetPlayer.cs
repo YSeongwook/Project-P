@@ -43,7 +43,6 @@ public class NetPlayer : NetworkBehaviour
             return;
         }
 
-        //CheckIsLocalPlayerOnUpdate();
         MoveOnUpdate();
     }
 
@@ -77,30 +76,6 @@ public class NetPlayer : NetworkBehaviour
         // Root Anim - True
         // this.transform.Translate(Vector3.right * (moveHorizontal * _moveSpeed * Time.deltaTime));
         // this.transform.Translate(Vector3.forward * (moveVertical * _moveSpeed * Time.deltaTime));
-    }
-
-    private void CheckIsLocalPlayerOnUpdate()
-    {
-        if (this.isLocalPlayer == false)
-            return;
-
-        // 회전
-        float horizontal = Input.GetAxis("Horizontal");
-        transform.Rotate(0, horizontal * _rotationSpeed * Time.deltaTime, 0);
-
-        // 이동
-        float vertical = Input.GetAxis("Vertical");
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-        NavAgent_Player.velocity = forward * Mathf.Max(vertical, 0) * NavAgent_Player.speed;
-        Animator_Player.SetBool("Moving", NavAgent_Player.velocity != Vector3.zero);
-
-        // 공격
-        if (Input.GetKeyDown(_atkKey))
-        {
-            RequestCommandInteractionOnServer();
-        }
-
-        RotateLocalPlayer();
     }
 
     [Command]
