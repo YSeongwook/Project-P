@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6349cbdef6740424cba27a8e96b8111c
+guid: ee29f28ae65c3c046af4b5a9f673252b
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable:
@@ -261,7 +261,7 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
-    motionNodeName: 
+    motionNodeName: ROOT
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
@@ -292,8 +292,8 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 0
-      loopBlendOrientation: 1
-      loopBlendPositionY: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 1
       keepOriginalPositionY: 1
