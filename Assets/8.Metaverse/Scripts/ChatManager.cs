@@ -31,6 +31,11 @@ public class MetaNetworkManager : NetworkBehaviour
         _rpcAnimStateChange += onRpcAnimStateChange;
     }
 
+    public void RequestChangeAnimStateByRemoteId(uint remoteNetId, string animStateKey, bool isActive)
+    {
+        ReqChangeAnimStateBool(remoteNetId, animStateKey, isActive);
+    }
+
     public void RequestChangeAnimState(string animStateKey, bool isActive)
     {
         ReqChangeAnimStateBool(_localPlayerNetId, animStateKey, isActive);
