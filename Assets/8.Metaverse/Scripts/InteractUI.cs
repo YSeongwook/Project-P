@@ -22,11 +22,10 @@ public class InteractUI : MonoBehaviour
 
     public void OnClick_CreateInteractObj()
     {
-        MetaNetworkManager.RequestChangeAnimState("InteractLoop", true);
     }
 
     public void OnClick_InteractMotion()
     {
-
+        MetaNetworkManager.RequestChangeAnimState("InteractLoop", true);
     }
 }

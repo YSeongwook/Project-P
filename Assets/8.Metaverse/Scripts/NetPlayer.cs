@@ -22,13 +22,18 @@ public class NetPlayer : NetworkBehaviour
     [SerializeField] Rigidbody RigidBody_Player;
     [SerializeField] Camera Camera_Player;
 
+    [Header("ChatMesh")]
+    [SerializeField] BillBoardChatMesh GObj_ChatMesh;
+    [SerializeField] TextMesh TextMesh_Chat;
+
     private float _moveSpeed = 5.0f;
     private float _mouseSensitivity = 100.0f;
     private float _cameraRotationX = 0.0f;
 
     private void Start()
     {
-        Camera_Player.gameObject.SetActive(this.isLocalPlayer);
+        GObj_ChatMesh.gameObject.SetActive(false);
+        Camera_Player.gameObject.SetActive(false);
 
         //Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = false;
@@ -49,9 +54,13 @@ public class NetPlayer : NetworkBehaviour
                 MetaNetworkManager = metaManager;
                 if (this.isLocalPlayer)
                 {
+                    Camera_Player.name = "LocalPlayerCamera";
                     MetaNetworkManager.BindLocalPlayerNetId(this.netId);
+                    Camera_Player.gameObject.SetActive(true);
                 }
+                
                 MetaNetworkManager.BindRpcAnimStateChangedCallback(OnRpcAnimStateChanged);
+                MetaNetworkManager.BindRecvMsgCallback(OnRecvChatMsg);
             }
         }
     }
@@ -62,6 +71,21 @@ public class NetPlayer : NetworkBehaviour
         {
             Animator_Player.SetBool(animStateKey, isActive);
         }
+    }
+
+    private void OnRecvChatMsg(uint netId, string msg)
+    {
+        if (this.isLocalPlayer)
+        {
+            return;
+        }
+
+        if(netId != this.netId)
+        {
+            return;
+        }
+
+        GObj_ChatMesh.ShowChatMsg(msg);
     }
 
     private void Update()

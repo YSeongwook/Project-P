@@ -9,7 +9,7 @@ public class MetaNetworkManager : NetworkBehaviour
     private Dictionary<uint, List<string>> _msgList = new Dictionary<uint, List<string>>();
 
     private uint _localPlayerNetId;
-    private Action<string> _recvMsgCallback;
+    private Action<uint, string> _recvMsgCallback;
     private Action<uint, string, bool> _rpcAnimStateChange;
 
     private void OnDestroy()
@@ -67,21 +67,19 @@ public class MetaNetworkManager : NetworkBehaviour
         }
     }
 
-    public void BindRecvMsgCallback(Action<string> onRecvMsg)
+    public void BindRecvMsgCallback(Action<uint, string> onRecvMsg)
     {
-        _recvMsgCallback = onRecvMsg;
+        _recvMsgCallback += onRecvMsg;
     }
 
     public void SendMsg(string msg)
     {
-        SendMsgCommand(msg);
+        SendMsgCommand(_localPlayerNetId, msg);
     }
 
     [Command(requiresAuthority = false)]
-    public void SendMsgCommand(string msg)
+    public void SendMsgCommand(uint id, string msg)
     {
-        var id = _localPlayerNetId;
-
         AddMsgList(id, msg);
         RecvMsg(id, msg);
     }
@@ -93,7 +91,7 @@ public class MetaNetworkManager : NetworkBehaviour
 
         if(_recvMsgCallback != null)
         {
-            _recvMsgCallback.Invoke(msg);
+            _recvMsgCallback.Invoke(id, msg);
         }
     }
 #endregion

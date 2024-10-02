@@ -27,7 +27,7 @@ public class ChatUI : MonoBehaviour
         ChatManager.BindRecvMsgCallback(OnChatMsgReceived);
     }
 
-    private void OnChatMsgReceived(string msg)
+    private void OnChatMsgReceived(uint id, string msg)
     {
         Text_ChatList.text = $"{Text_ChatList.text}\n{msg}";
         Text_ChatListExtended.text = $"{Text_ChatListExtended.text}\n{msg}";
