@@ -28,17 +28,12 @@ public class NetPlayer : NetworkBehaviour
 
     private void Start()
     {
-        if (isLocalPlayer == false)
-        {
-            Camera_Player.gameObject.SetActive(false);
-            return;
-        }
+        Camera_Player.gameObject.SetActive(this.isLocalPlayer);
 
         //Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = false;
 
         StartCoroutine(CoDelayBindRpc());
-
     }
 
     private IEnumerator CoDelayBindRpc()
@@ -52,7 +47,10 @@ public class NetPlayer : NetworkBehaviour
             if(metaManager != null)
             {
                 MetaNetworkManager = metaManager;
-                MetaNetworkManager.BindPlayerNetId(this.netId);
+                if (this.isLocalPlayer)
+                {
+                    MetaNetworkManager.BindLocalPlayerNetId(this.netId);
+                }
                 MetaNetworkManager.BindRpcAnimStateChangedCallback(OnRpcAnimStateChanged);
             }
         }

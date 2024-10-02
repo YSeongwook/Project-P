@@ -8,7 +8,7 @@ public class MetaNetworkManager : NetworkBehaviour
 {
     private Dictionary<uint, List<string>> _msgList = new Dictionary<uint, List<string>>();
 
-    private uint _playerNetId;
+    private uint _localPlayerNetId;
     private Action<string> _recvMsgCallback;
     private Action<uint, string, bool> _rpcAnimStateChange;
 
@@ -21,9 +21,9 @@ public class MetaNetworkManager : NetworkBehaviour
     }
 
     #region Interact
-    public void BindPlayerNetId(uint netId)
+    public void BindLocalPlayerNetId(uint netId)
     {
-        _playerNetId = netId;
+        _localPlayerNetId = netId;
     }
 
     public void BindRpcAnimStateChangedCallback(Action<uint, string, bool> onRpcAnimStateChange)
@@ -33,7 +33,7 @@ public class MetaNetworkManager : NetworkBehaviour
 
     public void RequestChangeAnimState(string animStateKey, bool isActive)
     {
-        ReqChangeAnimStateBool(_playerNetId, animStateKey, isActive);
+        ReqChangeAnimStateBool(_localPlayerNetId, animStateKey, isActive);
     }
 
     [Command(requiresAuthority=false)]
@@ -80,7 +80,7 @@ public class MetaNetworkManager : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void SendMsgCommand(string msg)
     {
-        var id = _playerNetId;
+        var id = _localPlayerNetId;
 
         AddMsgList(id, msg);
         RecvMsg(id, msg);
