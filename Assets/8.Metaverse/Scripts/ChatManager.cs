@@ -41,9 +41,13 @@ public class ChatManager : NetworkBehaviour
         }
     }
 
-    public void SendMsg(string msg, Action<string> onRecvMsg)
+    public void BindRecvMsgCallback(Action<string> onRecvMsg)
     {
         _recvMsgCallback = onRecvMsg;
+    }
+
+    public void SendMsg(string msg)
+    {
         SendMsgCommand(msg);
     }
 
@@ -65,7 +69,6 @@ public class ChatManager : NetworkBehaviour
         if(_recvMsgCallback != null)
         {
             _recvMsgCallback.Invoke(msg);
-            _recvMsgCallback = null;
         }
     }
 }
