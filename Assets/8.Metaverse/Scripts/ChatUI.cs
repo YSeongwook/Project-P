@@ -5,10 +5,15 @@ using UnityEngine.UI;
 
 public class ChatUI : MonoBehaviour
 {
-    [SerializeField] private InputField Input_ChatMsg;
-    [SerializeField] private Text Text_ChatList;
+    [SerializeField] private MetaNetworkManager ChatManager;
+
     [SerializeField] private GameObject GObj_ChatExtended;
     [SerializeField] private GameObject GObj_ChatMinimized;
+
+    [Header("Chat")]
+    [SerializeField] private InputField Input_ChatMsg;
+    [SerializeField] private Text Text_ChatList;
+    [SerializeField] private Text Text_ChatListExtended;
 
     private void OnEnable()
     {
@@ -18,18 +23,19 @@ public class ChatUI : MonoBehaviour
 
     private IEnumerator CoDelayRecvMsg()
     {
-        yield return new WaitForSeconds(3.0f);
-        ChatManager.Inst.BindRecvMsgCallback(OnChatMsgReceived);
+        yield return new WaitForSeconds(1.0f);
+        ChatManager.BindRecvMsgCallback(OnChatMsgReceived);
     }
 
     private void OnChatMsgReceived(string msg)
     {
         Text_ChatList.text = $"{Text_ChatList.text}\n{msg}";
+        Text_ChatListExtended.text = $"{Text_ChatListExtended.text}\n{msg}";
     }
 
     private void SendChatMsg()
     {
-        ChatManager.Inst.SendMsg(Input_ChatMsg.text);
+        ChatManager.SendMsg(Input_ChatMsg.text);
     }
 
     public void OnClick_SendMsg()

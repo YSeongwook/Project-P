@@ -633,10 +633,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c1554f9fbf9a8641ade60a91ade965b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Input_ChatMsg: {fileID: 731730605070609977}
-  Text_ChatList: {fileID: 5341340940581075732}
   GObj_ChatExtended: {fileID: 8727225996382145654}
   GObj_ChatMinimized: {fileID: 1721272220726760268}
+  Input_ChatMsg: {fileID: 731730605070609977}
+  Text_ChatList: {fileID: 1920612882512176469}
+  Text_ChatListExtended: {fileID: 5341340940581075732}
 --- !u!1 &2289227350606058900
 GameObject:
   m_ObjectHideFlags: 0
@@ -1189,7 +1190,7 @@ GameObject:
   - component: {fileID: 5595763054266095881}
   - component: {fileID: 5341340940581075732}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: Text_Extended
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1660,7 +1661,7 @@ GameObject:
   - component: {fileID: 62235246665937546}
   - component: {fileID: 1920612882512176469}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: Text_Minimized
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

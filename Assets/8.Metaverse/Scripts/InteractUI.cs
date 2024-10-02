@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class InteractUI : MonoBehaviour
 {
+    [Header("MetatNetworkManager")]
+    public MetaNetworkManager MetaNetworkManager;
+
     [SerializeField] private string Str_GameStartSceneName;
 
     public void OnClick_StartGame()
@@ -19,7 +22,7 @@ public class InteractUI : MonoBehaviour
 
     public void OnClick_CreateInteractObj()
     {
-
+        MetaNetworkManager.RequestChangeAnimState("InteractLoop", true);
     }
 
     public void OnClick_InteractMotion()

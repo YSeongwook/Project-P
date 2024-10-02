@@ -6,6 +6,9 @@ using UnityEngine.AI;
 
 public class NetPlayer : NetworkBehaviour
 {
+    [Header("MetaNetworkManager")]
+    public MetaNetworkManager MetaNetworkManager;
+
     [Header("Components")]
     public NavMeshAgent NavAgent_Player;
     public Animator Animator_Player;
@@ -33,8 +36,35 @@ public class NetPlayer : NetworkBehaviour
 
         //Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = false;
+
+        StartCoroutine(CoDelayBindRpc());
+
     }
 
+    private IEnumerator CoDelayBindRpc()
+    {
+        yield return new WaitForSeconds(1.0f);
+
+        var gObj = GameObject.Find("MetaNetworkManager");
+        if(gObj != null)
+        {
+            var metaManager = gObj.GetComponent<MetaNetworkManager>();
+            if(metaManager != null)
+            {
+                MetaNetworkManager = metaManager;
+                MetaNetworkManager.BindPlayerNetId(this.netId);
+                MetaNetworkManager.BindRpcAnimStateChangedCallback(OnRpcAnimStateChanged);
+            }
+        }
+    }
+
+    private void OnRpcAnimStateChanged(uint netId, string animStateKey, bool isActive)
+    {
+        if(netId == this.netId)
+        {
+            Animator_Player.SetBool(animStateKey, isActive);
+        }
+    }
 
     private void Update()
     {
@@ -51,6 +81,12 @@ public class NetPlayer : NetworkBehaviour
         return Application.isFocused;
     }
 
+    private bool IsAnimStateChanged(string animState, bool targetState)
+    {
+        var curState = Animator_Player.GetBool(animState);
+        return (curState != targetState);
+    }
+
     private void MoveOnUpdate()
     {
         if (isLocalPlayer == false)
@@ -60,8 +96,13 @@ public class NetPlayer : NetworkBehaviour
         float moveVertical = Input.GetAxis("Vertical");
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
 
+        string curStateName = "Run";
         bool isRunning = movement.magnitude > 0;
-        RequestCommandAnimChange("Run", isRunning);
+        if(IsAnimStateChanged(curStateName, isRunning))
+        {
+            MetaNetworkManager?.RequestChangeAnimState("InteractLoop", false);
+            MetaNetworkManager?.RequestChangeAnimState(curStateName, isRunning);
+        }
 
         // Rotate Camera
         float mouseX = Input.GetAxis("Mouse X") * _mouseSensitivity * Time.deltaTime;
@@ -76,18 +117,6 @@ public class NetPlayer : NetworkBehaviour
         // Root Anim - True
         // this.transform.Translate(Vector3.right * (moveHorizontal * _moveSpeed * Time.deltaTime));
         // this.transform.Translate(Vector3.forward * (moveVertical * _moveSpeed * Time.deltaTime));
-    }
-
-    [Command]
-    void RequestCommandAnimChange(string animKey, bool isStart)
-    {
-        RpcOnAnimChange(animKey, isStart);
-    }
-
-    [ClientRpc]
-    void RpcOnAnimChange(string animStateKey, bool isStart)
-    {
-        Animator_Player.SetBool(animStateKey, isStart);
     }
 
     [Command]

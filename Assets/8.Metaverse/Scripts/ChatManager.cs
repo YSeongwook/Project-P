@@ -4,31 +4,57 @@ using UnityEngine;
 using Mirror;
 using System;
 
-public class ChatManager : NetworkBehaviour
+public class MetaNetworkManager : NetworkBehaviour
 {
-    private static ChatManager _inst = null;
-    private Dictionary<int, List<string>> _msgList = new Dictionary<int, List<string>>();
+    private Dictionary<uint, List<string>> _msgList = new Dictionary<uint, List<string>>();
 
-    private int _playerNetId;
+    private uint _playerNetId;
     private Action<string> _recvMsgCallback;
+    private Action<uint, string, bool> _rpcAnimStateChange;
 
-
-    private void Awake()
+    private void OnDestroy()
     {
-        if(null == _inst)
+        if(_rpcAnimStateChange != null)
         {
-            _inst = this;
-            DontDestroyOnLoad(this.gameObject);
+            _rpcAnimStateChange = null;
         }
     }
 
-    public static ChatManager Inst
+    #region Interact
+    public void BindPlayerNetId(uint netId)
     {
-        get { return _inst; }
+        _playerNetId = netId;
     }
 
+    public void BindRpcAnimStateChangedCallback(Action<uint, string, bool> onRpcAnimStateChange)
+    {
+        _rpcAnimStateChange += onRpcAnimStateChange;
+    }
 
-    private void AddMsgList(int id, string msg)
+    public void RequestChangeAnimState(string animStateKey, bool isActive)
+    {
+        ReqChangeAnimStateBool(_playerNetId, animStateKey, isActive);
+    }
+
+    [Command(requiresAuthority=false)]
+    void ReqChangeAnimStateBool(uint netId, string animStateKey, bool isActive)
+    {
+        RpcOnAnimStateChange(netId, animStateKey, isActive);
+    }
+
+    [ClientRpc]
+    void RpcOnAnimStateChange(uint netId, string animStateKey, bool isActive)
+    {
+        if(_rpcAnimStateChange != null)
+        {
+            _rpcAnimStateChange.Invoke(netId, animStateKey, isActive);
+        }
+    }
+
+    #endregion
+
+    #region Chat
+    private void AddMsgList(uint id, string msg)
     {
         if (_msgList.ContainsKey(id))
         {
@@ -57,12 +83,11 @@ public class ChatManager : NetworkBehaviour
         var id = _playerNetId;
 
         AddMsgList(id, msg);
-
         RecvMsg(id, msg);
     }
 
     [ClientRpc]
-    public void RecvMsg(int id, string msg)
+    public void RecvMsg(uint id, string msg)
     {
         AddMsgList(id, msg);
 
@@ -71,4 +96,5 @@ public class ChatManager : NetworkBehaviour
             _recvMsgCallback.Invoke(msg);
         }
     }
+#endregion
 }
