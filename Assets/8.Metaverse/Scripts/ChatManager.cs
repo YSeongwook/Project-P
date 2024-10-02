@@ -12,6 +12,12 @@ public class MetaNetworkManager : NetworkBehaviour
     private Action<uint, string> _recvMsgCallback;
     private Action<uint, string, bool> _rpcAnimStateChange;
 
+    [Header("InteractionFieldObject")]
+    [SerializeField] GameObject Prefab_SpawnInteractFieldObj;
+
+    //임시
+    private NetPlayer _localPlayer = null;
+
     private void OnDestroy()
     {
         if(_rpcAnimStateChange != null)
@@ -19,6 +25,36 @@ public class MetaNetworkManager : NetworkBehaviour
             _rpcAnimStateChange = null;
         }
     }
+
+    #region FieldObject
+    public void BindLocalPlayer(NetPlayer player)
+    {
+        _localPlayer = player;
+    }
+
+    public void RequestSpawnFieldObject()
+    {
+        if(_localPlayer == null)
+        {
+            return;
+        }
+
+        var transform = _localPlayer.GetSpawnObjTransform();
+        if(transform == null)
+        {
+            return;
+        }
+
+        CommandSpawnFieldObject(transform.position, transform.rotation);
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CommandSpawnFieldObject(Vector3 pos, Quaternion rotate)
+    {
+        GameObject spawnedObj = Instantiate(Prefab_SpawnInteractFieldObj, pos, rotate);
+        NetworkServer.Spawn(spawnedObj);
+    }
+    #endregion
 
     #region Interact
     public void BindLocalPlayerNetId(uint netId)

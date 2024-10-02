@@ -13,7 +13,11 @@ public class NetSpawnedObject : NetworkBehaviour
         var remotePlayer = other.GetComponent<NetworkBehaviour>();
         if(remotePlayer == null)
         {
-            return;
+            remotePlayer = other.gameObject.GetComponentInParent<NetworkBehaviour>();
+            if(remotePlayer == null)
+            {
+                return;
+            }
         }
 
         var remoteNetId = remotePlayer.netId;

@@ -26,9 +26,14 @@ public class NetPlayer : NetworkBehaviour
     [SerializeField] BillBoardChatMesh GObj_ChatMesh;
     [SerializeField] TextMesh TextMesh_Chat;
 
+    [Header("SpawnFieldObj")]
+    [SerializeField] Transform Transform_SpawnObj;
+
     private float _moveSpeed = 5.0f;
     private float _mouseSensitivity = 100.0f;
     private float _cameraRotationX = 0.0f;
+
+    public Transform GetSpawnObjTransform() { return Transform_SpawnObj; }
 
     private void Start()
     {
@@ -56,6 +61,7 @@ public class NetPlayer : NetworkBehaviour
                 {
                     Camera_Player.name = "LocalPlayerCamera";
                     MetaNetworkManager.BindLocalPlayerNetId(this.netId);
+                    MetaNetworkManager.BindLocalPlayer(this);
                     Camera_Player.gameObject.SetActive(true);
                 }
                 
@@ -69,7 +75,10 @@ public class NetPlayer : NetworkBehaviour
     {
         if(netId == this.netId)
         {
-            Animator_Player.SetBool(animStateKey, isActive);
+            if(IsAnimStateChanged(animStateKey, isActive))
+            {
+                Animator_Player.SetBool(animStateKey, isActive);
+            }
         }
     }
 
@@ -109,6 +118,14 @@ public class NetPlayer : NetworkBehaviour
         return (curState != targetState);
     }
 
+    private void CheckAndCancelAnimState(string animState)
+    {
+        if (Animator_Player.GetBool(animState))
+        {
+            MetaNetworkManager?.RequestChangeAnimState(animState, false);
+        }
+    }
+
     private void MoveOnUpdate()
     {
         if (isLocalPlayer == false)
@@ -122,7 +139,8 @@ public class NetPlayer : NetworkBehaviour
         bool isRunning = movement.magnitude > 0;
         if(IsAnimStateChanged(curStateName, isRunning))
         {
-            MetaNetworkManager?.RequestChangeAnimState("InteractLoop", false);
+            CheckAndCancelAnimState("Sit");
+            CheckAndCancelAnimState("InteractLoop");
             MetaNetworkManager?.RequestChangeAnimState(curStateName, isRunning);
         }
 
@@ -141,29 +159,4 @@ public class NetPlayer : NetworkBehaviour
         // this.transform.Translate(Vector3.forward * (moveVertical * _moveSpeed * Time.deltaTime));
     }
 
-    [Command]
-    void RequestCommandInteractionOnServer()
-    {
-        //GameObject atkObjectForSpawn = Instantiate(Prefab_AtkObject, Tranfrom_AtkSpawnPos.transform.position, Tranfrom_AtkSpawnPos.transform.rotation);
-        //NetworkServer.Spawn(atkObjectForSpawn);
-
-        //RpcOnInteract("Atk");
-    }
-
-    [ClientRpc]
-    void RpcOnInteract(string animStateKey)
-    {
-        Animator_Player.SetTrigger(animStateKey);
-    }
-
-    void RotateLocalPlayer()
-    {
-        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //if (Physics.Raycast(ray, out RaycastHit hit, 100))
-        //{
-        //    Debug.DrawLine(ray.origin, hit.point);
-        //    Vector3 lookRotate = new Vector3(hit.point.x, Transform_Player.position.y, hit.point.z);
-        //    Transform_Player.LookAt(lookRotate);
-        //}
-    }
 }

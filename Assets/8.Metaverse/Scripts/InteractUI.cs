@@ -22,6 +22,7 @@ public class InteractUI : MonoBehaviour
 
     public void OnClick_CreateInteractObj()
     {
+        MetaNetworkManager.RequestSpawnFieldObject();
     }
 
     public void OnClick_InteractMotion()
