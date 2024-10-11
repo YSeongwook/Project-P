@@ -23,8 +23,7 @@ public class NetPlayer : NetworkBehaviour
     [SerializeField] Camera Camera_Player;
 
     [Header("ChatMesh")]
-    [SerializeField] BillBoardChatMesh GObj_ChatMesh;
-    [SerializeField] TextMesh TextMesh_Chat;
+    [SerializeField] GameObject Prefab_SpeechBallonSlotUI;
 
     [Header("SpawnFieldObj")]
     [SerializeField] Transform Transform_SpawnObj;
@@ -32,12 +31,12 @@ public class NetPlayer : NetworkBehaviour
     private float _moveSpeed = 5.0f;
     private float _mouseSensitivity = 100.0f;
     private float _cameraRotationX = 0.0f;
+    private Transform _chatRoot;
 
     public Transform GetSpawnObjTransform() { return Transform_SpawnObj; }
 
     private void Start()
     {
-        GObj_ChatMesh.gameObject.SetActive(false);
         Camera_Player.gameObject.SetActive(false);
 
         //Cursor.lockState = CursorLockMode.Locked;
@@ -94,7 +93,20 @@ public class NetPlayer : NetworkBehaviour
             return;
         }
 
-        GObj_ChatMesh.ShowChatMsg(msg);
+        var gObj = GameObject.Find("ChatSlotUIRoot");
+        if(gObj != null)
+        {
+            _chatRoot = gObj.transform;
+            var slotUI = Instantiate(Prefab_SpeechBallonSlotUI, _chatRoot);
+            if(slotUI != null)
+            {
+                var speechBallonUI = slotUI.GetComponent<SpeechBallonSlotUI>();
+                if(speechBallonUI != null)
+                {
+                    speechBallonUI.SetSpeechText(this.transform, msg);
+                }
+            }
+        }
     }
 
     private void Update()
