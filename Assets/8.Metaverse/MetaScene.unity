@@ -959,7 +959,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NetManager: {fileID: 278297474}
   Obj_LoadingPopup: {fileID: 2036430978649013498}
-  IsStartAsServer: 0
+  IsStartAsServer: 1
 --- !u!4 &2003784632
 Transform:
   m_ObjectHideFlags: 0

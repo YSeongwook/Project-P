@@ -10,7 +10,7 @@ public class SpeechBallonSlotUI : MonoBehaviour
     private Transform Transform_TargetObject;
     private Camera _cameraLocalPlayer;
 
-    private float _ballonPosY = 150;
+    private float _ballonPosY = 50;
 
     private void Update()
     {

@@ -23,6 +23,7 @@ public class NetPlayer : NetworkBehaviour
     [SerializeField] Camera Camera_Player;
 
     [Header("ChatMesh")]
+    [SerializeField] Transform Transform_ChatRoot;
     [SerializeField] GameObject Prefab_SpeechBallonSlotUI;
 
     [Header("SpawnFieldObj")]
@@ -103,7 +104,7 @@ public class NetPlayer : NetworkBehaviour
                 var speechBallonUI = slotUI.GetComponent<SpeechBallonSlotUI>();
                 if(speechBallonUI != null)
                 {
-                    speechBallonUI.SetSpeechText(this.transform, msg);
+                    speechBallonUI.SetSpeechText(Transform_ChatRoot, msg);
                 }
             }
         }

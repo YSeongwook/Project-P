@@ -39,6 +39,7 @@ Transform:
   - {fileID: 4413032471960309906}
   - {fileID: 6232058172091260880}
   - {fileID: 3615293495614663762}
+  - {fileID: 3052393018689676471}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5877381223688756421
@@ -63,9 +64,8 @@ MonoBehaviour:
   _atkKey: 32
   RigidBody_Player: {fileID: 1982773869364126957}
   Camera_Player: {fileID: 1658992674124473421}
+  Transform_ChatRoot: {fileID: 3052393018689676471}
   Prefab_SpeechBallonSlotUI: {fileID: 8244960321073742171, guid: 21f00744e727c614089ace882d2087cd, type: 3}
-  GObj_ChatMesh: {fileID: 0}
-  TextMesh_Chat: {fileID: 0}
   Transform_SpawnObj: {fileID: 4413032471960309906}
 --- !u!95 &9052867714697629153
 Animator:
@@ -270,6 +270,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.38, z: 1.22}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4371190599355953283}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6162347424334013206
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3052393018689676471}
+  m_Layer: 0
+  m_Name: Transform_ChatUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3052393018689676471
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6162347424334013206}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.753, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
