@@ -35,7 +35,7 @@ public class Chapter2_MiniGame : MonoBehaviour
 
         RiceObjects.Clear();
 
-        SetRiceObejct();        
+        SetRiceObject();        
     }
 
     private void OnDisable()
@@ -44,7 +44,7 @@ public class Chapter2_MiniGame : MonoBehaviour
         StopCoroutine(_miniGame);
     }
 
-    private void SetRiceObejct()
+    private void SetRiceObject()
     {
         foreach(Transform child in Rice)
         {
@@ -52,7 +52,7 @@ public class Chapter2_MiniGame : MonoBehaviour
         }
     }
 
-    IEnumerator StartTimer()
+    private IEnumerator StartTimer()
     {
         while(true)
         {

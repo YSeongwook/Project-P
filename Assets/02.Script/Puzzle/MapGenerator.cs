@@ -59,7 +59,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<StageEvent>.StartListening(StageEvent.CheckMissionFail, CheckMissionFail);
         EventManager<UIEvents>.StartListening(UIEvents.OnClickNextButton, StartNextStage);
         EventManager<UIEvents>.StartListening(UIEvents.OnClickRestartButton, ReStartCurrentStage);
-        EventManager<StageEvent>.StartListening<bool>(StageEvent.TutorialStage, SetTutotialStage);
+        EventManager<StageEvent>.StartListening<bool>(StageEvent.TutorialStage, SetTutorialStage);
         EventManager<MiniGame>.StartListening(MiniGame.StartMiniGame, OpenMiniGame);
         checkPath.SetTileGridEvent(true);
     }
@@ -74,7 +74,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<StageEvent>.StopListening(StageEvent.CheckMissionFail, CheckMissionFail);
         EventManager<UIEvents>.StopListening(UIEvents.OnClickNextButton, StartNextStage);
         EventManager<UIEvents>.StopListening(UIEvents.OnClickRestartButton, ReStartCurrentStage);
-        EventManager<StageEvent>.StopListening<bool>(StageEvent.TutorialStage, SetTutotialStage);
+        EventManager<StageEvent>.StopListening<bool>(StageEvent.TutorialStage, SetTutorialStage);
         EventManager<MiniGame>.StopListening(MiniGame.StartMiniGame, OpenMiniGame);
         checkPath.SetTileGridEvent(false);
     }
@@ -369,7 +369,7 @@ public class MapGenerator : MonoBehaviour
         OpenNewStage(_currentChapter, _currentStage);
     }
 
-    private void SetTutotialStage(bool isTutorialStage)
+    private void SetTutorialStage(bool isTutorialStage)
     {
         _isTutorial = isTutorialStage;
     }
@@ -381,7 +381,7 @@ public class MapGenerator : MonoBehaviour
         StartCoroutine(StartMiniGame());    
     }
 
-    IEnumerator StartMiniGame()
+    private IEnumerator StartMiniGame()
     {
         yield return new WaitForSeconds(3f);
 

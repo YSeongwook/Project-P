@@ -2,7 +2,7 @@
   "M1001": {
     "MapID": "M1001",
     "FileName": "1-1",
-    "LimitCount": 30
+    "LimitCount": 20
   },
   "M1002": {
     "MapID": "M1002",
@@ -12,7 +12,7 @@
   "M1003": {
     "MapID": "M1003",
     "FileName": "1-3",
-    "LimitCount": 30
+    "LimitCount": 20
   },
   "M1004": {
     "MapID": "M1004",
@@ -22,6 +22,506 @@
   "M1005": {
     "MapID": "M1005",
     "FileName": "1-5",
-    "LimitCount": 15
+    "LimitCount": 20
+  },
+  "M1006": {
+    "MapID": "M1006",
+    "FileName": "1-6",
+    "LimitCount": 20
+  },
+  "M1007": {
+    "MapID": "M1007",
+    "FileName": "1-7",
+    "LimitCount": 20
+  },
+  "M1008": {
+    "MapID": "M1008",
+    "FileName": "1-8",
+    "LimitCount": 20
+  },
+  "M1009": {
+    "MapID": "M1009",
+    "FileName": "1-9",
+    "LimitCount": 20
+  },
+  "M1010": {
+    "MapID": "M1010",
+    "FileName": "1-10",
+    "LimitCount": 20
+  },
+  "M2001": {
+    "MapID": "M2001",
+    "FileName": "2-1",
+    "LimitCount": 20
+  },
+  "M2002": {
+    "MapID": "M2002",
+    "FileName": "2-2",
+    "LimitCount": 30
+  },
+  "M2003": {
+    "MapID": "M2003",
+    "FileName": "2-3",
+    "LimitCount": 30
+  },
+  "M2004": {
+    "MapID": "M2004",
+    "FileName": "2-4",
+    "LimitCount": 20
+  },
+  "M2005": {
+    "MapID": "M2005",
+    "FileName": "2-5",
+    "LimitCount": 20
+  },
+  "M2006": {
+    "MapID": "M2006",
+    "FileName": "2-6",
+    "LimitCount": 10
+  },
+  "M2007": {
+    "MapID": "M2007",
+    "FileName": "2-7",
+    "LimitCount": 20
+  },
+  "M2008": {
+    "MapID": "M2008",
+    "FileName": "2-8",
+    "LimitCount": 20
+  },
+  "M2009": {
+    "MapID": "M2009",
+    "FileName": "2-9",
+    "LimitCount": 20
+  },
+  "M2010": {
+    "MapID": "M2010",
+    "FileName": "2-10",
+    "LimitCount": 20
+  },
+  "M2011": {
+    "MapID": "M2011",
+    "FileName": "2-11",
+    "LimitCount": 20
+  },
+  "M2012": {
+    "MapID": "M2012",
+    "FileName": "2-12",
+    "LimitCount": 20
+  },
+  "M2013": {
+    "MapID": "M2013",
+    "FileName": "2-13",
+    "LimitCount": 20
+  },
+  "M2014": {
+    "MapID": "M2014",
+    "FileName": "2-14",
+    "LimitCount": 20
+  },
+  "M2015": {
+    "MapID": "M2015",
+    "FileName": "2-15",
+    "LimitCount": 20
+  },
+  "M2016": {
+    "MapID": "M2016",
+    "FileName": "2-16",
+    "LimitCount": 20
+  },
+  "M2017": {
+    "MapID": "M2017",
+    "FileName": "2-17",
+    "LimitCount": 20
+  },
+  "M2018": {
+    "MapID": "M2018",
+    "FileName": "2-18",
+    "LimitCount": 50
+  },
+  "M2019": {
+    "MapID": "M2019",
+    "FileName": "2-19",
+    "LimitCount": 50
+  },
+  "M2020": {
+    "MapID": "M2020",
+    "FileName": "2-20",
+    "LimitCount": 50
+  },
+  "M2021": {
+    "MapID": "M2021",
+    "FileName": "2-21",
+    "LimitCount": 30
+  },
+  "M2022": {
+    "MapID": "M2022",
+    "FileName": "2-22",
+    "LimitCount": 30
+  },
+  "M2023": {
+    "MapID": "M2023",
+    "FileName": "2-23",
+    "LimitCount": 30
+  },
+  "M2024": {
+    "MapID": "M2024",
+    "FileName": "2-24",
+    "LimitCount": 30
+  },
+  "M2025": {
+    "MapID": "M2025",
+    "FileName": "2-25",
+    "LimitCount": 30
+  },
+  "M2026": {
+    "MapID": "M2026",
+    "FileName": "2-26",
+    "LimitCount": 30
+  },
+  "M2027": {
+    "MapID": "M2027",
+    "FileName": "2-27",
+    "LimitCount": 30
+  },
+  "M2028": {
+    "MapID": "M2028",
+    "FileName": "2-28",
+    "LimitCount": 30
+  },
+  "M2029": {
+    "MapID": "M2029",
+    "FileName": "2-29",
+    "LimitCount": 30
+  },
+  "M2030": {
+    "MapID": "M2030",
+    "FileName": "2-30",
+    "LimitCount": 30
+  },
+  "M3001": {
+    "MapID": "M3001",
+    "FileName": "3-1",
+    "LimitCount": 30
+  },
+  "M3002": {
+    "MapID": "M3002",
+    "FileName": "3-2",
+    "LimitCount": 30
+  },
+  "M3003": {
+    "MapID": "M3003",
+    "FileName": "3-3",
+    "LimitCount": 65
+  },
+  "M3004": {
+    "MapID": "M3004",
+    "FileName": "3-4",
+    "LimitCount": 30
+  },
+  "M3005": {
+    "MapID": "M3005",
+    "FileName": "3-5",
+    "LimitCount": 30
+  },
+  "M3006": {
+    "MapID": "M3006",
+    "FileName": "3-6",
+    "LimitCount": 30
+  },
+  "M3007": {
+    "MapID": "M3007",
+    "FileName": "3-7",
+    "LimitCount": 30
+  },
+  "M3008": {
+    "MapID": "M3008",
+    "FileName": "3-8",
+    "LimitCount": 30
+  },
+  "M3009": {
+    "MapID": "M3009",
+    "FileName": "3-9",
+    "LimitCount": 30
+  },
+  "M3010": {
+    "MapID": "M3010",
+    "FileName": "3-10",
+    "LimitCount": 30
+  },
+  "M3011": {
+    "MapID": "M3011",
+    "FileName": "3-11",
+    "LimitCount": 30
+  },
+  "M3012": {
+    "MapID": "M3012",
+    "FileName": "3-12",
+    "LimitCount": 30
+  },
+  "M3013": {
+    "MapID": "M3013",
+    "FileName": "3-13",
+    "LimitCount": 30
+  },
+  "M3014": {
+    "MapID": "M3014",
+    "FileName": "3-14",
+    "LimitCount": 50
+  },
+  "M3015": {
+    "MapID": "M3015",
+    "FileName": "3-15",
+    "LimitCount": 50
+  },
+  "M3016": {
+    "MapID": "M3016",
+    "FileName": "3-16",
+    "LimitCount": 50
+  },
+  "M3017": {
+    "MapID": "M3017",
+    "FileName": "3-17",
+    "LimitCount": 50
+  },
+  "M3018": {
+    "MapID": "M3018",
+    "FileName": "3-18",
+    "LimitCount": 50
+  },
+  "M3019": {
+    "MapID": "M3019",
+    "FileName": "3-19",
+    "LimitCount": 50
+  },
+  "M3020": {
+    "MapID": "M3020",
+    "FileName": "3-20",
+    "LimitCount": 50
+  },
+  "M3021": {
+    "MapID": "M3021",
+    "FileName": "3-21",
+    "LimitCount": 50
+  },
+  "M3022": {
+    "MapID": "M3022",
+    "FileName": "3-22",
+    "LimitCount": 50
+  },
+  "M3024": {
+    "MapID": "M3024",
+    "FileName": "3-24",
+    "LimitCount": 50
+  },
+  "M3025": {
+    "MapID": "M3025",
+    "FileName": "3-25",
+    "LimitCount": 50
+  },
+  "M3026": {
+    "MapID": "M3026",
+    "FileName": "3-26",
+    "LimitCount": 50
+  },
+  "M3027": {
+    "MapID": "M3027",
+    "FileName": "3-27",
+    "LimitCount": 50
+  },
+  "M3028": {
+    "MapID": "M3028",
+    "FileName": "3-28",
+    "LimitCount": 50
+  },
+  "M3029": {
+    "MapID": "M3029",
+    "FileName": "3-29",
+    "LimitCount": 50
+  },
+  "M3030": {
+    "MapID": "M3030",
+    "FileName": "3-30",
+    "LimitCount": 50
+  },
+  "M4001": {
+    "MapID": "M4001",
+    "FileName": "4-1",
+    "LimitCount": 30
+  },
+  "M4002": {
+    "MapID": "M4002",
+    "FileName": "4-2",
+    "LimitCount": 30
+  },
+  "M4003": {
+    "MapID": "M4003",
+    "FileName": "4-3",
+    "LimitCount": 30
+  },
+  "M4004": {
+    "MapID": "M4004",
+    "FileName": "4-4",
+    "LimitCount": 30
+  },
+  "M4005": {
+    "MapID": "M4005",
+    "FileName": "4-5",
+    "LimitCount": 30
+  },
+  "M4006": {
+    "MapID": "M4006",
+    "FileName": "4-6",
+    "LimitCount": 30
+  },
+  "M4007": {
+    "MapID": "M4007",
+    "FileName": "4-7",
+    "LimitCount": 30
+  },
+  "M4008": {
+    "MapID": "M4008",
+    "FileName": "4-8",
+    "LimitCount": 30
+  },
+  "M4009": {
+    "MapID": "M4009",
+    "FileName": "4-9",
+    "LimitCount": 30
+  },
+  "M4010": {
+    "MapID": "M4010",
+    "FileName": "4-10",
+    "LimitCount": 30
+  },
+  "M4011": {
+    "MapID": "M4011",
+    "FileName": "4-11",
+    "LimitCount": 50
+  },
+  "M4012": {
+    "MapID": "M4012",
+    "FileName": "4-12",
+    "LimitCount": 50
+  },
+  "M4013": {
+    "MapID": "M4013",
+    "FileName": "4-13",
+    "LimitCount": 50
+  },
+  "M4014": {
+    "MapID": "M4014",
+    "FileName": "4-14",
+    "LimitCount": 50
+  },
+  "M4015": {
+    "MapID": "M4015",
+    "FileName": "4-15",
+    "LimitCount": 30
+  },
+  "M4016": {
+    "MapID": "M4016",
+    "FileName": "4-16",
+    "LimitCount": 50
+  },
+  "M4017": {
+    "MapID": "M4017",
+    "FileName": "4-17",
+    "LimitCount": 50
+  },
+  "M4018": {
+    "MapID": "M4018",
+    "FileName": "4-18",
+    "LimitCount": 30
+  },
+  "M4019": {
+    "MapID": "M4019",
+    "FileName": "4-19",
+    "LimitCount": 50
+  },
+  "M4020": {
+    "MapID": "M4020",
+    "FileName": "4-20",
+    "LimitCount": 50
+  },
+  "M4021": {
+    "MapID": "M4021",
+    "FileName": "4-21",
+    "LimitCount": 50
+  },
+  "M4022": {
+    "MapID": "M4022",
+    "FileName": "4-22",
+    "LimitCount": 50
+  },
+  "M4023": {
+    "MapID": "M4023",
+    "FileName": "4-23",
+    "LimitCount": 50
+  },
+  "M4024": {
+    "MapID": "M4024",
+    "FileName": "4-24",
+    "LimitCount": 50
+  },
+  "M4025": {
+    "MapID": "M4025",
+    "FileName": "4-25",
+    "LimitCount": 50
+  },
+  "M4026": {
+    "MapID": "M4026",
+    "FileName": "4-26",
+    "LimitCount": 50
+  },
+  "M4027": {
+    "MapID": "M4027",
+    "FileName": "4-27",
+    "LimitCount": 50
+  },
+  "M4028": {
+    "MapID": "M4028",
+    "FileName": "4-28",
+    "LimitCount": 50
+  },
+  "M4029": {
+    "MapID": "M4029",
+    "FileName": "4-29",
+    "LimitCount": 50
+  },
+  "M4030": {
+    "MapID": "M4030",
+    "FileName": "4-30",
+    "LimitCount": 100
+  },
+  "M8001": {
+    "MapID": "M8001",
+    "FileName": "8-1",
+    "LimitCount": 20
+  },
+  "M8002": {
+    "MapID": "M8002",
+    "FileName": "8-2",
+    "LimitCount": 20
+  },
+  "M8003": {
+    "MapID": "M8003",
+    "FileName": "8-3",
+    "LimitCount": 30
+  },
+  "M8004": {
+    "MapID": "M8004",
+    "FileName": "8-4",
+    "LimitCount": 30
+  },
+  "M8005": {
+    "MapID": "M8005",
+    "FileName": "8-5",
+    "LimitCount": 30
+  },
+  "M8006": {
+    "MapID": "M8006",
+    "FileName": "8-6",
+    "LimitCount": 30
   }
 }

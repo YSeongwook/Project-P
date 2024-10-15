@@ -47,6 +47,8 @@ public class MiniGameManager : Singleton<MiniGameManager>
         // 디버깅 모드
         var index = (stage - 1);
 
+        if (index > 3) return;
+
         miniGameList[index].gameObject.SetActive(true);
     }
 
