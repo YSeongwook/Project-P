@@ -39,7 +39,7 @@ public class DataManager : Singleton<DataManager>
         textAssetDic.Add(DataType.Ticket, Resources.Load("Temp_TicketList") as TextAsset);
         textAssetDic.Add(DataType.PlayerInven, Resources.Load("Temp_PlayerInventory") as TextAsset);
         textAssetDic.Add(DataType.MapData, Resources.Load("Map/LimitCountTable") as TextAsset);
-
+        
         /*
         for(int i=1; i <= 10; i++)
         {
