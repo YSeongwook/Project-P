@@ -23,7 +23,17 @@ public class WebSocketClient : MonoBehaviour
     private void Start()
     {
         // WebSocket 서버에 연결
-        ws = new WebSocket("ws://3.38.178.218:8080");
+        ws = new WebSocket("ws://192.168.0.174:5000/ws");
+
+        ws.OnError += (sender, e) =>
+        {
+            Debug.Log("WebSocket Error: " + e.Message);
+        };
+
+        ws.OnClose += (sender, e) =>
+        {
+            Debug.Log($"WebSocket Closed: Code={e.Code}, Reason={e.Reason}");
+        };
 
         // 서버로부터 메시지를 받을 때 호출되는 이벤트 핸들러 설정
         ws.OnMessage += (sender, e) =>
@@ -42,6 +52,8 @@ public class WebSocketClient : MonoBehaviour
             {
                 // 텍스트 메시지일 경우 (보통 Data에 저장됨)
                 Debug.Log("Received from server (text): " + e.Data);
+                string message = e.Data;
+                mainThreadQueue.Enqueue(() => AddChatMessage(message));
             }
             else
             {
@@ -54,7 +66,7 @@ public class WebSocketClient : MonoBehaviour
 
         // 연결 상태 출력
         Debug.Log("WebSocket State: " + ws.ReadyState.ToString());
-
+        CheckLog("WebSocket State: " + ws.ReadyState.ToString());
         // 테스트 메시지 전송
         //ws.Send("Hello, Server!");
     }
@@ -121,6 +133,7 @@ public class WebSocketClient : MonoBehaviour
         // 프리팹 인스턴스 생성
         GameObject newMessage;
 
+        //if (nickName.Equals("Name")) newMessage = Instantiate(chatMessagePrefab_own, chatContent.transform);
         if (nickName.Equals(DBDataManager.Instance.UserData["Nickname"])) newMessage = Instantiate(chatMessagePrefab_own, chatContent.transform);
         else newMessage = Instantiate(chatMessagePrefab_other, chatContent.transform);
 
@@ -139,6 +152,38 @@ public class WebSocketClient : MonoBehaviour
         
         ScrollRect scrollRect = chatContent.GetComponentInParent<ScrollRect>();
         scrollRect.verticalNormalizedPosition = 0f;
+    }
 
+    public void CheckLog(string message)
+    {
+        //string[] strArr = message.Split("/|||/");
+
+        string nickName = "Test";
+        string context = message;
+        string time = "Test";
+
+        // 내껀지 아닌지 판단
+        // 프리팹 인스턴스 생성
+        GameObject newMessage = Instantiate(chatMessagePrefab_own, chatContent.transform);
+
+        //if (nickName.Equals("Name")) newMessage = Instantiate(chatMessagePrefab_own, chatContent.transform);
+        //if (nickName.Equals(DBDataManager.Instance.UserData["Nickname"])) newMessage = Instantiate(chatMessagePrefab_own, chatContent.transform);
+        //else newMessage = Instantiate(chatMessagePrefab_other, chatContent.transform);
+
+
+        // "Text_Chat" 오브젝트의 TextMeshPro 컴포넌트 찾기
+        TextMeshProUGUI nickNameText = newMessage.transform.Find("Speech_Bubble/Group_UserID_Tme/Text_UserID").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI messageText = newMessage.transform.Find("Speech_Bubble/Text_Chat").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI timeText = newMessage.transform.Find("Speech_Bubble/Group_UserID_Tme/Text_Time").GetComponent<TextMeshProUGUI>();
+
+        nickNameText.text = nickName;
+        messageText.text = context;
+        timeText.text = time;
+
+        // 메시지 추가 후 스크롤을 아래로 이동
+        Canvas.ForceUpdateCanvases();
+
+        ScrollRect scrollRect = chatContent.GetComponentInParent<ScrollRect>();
+        scrollRect.verticalNormalizedPosition = 0f;
     }
 }

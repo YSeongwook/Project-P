@@ -51,7 +51,7 @@ public class MySQLManager : MonoBehaviour
     {
         _androidJavaObject = new AndroidJavaObject("com.unity3d.player.KakaoLogin");
         // 데이터베이스 연결 문자열 설정
-        connectionString = "Server=3.38.178.218;Database=ProjectP;User ID=ubuntu;Password=P@ssw0rd!;Pooling=false;SslMode=None;AllowPublicKeyRetrieval=true;";
+        connectionString = "Server=192.168.0.174;Database=ProjectP;User ID=root;Password=P@ssw0rd!;Pooling=false;SslMode=None;AllowPublicKeyRetrieval=true;";
     }
 
     // type = Table 이름 str = 넘겨받은 || 로 구분된 정보
