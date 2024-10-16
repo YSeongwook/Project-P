@@ -23,16 +23,18 @@ public class WebSocketClient : MonoBehaviour
     private void Start()
     {
         // WebSocket 서버에 연결
-        ws = new WebSocket("ws://192.168.0.174:5000/ws");
+        ws = new WebSocket("ws://192.168.0.174:8080/ws");
 
         ws.OnError += (sender, e) =>
         {
             Debug.Log("WebSocket Error: " + e.Message);
+            CheckLog("WebSocket Error: " + e.Message);
         };
 
         ws.OnClose += (sender, e) =>
         {
             Debug.Log($"WebSocket Closed: Code={e.Code}, Reason={e.Reason}");
+            CheckLog($"WebSocket Closed: Code={e.Code}, Reason={e.Reason}");
         };
 
         // 서버로부터 메시지를 받을 때 호출되는 이벤트 핸들러 설정
@@ -66,7 +68,7 @@ public class WebSocketClient : MonoBehaviour
 
         // 연결 상태 출력
         Debug.Log("WebSocket State: " + ws.ReadyState.ToString());
-        CheckLog("WebSocket State: " + ws.ReadyState.ToString());
+        //CheckLog("WebSocket State: " + ws.ReadyState.ToString());
         // 테스트 메시지 전송
         //ws.Send("Hello, Server!");
     }
@@ -92,6 +94,7 @@ public class WebSocketClient : MonoBehaviour
 
     public void SendMessageToServer(string message)
     {
+        //CheckLog($"SendMessageToServer : {ws != null && ws.ReadyState == WebSocketState.Open}");
         // 서버로 메시지 전송
         if (ws != null && ws.ReadyState == WebSocketState.Open)
         {
@@ -101,23 +104,48 @@ public class WebSocketClient : MonoBehaviour
 
     public void SendMessage()
     {
-        string nickName = DBDataManager.Instance.UserData["Nickname"];
-        //string nickName = "Name";
-
-        // 한국 시간대(KST) 설정
-        TimeZoneInfo kstZone = TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time");
-        DateTime koreanTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, kstZone);
-
-        // 현재 한국 시간 (예: 2024-09-19 14:30:00)
-        string currentTime = koreanTime.ToString("yyyy-MM-dd HH:mm:ss");
-
-        string mess = $"{nickName}/|||/{InputField_Text.text}/|||/{currentTime}";
-
-        if (false == mess.IsNullOrEmpty())
+        //CheckLog("Test");
+        try
         {
-            SendMessageToServer(mess);
-            //Debug.Log(mess);
-            InputField_Text.text = "";
+            string nickName = DBDataManager.Instance.UserData["Nickname"];
+            //string nickName = "Name";
+
+            // 한국 시간대(KST) 설정
+            //TimeZoneInfo kstZone = TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time");
+            //DateTime koreanTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, kstZone);
+
+            // UTC 기준의 현재 시간
+            DateTime utcNow = DateTime.UtcNow;
+
+            // 한국 시간대는 UTC+9 오프셋
+            TimeSpan koreanOffset = TimeSpan.FromHours(9);
+
+            // 한국 시간대로 변환
+            DateTime koreanTime = utcNow + koreanOffset;
+
+            // 현재 한국 시간 (예: 2024-09-19 14:30:00)
+            string currentTime = koreanTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+            string mess = $"{nickName}/|||/{InputField_Text.text}/|||/{currentTime}";
+
+            if (false == mess.IsNullOrEmpty())
+            {
+                SendMessageToServer(mess);
+                //Debug.Log(mess);
+                InputField_Text.text = "";
+            }
+            else
+            {
+                CheckLog($"mess.IsNullOrEmpty() : {mess.IsNullOrEmpty()}");
+            }
+        }
+        catch (Exception e) 
+        {
+            CheckLog($"{e.Message}");
+            // 오류 메시지와 스택 트레이스 출력
+            string errorMessage = $"Exception: {e.Message}\nStackTrace: {e.StackTrace}";
+            CheckLog(errorMessage);
+            Debug.LogError(errorMessage);
         }
     }
 
