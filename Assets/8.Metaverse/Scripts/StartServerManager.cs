@@ -42,11 +42,7 @@ public class StartServerManager : MonoBehaviour
     {
         if (NetManager.GetNetworkClientConnected())
         {
-            if (Obj_LoadingPopup.activeSelf)
-            {
-                Obj_LoadingPopup.gameObject.SetActive(false);
-            }
-
+            StartCoroutine(CoDelayCloseLoadingPopup());
             return;
         }
 
@@ -57,6 +53,17 @@ public class StartServerManager : MonoBehaviour
 
         NetManager.OnMetaStartClientCallback += OnMetaStartClient;
         NetManager.StartClient();
+    }
+
+    IEnumerator CoDelayCloseLoadingPopup()
+    {
+        yield return new WaitForSeconds(3.0f);
+
+        if (Obj_LoadingPopup.activeSelf)
+        {
+            Obj_LoadingPopup.gameObject.SetActive(false);
+        }
+
     }
 
     private void OnMetaStartClient()
