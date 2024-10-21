@@ -2221,6 +2221,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChatUI
       objectReference: {fileID: 0}
+    - target: {fileID: 3244763308874612892, guid: 5a275e5c996cbcc4da8dcff9440b46e1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244763308874612892, guid: 5a275e5c996cbcc4da8dcff9440b46e1, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3244763308874612892, guid: 5a275e5c996cbcc4da8dcff9440b46e1, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3375590128011782120, guid: 5a275e5c996cbcc4da8dcff9440b46e1, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3581339926487800703, guid: 5a275e5c996cbcc4da8dcff9440b46e1, type: 3}
       propertyPath: ChatManager
       value: 
@@ -2243,6 +2259,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9080393568468300330, guid: 5a275e5c996cbcc4da8dcff9440b46e1, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9080393568468300330, guid: 5a275e5c996cbcc4da8dcff9440b46e1, type: 3}
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9144204200910586050, guid: 5a275e5c996cbcc4da8dcff9440b46e1, type: 3}
