@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using System;
+using UnityEngine.SceneManagement;
 
 public class MetaNetworkManager : NetworkBehaviour
 {
@@ -15,8 +16,12 @@ public class MetaNetworkManager : NetworkBehaviour
     [Header("InteractionFieldObject")]
     [SerializeField] GameObject Prefab_SpawnInteractFieldObj;
 
+    [SerializeField] NetworkManager NetManager;
+
+
     //임시
     private NetPlayer _localPlayer = null;
+    private string _changeSceneName = "Login";
 
     private void OnDestroy()
     {
@@ -24,6 +29,20 @@ public class MetaNetworkManager : NetworkBehaviour
         {
             _rpcAnimStateChange = null;
         }
+    }
+
+    public void ReqStopClient()
+    {
+        if(NetManager != null)
+        {
+            NetManager.StopClient();
+        }
+    }
+
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        SceneManager.LoadScene(_changeSceneName);
     }
 
     #region FieldObject
