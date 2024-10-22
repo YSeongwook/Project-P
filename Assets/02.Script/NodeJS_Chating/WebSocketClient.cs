@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using TMPro;
@@ -27,13 +26,13 @@ public class WebSocketClient : MonoBehaviour
 
         ws.OnError += (sender, e) =>
         {
-            Debug.Log("WebSocket Error: " + e.Message);
+            DebugLogger.Log("WebSocket Error: " + e.Message);
             CheckLog("WebSocket Error: " + e.Message);
         };
 
         ws.OnClose += (sender, e) =>
         {
-            Debug.Log($"WebSocket Closed: Code={e.Code}, Reason={e.Reason}");
+            DebugLogger.Log($"WebSocket Closed: Code={e.Code}, Reason={e.Reason}");
             CheckLog($"WebSocket Closed: Code={e.Code}, Reason={e.Reason}");
         };
 
@@ -44,7 +43,7 @@ public class WebSocketClient : MonoBehaviour
             {
                 // 바이트 데이터를 UTF-8 문자열로 변환
                 string message = Encoding.UTF8.GetString(e.RawData);
-                Debug.Log("Received from server (binary): " + message);
+                DebugLogger.Log("Received from server (binary): " + message);
                 //AddChatMessage(message);
 
                 // AddChatMessage 호출을 메인 스레드에서 실행하도록 큐에 추가
@@ -53,13 +52,13 @@ public class WebSocketClient : MonoBehaviour
             else if (e.IsText)
             {
                 // 텍스트 메시지일 경우 (보통 Data에 저장됨)
-                Debug.Log("Received from server (text): " + e.Data);
+                DebugLogger.Log("Received from server (text): " + e.Data);
                 string message = e.Data;
                 mainThreadQueue.Enqueue(() => AddChatMessage(message));
             }
             else
             {
-                Debug.Log("Received from server: Unknown data format.");
+                DebugLogger.Log("Received from server: Unknown data format.");
             }
         };
 
@@ -67,10 +66,8 @@ public class WebSocketClient : MonoBehaviour
         ws.Connect();
 
         // 연결 상태 출력
-        Debug.Log("WebSocket State: " + ws.ReadyState.ToString());
+        DebugLogger.Log("WebSocket State: " + ws.ReadyState.ToString());
         //CheckLog("WebSocket State: " + ws.ReadyState.ToString());
-        // 테스트 메시지 전송
-        //ws.Send("Hello, Server!");
     }
 
     private void LateUpdate()
@@ -108,7 +105,6 @@ public class WebSocketClient : MonoBehaviour
         try
         {
             string nickName = DBDataManager.Instance.UserData["Nickname"];
-            //string nickName = "Name";
 
             // 한국 시간대(KST) 설정
             //TimeZoneInfo kstZone = TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time");
@@ -131,7 +127,6 @@ public class WebSocketClient : MonoBehaviour
             if (false == mess.IsNullOrEmpty())
             {
                 SendMessageToServer(mess);
-                //Debug.Log(mess);
                 InputField_Text.text = "";
             }
             else
@@ -145,7 +140,7 @@ public class WebSocketClient : MonoBehaviour
             // 오류 메시지와 스택 트레이스 출력
             string errorMessage = $"Exception: {e.Message}\nStackTrace: {e.StackTrace}";
             CheckLog(errorMessage);
-            Debug.LogError(errorMessage);
+            DebugLogger.LogError(errorMessage);
         }
     }
 
@@ -193,12 +188,7 @@ public class WebSocketClient : MonoBehaviour
         // 내껀지 아닌지 판단
         // 프리팹 인스턴스 생성
         GameObject newMessage = Instantiate(chatMessagePrefab_own, chatContent.transform);
-
-        //if (nickName.Equals("Name")) newMessage = Instantiate(chatMessagePrefab_own, chatContent.transform);
-        //if (nickName.Equals(DBDataManager.Instance.UserData["Nickname"])) newMessage = Instantiate(chatMessagePrefab_own, chatContent.transform);
-        //else newMessage = Instantiate(chatMessagePrefab_other, chatContent.transform);
-
-
+        
         // "Text_Chat" 오브젝트의 TextMeshPro 컴포넌트 찾기
         TextMeshProUGUI nickNameText = newMessage.transform.Find("Speech_Bubble/Group_UserID_Tme/Text_UserID").GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI messageText = newMessage.transform.Find("Speech_Bubble/Text_Chat").GetComponent<TextMeshProUGUI>();

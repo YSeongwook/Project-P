@@ -1,8 +1,11 @@
-using UnityEngine;
-using UnityEngine.Networking;
-using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Text;
+using EnumTypes;
+using EventLibrary;
+using Newtonsoft.Json;
+using UnityEngine;
+using UnityEngine.Networking;
 
 public class TokenTransactionManager : MonoBehaviour
 {
@@ -15,6 +18,16 @@ public class TokenTransactionManager : MonoBehaviour
     private readonly string _createToken = "/meta-transction/createToken";
     private readonly string _deleteToken = "/meta-transction";
     private string _getWallet => $"/meta-transction/{uid}"; // uid를 사용하여 동적으로 경로 생성
+
+    private void OnEnable()
+    {
+        EventManager<StageEvent>.StartListening(StageEvent.CreateToken, CreateToken);
+    }
+
+    private void OnDisable()
+    {
+        EventManager<StageEvent>.StopListening(StageEvent.CreateToken, CreateToken);
+    }
 
     // 지갑을 생성하는 메서드
     public void CreateWallet()
@@ -41,7 +54,7 @@ public class TokenTransactionManager : MonoBehaviour
     }
 
     // 서버 요청을 처리하는 코루틴
-    private IEnumerator SendRequest(string endpoint, string method, object jsonData, System.Action<string> onSuccess)
+    private IEnumerator SendRequest(string endpoint, string method, object jsonData, Action<string> onSuccess)
     {
         string url = $"{apiUrl}{endpoint}";
         UnityWebRequest www;

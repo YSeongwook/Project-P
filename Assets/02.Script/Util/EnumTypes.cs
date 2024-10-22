@@ -105,6 +105,7 @@ namespace EnumTypes
         TutorialStage,
         GameEnd,
         SetMiniGame,
+        CreateToken,
     }
 
     public enum VibrateEvents
