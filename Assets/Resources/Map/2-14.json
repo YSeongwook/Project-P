@@ -1,0 +1,152 @@
+[
+  {
+    "Type": 2,
+    "RoadShape": 1,
+    "GimmickShape": 1,
+    "RotateValue": 0
+  },
+  {
+    "Type": 2,
+    "RoadShape": 1,
+    "GimmickShape": 1,
+    "RotateValue": 3
+  },
+  {
+    "Type": 1,
+    "RoadShape": 2,
+    "GimmickShape": 0,
+    "RotateValue": 3
+  },
+  {
+    "Type": 1,
+    "RoadShape": 1,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 5,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 2,
+    "GimmickShape": 0,
+    "RotateValue": 1
+  },
+  {
+    "Type": 1,
+    "RoadShape": 2,
+    "GimmickShape": 0,
+    "RotateValue": 3
+  },
+  {
+    "Type": 1,
+    "RoadShape": 2,
+    "GimmickShape": 0,
+    "RotateValue": 1
+  },
+  {
+    "Type": 1,
+    "RoadShape": 1,
+    "GimmickShape": 0,
+    "RotateValue": 1
+  },
+  {
+    "Type": 1,
+    "RoadShape": 2,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 2,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 1,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 1,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 1,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 2,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 1,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 2,
+    "GimmickShape": 0,
+    "RotateValue": 1
+  },
+  {
+    "Type": 1,
+    "RoadShape": 1,
+    "GimmickShape": 0,
+    "RotateValue": 3
+  },
+  {
+    "Type": 1,
+    "RoadShape": 6,
+    "GimmickShape": 0,
+    "RotateValue": 3
+  },
+  {
+    "Type": 1,
+    "RoadShape": 2,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 0,
+    "RoadShape": 0,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 0,
+    "RoadShape": 0,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 0,
+    "RoadShape": 0,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 0,
+    "RoadShape": 0,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 0,
+    "RoadShape": 0,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  }
+]

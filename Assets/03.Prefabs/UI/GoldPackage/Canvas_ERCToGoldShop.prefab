@@ -81,7 +81,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1080, y: 1920}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 1
+  m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -200,6 +200,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1965387923421256221, guid: 7343220340156364f87021a614202974, type: 3}
+      propertyPath: m_Maskable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2166278964950992184, guid: 7343220340156364f87021a614202974, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -223,6 +227,10 @@ PrefabInstance:
     - target: {fileID: 2467404387668352347, guid: 7343220340156364f87021a614202974, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -43.711357
+      objectReference: {fileID: 0}
+    - target: {fileID: 2658321837837246384, guid: 7343220340156364f87021a614202974, type: 3}
+      propertyPath: m_Maskable
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2771009814220963477, guid: 7343220340156364f87021a614202974, type: 3}
       propertyPath: m_AnchorMax.y
@@ -524,6 +532,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7418873670777742820, guid: 7343220340156364f87021a614202974, type: 3}
+      propertyPath: m_Maskable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7524308600877148984, guid: 7343220340156364f87021a614202974, type: 3}
       propertyPath: m_Name
       value: Panel_GoldShop
@@ -538,6 +550,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8452227939896260997, guid: 7343220340156364f87021a614202974, type: 3}
       propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8730933554589019428, guid: 7343220340156364f87021a614202974, type: 3}
+      propertyPath: m_Maskable
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8989635853179147354, guid: 7343220340156364f87021a614202974, type: 3}
@@ -781,6 +797,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3697581983678160406}
     m_Modifications:
+    - target: {fileID: 138985251522634867, guid: 252f266d0ee06484d92a66d5ffd88d3e, type: 3}
+      propertyPath: m_Maskable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 878506469240901202, guid: 252f266d0ee06484d92a66d5ffd88d3e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -875,6 +895,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5831498992549016269, guid: 252f266d0ee06484d92a66d5ffd88d3e, type: 3}
       propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6391007461279980649, guid: 252f266d0ee06484d92a66d5ffd88d3e, type: 3}
+      propertyPath: m_Maskable
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

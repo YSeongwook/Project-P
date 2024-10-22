@@ -205,14 +205,10 @@ public class TileNode : MonoBehaviour
     public void OnClickRotationTile()
     {
         if (_isEnd) return;
+        if (_rotationTile.IsRotating) return; // 이미 타일이 회전 중이면 더 회전하지 못하게 방지
 
         // 짧은 진동 발생
         EventManager<VibrateEvents>.TriggerEvent(VibrateEvents.ShortWeak);
-        
-        //if (_rotationTile != null && !_isHint)
-        //{
-        //    _rotationTile.RotateTile();  // 회전 로직 RotationTile에 위임
-        //}
 
         if (_tile.GimmickShape == GimmickShape.Link && !_isHint)
         {

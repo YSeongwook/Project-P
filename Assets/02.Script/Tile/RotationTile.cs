@@ -1,9 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using EnumTypes;
 using EventLibrary;
+using UnityEngine;
 
 public class RotationTile : MonoBehaviour
 {
@@ -18,6 +17,14 @@ public class RotationTile : MonoBehaviour
 
     private readonly Queue<int> _rotationQueue = new Queue<int>();
     private int _currentRotation;
+
+    public bool IsRotating
+    {
+        get
+        {
+            return _isRotating;
+        }
+    }
 
     private void Awake()
     {
@@ -49,18 +56,16 @@ public class RotationTile : MonoBehaviour
 
         if (_isRotating) return; // 이미 회전 중인 타일의 경우 다시 클릭해도 회전 되지 않는다.
         StartCoroutine(ProcessRotationQueue());
-        //StartCoroutine(RotateOverTime(targetRotation, rotationDuration));
     }
 
     public void RotateTile(int rotateValue)
     {
+        if (_isRotating) return; // 이미 회전 중인 타일의 경우 다시 클릭해도 회전 되지 않는다.
+        
         _rotateValue = rotateValue % 4;
-        //_roadImage.rotation = targetRotation;  // 직접적으로 회전값을 반영
         _rotationQueue.Enqueue(_rotateValue);
 
-        if (_isRotating) return; // 이미 회전 중인 타일의 경우 다시 클릭해도 회전 되지 않는다.
         StartCoroutine(ProcessRotationQueue());
-        //StartCoroutine(RotateOverTime(targetRotation, rotationDuration));
     }
 
     public void RandomRotateTile(int rotateValue)

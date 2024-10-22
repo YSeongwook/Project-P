@@ -39,11 +39,23 @@ public class DataManager : Singleton<DataManager>
         textAssetDic.Add(DataType.Ticket, Resources.Load("Temp_TicketList") as TextAsset);
         textAssetDic.Add(DataType.PlayerInven, Resources.Load("Temp_PlayerInventory") as TextAsset);
         textAssetDic.Add(DataType.MapData, Resources.Load("Map/LimitCountTable") as TextAsset);
-
-        for(int i=1; i<= 5; i++)
+        
+        /*
+        for(int i=1; i <= 10; i++)
         {
             string tileMapName = $"1-{i}";
             TileMapDic.Add(tileMapName, Resources.Load($"Map/{tileMapName}") as TextAsset);
+        }
+        */
+
+        for (int i = 1; i <= 4; i++)
+        {
+            for (int j = 1; j <= 30; j++)
+            {
+                if(i == 1 && j >= 11) continue;
+                string tileMapName = $"{i}-{j}";
+                TileMapDic.Add(tileMapName, Resources.Load($"Map/{tileMapName}") as TextAsset);
+            }
         }
     }
 
