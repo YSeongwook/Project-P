@@ -1111,6 +1111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NetManager: {fileID: 278297474}
+  MetaNetManager: {fileID: 773746206}
   Obj_LoadingPopup: {fileID: 2036430978649013498}
   IsStartAsServer: 1
 --- !u!4 &2003784632

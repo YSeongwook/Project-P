@@ -6,6 +6,7 @@ using UnityEngine;
 public class StartServerManager : MonoBehaviour
 {
     [SerializeField] MetaNetManager NetManager;
+    [SerializeField] MetaNetworkManager MetaNetManager;
 
     [SerializeField] GameObject Obj_LoadingPopup;
 
@@ -35,6 +36,11 @@ public class StartServerManager : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (MetaNetManager != null && MetaNetManager.IsDisableClientConnectTry)
+        {
+            return;
+        }
+
         TryConnectToServer();
     }
 

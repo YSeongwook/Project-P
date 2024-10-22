@@ -18,10 +18,10 @@ public class MetaNetworkManager : NetworkBehaviour
 
     [SerializeField] NetworkManager NetManager;
 
-
     //임시
     private NetPlayer _localPlayer = null;
     private string _changeSceneName = "Login";
+    public bool IsDisableClientConnectTry { get; set; }
 
     private void OnDestroy()
     {
@@ -35,6 +35,7 @@ public class MetaNetworkManager : NetworkBehaviour
     {
         if(NetManager != null)
         {
+            IsDisableClientConnectTry = true;
             NetManager.StopClient();
         }
     }
