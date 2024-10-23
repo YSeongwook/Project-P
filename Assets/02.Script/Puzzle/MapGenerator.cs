@@ -226,8 +226,7 @@ public class MapGenerator : MonoBehaviour
             isLoop = IsCorrectAnswer() && checkPath.GetRotationConditionSuccess(5, allTiles);
         }
     }
-
-
+    
     private IEnumerator Dummy()
     {
         yield return new WaitForEndOfFrame();

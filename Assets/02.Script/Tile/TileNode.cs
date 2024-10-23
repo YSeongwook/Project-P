@@ -213,6 +213,7 @@ public class TileNode : MonoBehaviour
         if (_tile.GimmickShape == GimmickShape.Link && !_isHint)
         {
             EventManager<PuzzleEvent>.TriggerEvent(PuzzleEvent.Rotation, this, _isReverseRotate);
+            EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn); // 제한 횟수 감소 이벤트 발생
             return;
         }
 
@@ -232,7 +233,7 @@ public class TileNode : MonoBehaviour
         else
         {
             _tile.RotateValue = (_tile.RotateValue + 1) % 4;
-            EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
+            EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn); // 제한 횟수 감소 이벤트 발생
         }
 
         if (_rotationTile != null && !_isHint)

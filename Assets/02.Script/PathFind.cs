@@ -436,14 +436,14 @@ public class PathFind
 
     private void SetLinkTileRandomRotate(int rotateValue)
     {
-        foreach (var linktile in _linkTiles)
+        foreach (var linkTile in _linkTiles)
         {
             for (var i = 0; i < rotateValue; i++)
             {
-                linktile.SetLinkTileRotate(false);
+                linkTile.SetLinkTileRotate(false);
             }
 
-            DebugLogger.Log($"{linktile.transform.name} : {linktile.GetTileInfo.RotateValue}");
+            DebugLogger.Log($"{linkTile.transform.name} : {linkTile.GetTileInfo.RotateValue}");
         }
     }
 
