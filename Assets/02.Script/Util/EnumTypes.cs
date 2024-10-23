@@ -131,6 +131,7 @@ namespace EnumTypes
     {
         GetInventoryItemList,
         UseItem,
+        AddItem,
         DecreaseItemCount,
         SetEnableButton,
         SetReverseRotate,

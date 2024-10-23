@@ -60,6 +60,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<GoldEvent>.StartListening<float>(GoldEvent.OnGetGold, GetGold);
         EventManager<InventoryItemEvent>.StartListening<Dictionary<ItemData, int>>(InventoryItemEvent.GetInventoryItemList, GetPlayerItemInventory);
         EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.UseItem, UseItem);
+        EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.AddItem, AddItem);
         EventManager<StageEvent>.StartListening(StageEvent.SetPlayerItemInventoryList, SetGamePlayerItem);
         EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.DecreaseItemCount, DecreaseItemCount);
         EventManager<InventoryItemEvent>.StartListening(InventoryItemEvent.RecoveryTicketCountAfterGameClear, RechargeGameTicket);
@@ -74,6 +75,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<GoldEvent>.StopListening<float>(GoldEvent.OnGetGold, GetGold);
         EventManager<InventoryItemEvent>.StopListening<Dictionary<ItemData, int>>(InventoryItemEvent.GetInventoryItemList, GetPlayerItemInventory);
         EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.UseItem, UseItem);
+        EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.AddItem, AddItem);
         EventManager<StageEvent>.StopListening(StageEvent.SetPlayerItemInventoryList, SetGamePlayerItem);
         EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.DecreaseItemCount, DecreaseItemCount);
         EventManager<InventoryItemEvent>.StopListening(InventoryItemEvent.RecoveryTicketCountAfterGameClear, RechargeGameTicket);
@@ -254,6 +256,11 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         ExecuteItemEffect(itemID);
     }
 
+    private void AddItem(string itemID)
+    {
+        IncreaseItemCount(itemID);
+    }
+
     // 아이템 감소
     private void DecreaseItemCount(string itemID)
     {
@@ -282,13 +289,44 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         ItemData newItemData = new ItemData();
         newItemData.ItemID = useItem.ItemID;
 
-        // Player Informaiton에 데이터 전달
+        // Player Information에 데이터 전달
         EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerItemListChanged, newItemData, _itemInventory[useItem]);
 
+        
+        // 아이템 개수가 0이하가 되면 리스트에서 제거하는 것 같은데 제거하면 아이템 추가시 예외 처리를 해야함
+        // 그래서 주석 처리
+        /*
         if (_itemInventory[useItem] <= 0)
         {
             _itemInventory.Remove(useItem);
         }
+        */
+    }
+
+    private void IncreaseItemCount(string itemID)
+    {
+        ItemData useItem = default;
+
+        foreach (var item in _itemInventory)
+        {
+            if (item.Key.ItemID == itemID)
+            {
+                useItem = item.Key;
+                break;
+            }
+        }
+
+        // 소유 아이템 개수 증가
+        if (useItem.ItemID != default)
+        {
+            _itemInventory[useItem]++;
+        }
+
+        ItemData newItemData = new ItemData();
+        newItemData.ItemID = useItem.ItemID;
+
+        // Player Information에 데이터 전달
+        EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerItemListChanged, newItemData, _itemInventory[useItem]);
     }
 
     private void ExecuteItemEffect(string itemID)

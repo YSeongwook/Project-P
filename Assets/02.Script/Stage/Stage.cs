@@ -33,6 +33,8 @@ public class Stage : MonoBehaviour
             DebugLogger.Log("티켓의 수가 부족합니다.");
             return;
         }
+        
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
 
         EventManager<DataEvents>.TriggerEvent(DataEvents.SelectStage, this._chapter,stageNumber);
 
