@@ -23,6 +23,7 @@ public class MiniGameManager : Singleton<MiniGameManager>
 
     private void Start()
     {
+        // 미니게임 리스트에 있는 오브젝트들을 비활성화
         foreach(var game in miniGameList) 
         {
             game.gameObject.SetActive(false);
@@ -43,13 +44,13 @@ public class MiniGameManager : Singleton<MiniGameManager>
 
     private void ActiveMiniGameCanvas(int chapter, int stage)
     {
-        //var index = (chapter - 2) * 3 + (stage / 10);
-        // 디버깅 모드
-        var index = (stage - 1);
+        int index = 0;
+        if (chapter > 1 && stage % 10 == 0)
+        {
+            index = chapter - 2 + (stage % 10);
+        }
 
-        if (index > 3) return;
-
-        miniGameList[index].gameObject.SetActive(true);
+        if(index < miniGameList.Count - 1) miniGameList[index].gameObject.SetActive(true);
     }
 
     private void DisActiveMiniGameCanvas()

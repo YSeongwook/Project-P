@@ -86,7 +86,7 @@ public class StageManager : Singleton<StageManager>
 
             // 디버깅
             stage.SetMiniGameStage(false);
-            if(i > 4) stage.SetMiniGameStage(false); // 5스테이지 부터는 미니게임 X
+            if((i + 1) % 10 == 0) stage.SetMiniGameStage(true); // 10스테이지는 미니게임
 
             TMP_Text stageText = _stages[i].GetComponentInChildren<TMP_Text>();
             if (stageText != null)
