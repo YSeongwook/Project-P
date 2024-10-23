@@ -301,6 +301,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
             _itemInventory.Remove(useItem);
         }
         */
+        
     }
 
     private void IncreaseItemCount(string itemID)

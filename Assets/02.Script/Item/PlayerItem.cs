@@ -67,6 +67,11 @@ public class PlayerItem : MonoBehaviour
     public void OnClick_UseItem()
     {
         // 아이템 사용
-        EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.UseItem, this.data.ItemID);
+        if (Count >= 1)
+        {
+            EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.UseItem, this.data.ItemID);
+            Count--;
+        }
+        
     }
 }
