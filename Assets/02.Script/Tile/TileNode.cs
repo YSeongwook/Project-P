@@ -45,6 +45,9 @@ public struct Tile
 
 public class TileNode : MonoBehaviour
 {
+    [SerializeField] private AnimationCurve scaleCurve;
+    [SerializeField] private float animationDuration = 1f;
+
     public Tile CorrectTileInfo { get; private set; }   // 정답 확인용 Tile
     private Tile _tile;             // Player에게 조작되는 Tile
 
@@ -274,7 +277,17 @@ public class TileNode : MonoBehaviour
     // Scale 애니메이션 실행
     public void StartPathAnimation()
     {
-        tweenAnimation.DORestart();
+        //tweenAnimation.DORestart();
+
+        // 기본 크기 저장
+        var initScale = transform.localScale;
+
+        // 시퀀스 생성
+        Sequence scaleSequence = DOTween.Sequence();
+
+        scaleSequence.Append(transform.DOScale(Vector3.one * 1.5f, animationDuration).SetEase(scaleCurve));
+
+        scaleSequence.Append(transform.DOScale(initScale, animationDuration).SetEase(scaleCurve));
     }
 
     private void SetGameEnd(bool isEnd)

@@ -22,14 +22,16 @@ public class TokenTransactionManager : MonoBehaviour
 
     private void OnEnable()
     {
+        EventManager<StageEvent>.StartListening(StageEvent.GameClear, CreateToken);
         EventManager<StageEvent>.StartListening<int>(StageEvent.CreateToken, CreateToken);
-        EventManager<StageEvent>.StartListening<int>(StageEvent.CreateToken, DeleteToken);
+        EventManager<StageEvent>.StartListening<int>(StageEvent.DeleteToken, DeleteToken);
     }
 
     private void OnDisable()
     {
+        EventManager<StageEvent>.StopListening(StageEvent.GameClear, CreateToken);
         EventManager<StageEvent>.StopListening(StageEvent.CreateToken, CreateToken);
-        EventManager<StageEvent>.StopListening(StageEvent.CreateToken, DeleteToken);
+        EventManager<StageEvent>.StopListening(StageEvent.DeleteToken, DeleteToken);
     }
 
     // 지갑을 생성하는 메서드
@@ -97,7 +99,7 @@ public class TokenTransactionManager : MonoBehaviour
 
         if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
         {
-            DebugLogger.LogError($"요청 실패: {www.error}");
+            DebugLogger.LogError($"요청 실패: {www.error}. 응답 본문: {www.downloadHandler.text}");
         }
         else
         {
@@ -139,9 +141,8 @@ public class TokenTransactionManager : MonoBehaviour
         {
             DebugLogger.LogError($"JSON 파싱 오류: {ex.Message}");
         }
-        
-        // 메인 UI 업데이트
-        // 리소스 폴더 xml 업데이트
+
+        EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.CallbackPlayerResourceUI);
     }
 
     private void OnTokenDeleted(string response)

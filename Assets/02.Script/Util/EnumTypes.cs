@@ -106,7 +106,9 @@ namespace EnumTypes
         TutorialStage,
         GameEnd,
         SetMiniGame,
+        GameClear,
         CreateToken,
+        DeleteToken,
     }
 
     public enum VibrateEvents
@@ -138,6 +140,7 @@ namespace EnumTypes
         SetReverseRotate,
         SetHint,
         RecoveryTicketCountAfterGameClear,
+        CallbackPlayerResourceUI
     }
 
     public class EnumTypes : MonoBehaviour
