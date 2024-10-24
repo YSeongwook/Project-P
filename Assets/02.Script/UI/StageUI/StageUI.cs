@@ -125,8 +125,6 @@ public class StageUI : MonoBehaviour
         _limitCount += 5;
         limitCountText.text = $"{_limitCount}";
 
-        DebugLogger.Log(_limitCount);
-
         EventManager<DataEvents>.TriggerEvent(DataEvents.DecreaseLimitCount, _limitCount);
     }
 

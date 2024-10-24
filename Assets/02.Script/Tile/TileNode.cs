@@ -74,23 +74,23 @@ public class TileNode : MonoBehaviour
     private void Awake()
     {
         Initialize();
-
+    }
+    
+    private void OnEnable()
+    {
+        _isReverseRotate = false;
+        _isEnd = false;
+        
         EventManager<InventoryItemEvent>.StartListening<bool>(InventoryItemEvent.SetReverseRotate, SetReverse);
         EventManager<InventoryItemEvent>.StartListening<bool>(InventoryItemEvent.SetHint, UseHintItem);
         EventManager<StageEvent>.StartListening<bool>(StageEvent.GameEnd, SetGameEnd);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         EventManager<InventoryItemEvent>.StopListening<bool>(InventoryItemEvent.SetReverseRotate, SetReverse);
         EventManager<InventoryItemEvent>.StopListening<bool>(InventoryItemEvent.SetHint, UseHintItem);
         EventManager<StageEvent>.StopListening<bool>(StageEvent.GameEnd, SetGameEnd);
-    }
-
-    private void OnEnable()
-    {
-        _isReverseRotate = false;
-        _isEnd = false;
     }
 
     private void Start()

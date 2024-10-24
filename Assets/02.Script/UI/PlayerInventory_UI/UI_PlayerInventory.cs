@@ -24,7 +24,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
     private float _ercValue; // Player가 가지고 있는 ERC의 갯수
 
     // 임의로 지정한 티켓의 최대 갯수
-    private const int TicketMaxCount = 5;
+    private const int TicketMaxCount = 99;
     private const int MaxTimer = 300;
 
     private int ticketTimer = MaxTimer;
