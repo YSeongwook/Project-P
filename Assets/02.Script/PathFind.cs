@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using DG.Tweening;
 using EnumTypes;
@@ -13,7 +14,7 @@ public class PathFind
     private Dictionary<Vector2, TileNode> _endPoint = new Dictionary<Vector2, TileNode>();
     private Dictionary<Vector2, Vector2> _warpPoints = new Dictionary<Vector2, Vector2>();
     public List<TileNode> _linkTiles { get; private set; } = new List<TileNode>();
-    private List<TileNode> _connectedPoints = new List<TileNode>();
+    //private List<TileNode> _connectedPoints = new List<TileNode>();
 
     private float CellSize;
     private bool isMiniGameStage;
@@ -123,6 +124,8 @@ public class PathFind
 
             foreach (var path in _PathTileList.Values)
             {
+                //Debugger.Log($"{path.Reverse()}");
+
                 foreach (var item in path.Reverse())
                 {
                     // 애니메이션을 시퀀스에 추가
@@ -164,7 +167,7 @@ public class PathFind
     public bool TilePathFind()
     {
         bool missionSuccess = false;
-        _connectedPoints.Clear();
+        var _connectedPoints = new List<TileNode>();
 
         var successfulPaths = new Dictionary<int, Dictionary<Vector2, TileNode>>();
 
@@ -176,12 +179,17 @@ public class PathFind
                 if (path != null)
                 {
                     // 이미 연결된 지점이 경로에 존재하면 리턴
-                    if (_connectedPoints.Contains(endPoint.Value)) continue;
+                    //if (_connectedPoints.Contains(endPoint.Value)) continue;
 
                     // 경로가 존재할 경우, successfulPaths에 저장
                     int pathIndex = successfulPaths.Count + 1;
                     successfulPaths.Add(pathIndex, path);
-                    _connectedPoints.Add(endPoint.Value);                    
+
+                    if(!_connectedPoints.Contains(startPoint.Value))
+                        _connectedPoints.Add(startPoint.Value);
+
+                    if (!_connectedPoints.Contains(endPoint.Value))
+                        _connectedPoints.Add(endPoint.Value);                    
                 }
                 else
                 {
@@ -191,7 +199,7 @@ public class PathFind
             }
 
             // 완성된 경로가 시작 포인트보다 많으면 종료.
-            if (successfulPaths.Count >= _startPoint.Count)
+            if (_connectedPoints.Count >=( _startPoint.Count + _endPoint.Count))
             {
                 // 하나의 startPoint에서 모든 endPoint들이 연결된 경우
                 _PathTileList = successfulPaths;
@@ -447,7 +455,7 @@ public class PathFind
                 linkTile.SetLinkTileRotate(false);
             }
 
-            DebugLogger.Log($"{linkTile.transform.name} : {linkTile.GetTileInfo.RotateValue}");
+            //DebugLogger.Log($"{linkTile.transform.name} : {linkTile.GetTileInfo.RotateValue}");
         }
     }
 

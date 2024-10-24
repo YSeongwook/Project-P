@@ -274,7 +274,7 @@ public class TileNode : MonoBehaviour
     // Scale 애니메이션 실행
     public void StartPathAnimation()
     {
-        tweenAnimation.DOPlay();
+        tweenAnimation.DORestart();
     }
 
     private void SetGameEnd(bool isEnd)
