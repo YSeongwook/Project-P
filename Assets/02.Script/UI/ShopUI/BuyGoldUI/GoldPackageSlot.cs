@@ -1,8 +1,6 @@
-using DataStruct;
-using EnumTypes;
-using EventLibrary;
-using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using DataStruct;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,11 +41,10 @@ public class GoldPackageSlot : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("PackageIcon is null!");
+            DebugLogger.LogWarning("PackageIcon is null!");
         }
 
     }
-
 
     // 슬롯 클릭 시 팝업 열기
     public void OnSlotClick()
@@ -64,7 +61,7 @@ public class GoldPackageSlot : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Gold Buy Popup is not assigned.");
+            DebugLogger.LogError("Gold Buy Popup is not assigned.");
         }
     }
 }

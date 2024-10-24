@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Temp_PackageList>
   <dataCategory>
-    <data PackageID="G1001" ERCPrice="0.5" GiveGold="1500" Image="Icon_ShopIcon_Gold0" />
-    <data PackageID="G1002" ERCPrice="1" GiveGold="4000" Image="Icon_ShopIcon_Gold1" />
-    <data PackageID="G1003" ERCPrice="1.5" GiveGold="12000" Image="Icon_ShopIcon_Gold2" />
-    <data PackageID="G1004" ERCPrice="3" GiveGold="25000" Image="Icon_ShopIcon_Gold3" />
-    <data PackageID="G1005" ERCPrice="6.5" GiveGold="60000" Image="Icon_ShopIcon_Gold4" />
+    <data PackageID="G1001" ERCPrice="5" GiveGold="1500" Image="Icon_ShopIcon_Gold0" />
+    <data PackageID="G1002" ERCPrice="10" GiveGold="4000" Image="Icon_ShopIcon_Gold1" />
+    <data PackageID="G1003" ERCPrice="25" GiveGold="12000" Image="Icon_ShopIcon_Gold2" />
+    <data PackageID="G1004" ERCPrice="50" GiveGold="25000" Image="Icon_ShopIcon_Gold3" />
+    <data PackageID="G1005" ERCPrice="100" GiveGold="60000" Image="Icon_ShopIcon_Gold4" />
   </dataCategory>
 </Temp_PackageList>

@@ -1,11 +1,8 @@
 using System.Collections.Generic;
-using System.Threading;
 using DataStruct;
 using EnumTypes;
 using EventLibrary;
-using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UI_ItemStoreList : MonoBehaviour
 {

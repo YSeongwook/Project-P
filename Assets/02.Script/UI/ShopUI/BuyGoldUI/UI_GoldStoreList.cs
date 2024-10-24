@@ -4,17 +4,15 @@ using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UI_GoldStoreList : MonoBehaviour
 {
     [FoldoutGroup("Gold Shop List")] 
-    [SerializeField] private GameObject[] goldPakage;
+    [SerializeField] private GameObject[] goldPackage;
     [SerializeField] private GameObject goldShop;
 
     private Dictionary<string, GoldPackageData> _goldPackageDataDictionary;
-
-
+    
     private void Awake()
     {
         AddEvent();
@@ -47,7 +45,7 @@ public class UI_GoldStoreList : MonoBehaviour
         int count = 0;
         foreach (var PackageData in _goldPackageDataDictionary.Values)
         {
-            GameObject PakageSlot = goldPakage[count++];
+            GameObject PakageSlot = goldPackage[count++];
             GoldPackageSlot goldPackageSlot = PakageSlot.GetComponent<GoldPackageSlot>();
             goldPackageSlot.SetPackageInfo(PackageData);
             // count++;

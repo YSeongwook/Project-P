@@ -1,4 +1,6 @@
 using DataStruct;
+using EnumTypes;
+using EventLibrary;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,27 +18,20 @@ public class GoldBuyPopup : MonoBehaviour
         gameObject.SetActive(false);
     }
     
-    public void SetPackageInfo(GoldPackageData pakagedata)
+    public void SetPackageInfo(GoldPackageData packageData)
     {
-
-        textPriceErc.text = pakagedata.ERCPrice.ToString();
-        textPriceGold.text = pakagedata.GiveGold.ToString();
+        textPriceErc.text = packageData.ERCPrice.ToString();
+        textPriceGold.text = packageData.GiveGold.ToString();
         
-        if (pakagedata.Image != null)
-        {
-            imagePackageIcon.sprite = pakagedata.Image;
-        }
-        else
-        {
-            Debug.LogWarning("PackageIcon is null!");
-        }
+        if (packageData.Image != null) imagePackageIcon.sprite = packageData.Image;
+        else  DebugLogger.LogWarning("PackageIcon is null!");
         
-        if (pakagedata.PackageID == "G1001") rectTransform.sizeDelta = new Vector2(206, 153);
-        else if (pakagedata.PackageID == "G1002") rectTransform.sizeDelta = new Vector2(217, 155);
-        else if(pakagedata.PackageID == "G1003") rectTransform.sizeDelta = new Vector2(230, 177);
-        else if (pakagedata.PackageID == "G1004") rectTransform.sizeDelta = new Vector2(269, 207);
-        else if (pakagedata.PackageID == "G1005") rectTransform.sizeDelta = new Vector2(340, 270);
-        shineParticle.SetActive(pakagedata.PackageID == "G1005");
+        if (packageData.PackageID == "G1001") rectTransform.sizeDelta = new Vector2(206, 153);
+        else if (packageData.PackageID == "G1002") rectTransform.sizeDelta = new Vector2(217, 155);
+        else if(packageData.PackageID == "G1003") rectTransform.sizeDelta = new Vector2(230, 177);
+        else if (packageData.PackageID == "G1004") rectTransform.sizeDelta = new Vector2(269, 207);
+        else if (packageData.PackageID == "G1005") rectTransform.sizeDelta = new Vector2(340, 270);
+        shineParticle.SetActive(packageData.PackageID == "G1005");
     }
 
     public void PopUpOn()
@@ -47,5 +42,11 @@ public class GoldBuyPopup : MonoBehaviour
     public void PopUpOff()
     {
         this.gameObject.SetActive(false);
+    }
+    
+    //아이템 구매
+    public void BuyItem_Gold()
+    {
+        // EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickGoldBuyButton, _data, _buyItemCount);
     }
 }

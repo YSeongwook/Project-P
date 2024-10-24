@@ -295,8 +295,8 @@ GameObject:
   - component: {fileID: 7437200066036006576}
   - component: {fileID: 14098502920419208}
   - component: {fileID: 6124666267538597972}
-  - component: {fileID: 5561538250909691645}
   - component: {fileID: 6693616422757588765}
+  - component: {fileID: 5561538250909691645}
   m_Layer: 5
   m_Name: Item_Gold
   m_TagString: Untagged
@@ -367,23 +367,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5561538250909691645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3809469541267338979}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e7188f488a0f944bac9c1dbd522d4ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  imagePackageIcon: {fileID: 5343004998141226555}
-  textPriceErc: {fileID: 1512428976602188994}
-  textPriceGold: {fileID: 916527029860300023}
-  ShineParticle: {fileID: 4133759255192329731}
-  goldBuyPopup: {fileID: 1637100486145242351, guid: 252f266d0ee06484d92a66d5ffd88d3e, type: 3}
 --- !u!114 &6693616422757588765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -440,6 +423,23 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5561538250909691645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3809469541267338979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e7188f488a0f944bac9c1dbd522d4ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imagePackageIcon: {fileID: 5343004998141226555}
+  textPriceErc: {fileID: 1512428976602188994}
+  textPriceGold: {fileID: 916527029860300023}
+  goldBuyPopup: {fileID: 1637100486145242351, guid: 252f266d0ee06484d92a66d5ffd88d3e, type: 3}
+  goldPackageSlot: {fileID: 0}
 --- !u!1 &4824963501853872600
 GameObject:
   m_ObjectHideFlags: 0
@@ -5863,10 +5863,5 @@ PrefabInstance:
 --- !u!224 &4133759255192329730 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3399755011153214663, guid: b810bd8deadd946908640d87a6a01ccf, type: 3}
-  m_PrefabInstance: {fileID: 1616874796633350853}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &4133759255192329731 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3399755011153214662, guid: b810bd8deadd946908640d87a6a01ccf, type: 3}
   m_PrefabInstance: {fileID: 1616874796633350853}
   m_PrefabAsset: {fileID: 0}
