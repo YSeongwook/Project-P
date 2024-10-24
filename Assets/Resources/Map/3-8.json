@@ -54,9 +54,9 @@
     "RotateValue": 0
   },
   {
-    "Type": 2,
+    "Type": 1,
     "RoadShape": 2,
-    "GimmickShape": 3,
+    "GimmickShape": 0,
     "RotateValue": 2
   },
   {
@@ -99,7 +99,7 @@
     "Type": 1,
     "RoadShape": 1,
     "GimmickShape": 0,
-    "RotateValue": 3
+    "RotateValue": 1
   },
   {
     "Type": 1,
@@ -135,13 +135,13 @@
     "Type": 1,
     "RoadShape": 1,
     "GimmickShape": 0,
-    "RotateValue": 0
+    "RotateValue": 3
   },
   {
     "Type": 2,
     "RoadShape": 1,
     "GimmickShape": 1,
-    "RotateValue": 0
+    "RotateValue": 2
   },
   {
     "Type": 0,
@@ -156,15 +156,15 @@
     "RotateValue": 0
   },
   {
-    "Type": 1,
+    "Type": 2,
     "RoadShape": 2,
-    "GimmickShape": 0,
+    "GimmickShape": 2,
     "RotateValue": 0
   },
   {
-    "Type": 1,
+    "Type": 2,
     "RoadShape": 2,
-    "GimmickShape": 0,
+    "GimmickShape": 2,
     "RotateValue": 1
   },
   {
@@ -192,16 +192,16 @@
     "RotateValue": 0
   },
   {
-    "Type": 1,
+    "Type": 2,
     "RoadShape": 1,
-    "GimmickShape": 0,
+    "GimmickShape": 2,
     "RotateValue": 0
   },
   {
-    "Type": 1,
+    "Type": 2,
     "RoadShape": 1,
-    "GimmickShape": 0,
-    "RotateValue": 0
+    "GimmickShape": 2,
+    "RotateValue": 3
   },
   {
     "Type": 1,

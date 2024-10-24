@@ -4,6 +4,11 @@
     "FileName": "1-1",
     "LimitCount": 20
   },
+  "M100100": {
+    "MapID": "M100100",
+    "FileName": "100-100",
+    "LimitCount": 100
+  },
   "M1002": {
     "MapID": "M1002",
     "FileName": "1-2",
@@ -47,7 +52,7 @@
   "M1010": {
     "MapID": "M1010",
     "FileName": "1-10",
-    "LimitCount": 20
+    "LimitCount": 30
   },
   "M2001": {
     "MapID": "M2001",
@@ -67,22 +72,22 @@
   "M2004": {
     "MapID": "M2004",
     "FileName": "2-4",
-    "LimitCount": 20
+    "LimitCount": 30
   },
   "M2005": {
     "MapID": "M2005",
     "FileName": "2-5",
-    "LimitCount": 20
+    "LimitCount": 25
   },
   "M2006": {
     "MapID": "M2006",
     "FileName": "2-6",
-    "LimitCount": 10
+    "LimitCount": 30
   },
   "M2007": {
     "MapID": "M2007",
     "FileName": "2-7",
-    "LimitCount": 20
+    "LimitCount": 30
   },
   "M2008": {
     "MapID": "M2008",
@@ -92,22 +97,22 @@
   "M2009": {
     "MapID": "M2009",
     "FileName": "2-9",
-    "LimitCount": 20
+    "LimitCount": 25
   },
   "M2010": {
     "MapID": "M2010",
     "FileName": "2-10",
-    "LimitCount": 20
+    "LimitCount": 30
   },
   "M2011": {
     "MapID": "M2011",
     "FileName": "2-11",
-    "LimitCount": 20
+    "LimitCount": 30
   },
   "M2012": {
     "MapID": "M2012",
     "FileName": "2-12",
-    "LimitCount": 20
+    "LimitCount": 30
   },
   "M2013": {
     "MapID": "M2013",
@@ -117,32 +122,32 @@
   "M2014": {
     "MapID": "M2014",
     "FileName": "2-14",
-    "LimitCount": 20
+    "LimitCount": 30
   },
   "M2015": {
     "MapID": "M2015",
     "FileName": "2-15",
-    "LimitCount": 20
+    "LimitCount": 30
   },
   "M2016": {
     "MapID": "M2016",
     "FileName": "2-16",
-    "LimitCount": 20
+    "LimitCount": 30
   },
   "M2017": {
     "MapID": "M2017",
     "FileName": "2-17",
-    "LimitCount": 20
+    "LimitCount": 30
   },
   "M2018": {
     "MapID": "M2018",
     "FileName": "2-18",
-    "LimitCount": 50
+    "LimitCount": 30
   },
   "M2019": {
     "MapID": "M2019",
     "FileName": "2-19",
-    "LimitCount": 50
+    "LimitCount": 35
   },
   "M2020": {
     "MapID": "M2020",
@@ -152,27 +157,27 @@
   "M2021": {
     "MapID": "M2021",
     "FileName": "2-21",
-    "LimitCount": 30
+    "LimitCount": 40
   },
   "M2022": {
     "MapID": "M2022",
     "FileName": "2-22",
-    "LimitCount": 30
+    "LimitCount": 50
   },
   "M2023": {
     "MapID": "M2023",
     "FileName": "2-23",
-    "LimitCount": 30
+    "LimitCount": 50
   },
   "M2024": {
     "MapID": "M2024",
     "FileName": "2-24",
-    "LimitCount": 30
+    "LimitCount": 40
   },
   "M2025": {
     "MapID": "M2025",
     "FileName": "2-25",
-    "LimitCount": 30
+    "LimitCount": 50
   },
   "M2026": {
     "MapID": "M2026",
@@ -182,22 +187,22 @@
   "M2027": {
     "MapID": "M2027",
     "FileName": "2-27",
-    "LimitCount": 30
+    "LimitCount": 40
   },
   "M2028": {
     "MapID": "M2028",
     "FileName": "2-28",
-    "LimitCount": 30
+    "LimitCount": 40
   },
   "M2029": {
     "MapID": "M2029",
     "FileName": "2-29",
-    "LimitCount": 30
+    "LimitCount": 50
   },
   "M2030": {
     "MapID": "M2030",
     "FileName": "2-30",
-    "LimitCount": 30
+    "LimitCount": 70
   },
   "M3001": {
     "MapID": "M3001",
@@ -212,17 +217,17 @@
   "M3003": {
     "MapID": "M3003",
     "FileName": "3-3",
-    "LimitCount": 65
+    "LimitCount": 40
   },
   "M3004": {
     "MapID": "M3004",
     "FileName": "3-4",
-    "LimitCount": 30
+    "LimitCount": 40
   },
   "M3005": {
     "MapID": "M3005",
     "FileName": "3-5",
-    "LimitCount": 30
+    "LimitCount": 40
   },
   "M3006": {
     "MapID": "M3006",
@@ -232,22 +237,22 @@
   "M3007": {
     "MapID": "M3007",
     "FileName": "3-7",
-    "LimitCount": 30
+    "LimitCount": 50
   },
   "M3008": {
     "MapID": "M3008",
     "FileName": "3-8",
-    "LimitCount": 30
+    "LimitCount": 40
   },
   "M3009": {
     "MapID": "M3009",
     "FileName": "3-9",
-    "LimitCount": 30
+    "LimitCount": 40
   },
   "M3010": {
     "MapID": "M3010",
     "FileName": "3-10",
-    "LimitCount": 30
+    "LimitCount": 50
   },
   "M3011": {
     "MapID": "M3011",
@@ -262,7 +267,7 @@
   "M3013": {
     "MapID": "M3013",
     "FileName": "3-13",
-    "LimitCount": 30
+    "LimitCount": 40
   },
   "M3014": {
     "MapID": "M3014",
@@ -287,17 +292,17 @@
   "M3018": {
     "MapID": "M3018",
     "FileName": "3-18",
-    "LimitCount": 50
+    "LimitCount": 80
   },
   "M3019": {
     "MapID": "M3019",
     "FileName": "3-19",
-    "LimitCount": 50
+    "LimitCount": 70
   },
   "M3020": {
     "MapID": "M3020",
     "FileName": "3-20",
-    "LimitCount": 50
+    "LimitCount": 60
   },
   "M3021": {
     "MapID": "M3021",
@@ -309,10 +314,15 @@
     "FileName": "3-22",
     "LimitCount": 50
   },
+  "M3023": {
+    "MapID": "M3023",
+    "FileName": "3-23",
+    "LimitCount": 30
+  },
   "M3024": {
     "MapID": "M3024",
     "FileName": "3-24",
-    "LimitCount": 50
+    "LimitCount": 40
   },
   "M3025": {
     "MapID": "M3025",
@@ -342,57 +352,57 @@
   "M3030": {
     "MapID": "M3030",
     "FileName": "3-30",
-    "LimitCount": 50
+    "LimitCount": 100
   },
   "M4001": {
     "MapID": "M4001",
     "FileName": "4-1",
-    "LimitCount": 30
+    "LimitCount": 40
   },
   "M4002": {
     "MapID": "M4002",
     "FileName": "4-2",
-    "LimitCount": 30
+    "LimitCount": 40
   },
   "M4003": {
     "MapID": "M4003",
     "FileName": "4-3",
-    "LimitCount": 30
+    "LimitCount": 40
   },
   "M4004": {
     "MapID": "M4004",
     "FileName": "4-4",
-    "LimitCount": 30
+    "LimitCount": 50
   },
   "M4005": {
     "MapID": "M4005",
     "FileName": "4-5",
-    "LimitCount": 30
+    "LimitCount": 50
   },
   "M4006": {
     "MapID": "M4006",
     "FileName": "4-6",
-    "LimitCount": 30
+    "LimitCount": 50
   },
   "M4007": {
     "MapID": "M4007",
     "FileName": "4-7",
-    "LimitCount": 30
+    "LimitCount": 50
   },
   "M4008": {
     "MapID": "M4008",
     "FileName": "4-8",
-    "LimitCount": 30
+    "LimitCount": 60
   },
   "M4009": {
     "MapID": "M4009",
     "FileName": "4-9",
-    "LimitCount": 30
+    "LimitCount": 60
   },
   "M4010": {
     "MapID": "M4010",
     "FileName": "4-10",
-    "LimitCount": 30
+    "LimitCount": 60
   },
   "M4011": {
     "MapID": "M4011",
@@ -417,22 +427,22 @@
   "M4015": {
     "MapID": "M4015",
     "FileName": "4-15",
-    "LimitCount": 30
+    "LimitCount": 50
   },
   "M4016": {
     "MapID": "M4016",
     "FileName": "4-16",
-    "LimitCount": 50
+    "LimitCount": 70
   },
   "M4017": {
     "MapID": "M4017",
     "FileName": "4-17",
-    "LimitCount": 50
+    "LimitCount": 70
   },
   "M4018": {
     "MapID": "M4018",
     "FileName": "4-18",
-    "LimitCount": 30
+    "LimitCount": 50
   },
   "M4019": {
     "MapID": "M4019",
@@ -477,21 +487,26 @@
   "M4027": {
     "MapID": "M4027",
     "FileName": "4-27",
-    "LimitCount": 50
+    "LimitCount": 70
   },
   "M4028": {
     "MapID": "M4028",
     "FileName": "4-28",
-    "LimitCount": 50
+    "LimitCount": 70
   },
   "M4029": {
     "MapID": "M4029",
     "FileName": "4-29",
-    "LimitCount": 50
+    "LimitCount": 70
   },
   "M4030": {
     "MapID": "M4030",
     "FileName": "4-30",
+    "LimitCount": 100
+  },
+  "M7007": {
+    "MapID": "M7007",
+    "FileName": "7-7",
     "LimitCount": 100
   },
   "M8001": {
@@ -523,5 +538,10 @@
     "MapID": "M8006",
     "FileName": "8-6",
     "LimitCount": 30
+  },
+  "M8008": {
+    "MapID": "M8008",
+    "FileName": "8-8",
+    "LimitCount": 40
   }
 }
