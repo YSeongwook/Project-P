@@ -13,9 +13,14 @@ public class GoldBuyPopup : MonoBehaviour
     [SerializeField] private TMP_Text textPriceGold; // 골드 가격 텍스트
     [SerializeField] private GameObject shineParticle; // 특별한 아이디의 패키지에 대한 파티클 효과
 
+    [SerializeField] private Button btn_BuyGold;
+    private GoldPackageData buyPackageData;
+
     private void Start()
     {
         gameObject.SetActive(false);
+
+        btn_BuyGold.onClick.AddListener(BuyItem_Gold);
     }
     
     public void SetPackageInfo(GoldPackageData packageData)
@@ -32,6 +37,7 @@ public class GoldBuyPopup : MonoBehaviour
         else if (packageData.PackageID == "G1004") rectTransform.sizeDelta = new Vector2(269, 207);
         else if (packageData.PackageID == "G1005") rectTransform.sizeDelta = new Vector2(340, 270);
         shineParticle.SetActive(packageData.PackageID == "G1005");
+        buyPackageData = packageData;
     }
 
     public void PopUpOn()
@@ -47,6 +53,6 @@ public class GoldBuyPopup : MonoBehaviour
     //아이템 구매
     public void BuyItem_Gold()
     {
-        // EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickGoldBuyButton, _data, _buyItemCount);
+        EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickGoldBuyButton, buyPackageData);
     }
 }

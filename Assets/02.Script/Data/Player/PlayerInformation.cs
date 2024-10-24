@@ -58,7 +58,7 @@ public class PlayerInformation : Singleton<PlayerInformation>
         EventManager<DataEvents>.StartListening(DataEvents.OnUserInformationLoad, SetPlayerData);
         EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerTicketCountChanged, PlayerTicketCountChanged);
         EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
-        EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerERCChanged, PlayerERCChanged);
+        EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
         EventManager<DataEvents>.StartListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
         EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerCurrentChapterChanged, PlayerCurrentChapterChanged);
         EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerCurrentStageChanged, PlayerCurrentStageChanged);
@@ -69,7 +69,7 @@ public class PlayerInformation : Singleton<PlayerInformation>
         EventManager<DataEvents>.StopListening(DataEvents.OnUserInformationLoad, SetPlayerData);
         EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerTicketCountChanged, PlayerTicketCountChanged);
         EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
-        EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerERCChanged, PlayerERCChanged);
+        EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
         EventManager<DataEvents>.StopListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
         EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerCurrentChapterChanged, PlayerCurrentChapterChanged);
         EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerCurrentStageChanged, PlayerCurrentStageChanged);
@@ -112,7 +112,7 @@ public class PlayerInformation : Singleton<PlayerInformation>
         // DB에 업데이트할 데이터
         // UpdateDBData();
 
-        PlayerDataSave();
+        //PlayerDataSave();
     }
     
     // 스테이지 해금 메서드 추가
@@ -224,31 +224,37 @@ public class PlayerInformation : Singleton<PlayerInformation>
     private void PlayerTicketCountChanged(int ticketCount)
     {
         PlayerViewModel.RequestPlayerGameTicketCountChanged(ticketCount);
+        PlayerDataSave();
     }
 
     private void PlayerGoldChanged(float gold)
     {
         PlayerViewModel.RequestPlayerGoldChanged(gold);
+        PlayerDataSave();
     }
 
-    private void PlayerERCChanged(int erc)
+    private void PlayerERCChanged(float erc)
     {
         PlayerViewModel.RequestPlayerERCChanged(erc);
+        PlayerDataSave();
     }
 
     private void PlayerItemListChanged(ItemData item, int count)
     {
         PlayerViewModel.RequestPlayerItemListChanged(item, count);
+        PlayerDataSave();
     }
 
     private void PlayerCurrentChapterChanged(int chapter)
     {
         PlayerViewModel.RequestPlayerCurrentChapterChanged(chapter);
+        PlayerDataSave();
     }
 
     private void PlayerCurrentStageChanged(int stage)
     {
         PlayerViewModel.RequestPlayerCurrentStageChanged(stage);
+        PlayerDataSave();
     }
 
     public int GetPlayerCurrentChapter()

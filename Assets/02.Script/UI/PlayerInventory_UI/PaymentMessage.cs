@@ -41,6 +41,7 @@ public class PaymentMessage : MonoBehaviour
         if (PaymentSuccessful)
         {
             textMessage.text = "Payment is Complete";
+            EventManager<UIEvents>.TriggerEvent(UIEvents.UpdatePlayerResources);
         }
         else
         {
