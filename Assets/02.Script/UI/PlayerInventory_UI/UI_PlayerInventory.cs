@@ -66,7 +66,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.DecreaseItemCount, DecreaseItemCount);
         EventManager<InventoryItemEvent>.StartListening(InventoryItemEvent.RecoveryTicketCountAfterGameClear, RechargeGameTicket);
         EventManager<UIEvents>.StartListening(UIEvents.UpdatePlayerResources, UpdateUIText);
-        EventManager<InventoryItemEvent>.StartListening(InventoryItemEvent.CallbackPlayerResourceUI, CallChangedRecourceUI);
+        EventManager<InventoryItemEvent>.StartListening(InventoryItemEvent.CallbackPlayerResourceUI, CallChangedResourceUI);
     }
 
     private void RemoveEvents()
@@ -83,7 +83,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.DecreaseItemCount, DecreaseItemCount);
         EventManager<InventoryItemEvent>.StopListening(InventoryItemEvent.RecoveryTicketCountAfterGameClear, RechargeGameTicket);
         EventManager<UIEvents>.StopListening(UIEvents.UpdatePlayerResources, UpdateUIText);
-        EventManager<InventoryItemEvent>.StopListening(InventoryItemEvent.CallbackPlayerResourceUI, CallChangedRecourceUI);
+        EventManager<InventoryItemEvent>.StopListening(InventoryItemEvent.CallbackPlayerResourceUI, CallChangedResourceUI);
     }
 
     //Gold와 ERC 초기화
@@ -226,11 +226,11 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
             _ercValue -= itemInfo.ERCPrice;
 
             // EPC 지갑에 변동되는 코인 값 전달
-            EventManager<StageEvent>.TriggerEvent(StageEvent.DeleteToken, (int)_ercValue);
+            EventManager<StageEvent>.TriggerEvent(StageEvent.DeleteToken, (int)itemInfo.ERCPrice);
         }
     }
 
-    private void CallChangedRecourceUI()
+    private void CallChangedResourceUI()
     {
         var itemInfo = buyGoldPackageData;
         buyGoldPackageData = default;
