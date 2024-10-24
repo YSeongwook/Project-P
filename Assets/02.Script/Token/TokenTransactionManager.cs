@@ -139,6 +139,9 @@ public class TokenTransactionManager : MonoBehaviour
         {
             DebugLogger.LogError($"JSON 파싱 오류: {ex.Message}");
         }
+        
+        // 메인 UI 업데이트
+        // 리소스 폴더 xml 업데이트
     }
 
     private void OnTokenDeleted(string response)

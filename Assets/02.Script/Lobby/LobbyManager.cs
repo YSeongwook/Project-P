@@ -38,6 +38,9 @@ public class LobbyManager : MonoBehaviour
         int currentChapter = PlayerInformation.Instance.PlayerViewModel.CurrentChapter;
         int currentStage = PlayerInformation.Instance.PlayerViewModel.CurrentStage;
 
+        DebugLogger.Log($"챕터: {currentChapter}");
+        DebugLogger.Log($"스테이지: {currentStage}");
+        
         // 조건: 각 챕터의 특정 스테이지를 클리어했을 때만 배경 변경
         if (ShouldChangeBackground(currentChapter, currentStage))
         {
@@ -65,7 +68,7 @@ public class LobbyManager : MonoBehaviour
             case 2:
             case 3:
             case 4:
-                return stage == 10 || stage == 20 || stage == 30; // 2, 3, 4챕터의 10, 20, 30스테이지 클리어 시
+                return stage == 1 || stage == 11 || stage == 21 || stage == 30; // 2, 3, 4챕터의 10, 20, 30스테이지 클리어 시
             default:
                 return false;
         }
@@ -74,23 +77,23 @@ public class LobbyManager : MonoBehaviour
     // 챕터와 스테이지에 맞는 스프라이트 인덱스를 반환하는 메서드
     private int GetSpriteIndex(int chapter, int stage)
     {
-        if (chapter == 1 && stage == 10) return 1;
         if (chapter == 2)
         {
-            if (stage == 10) return 2;
-            if (stage == 20) return 3;
-            if (stage == 30) return 4;
+            if (stage == 1) return 1;
+            if (stage == 11) return 2;
+            if (stage == 21) return 3;
         }
         if (chapter == 3)
         {
-            if (stage == 10) return 5;
-            if (stage == 20) return 6;
-            if (stage == 30) return 7;
+            if (stage == 1) return 4;
+            if (stage == 11) return 5;
+            if (stage == 21) return 6;
         }
         if (chapter == 4)
         {
-            if (stage == 10) return 8;
-            if (stage == 20) return 9;
+            if (stage == 1) return 7;
+            if (stage == 11) return 8;
+            if (stage == 21) return 9;
             if (stage == 30) return 10;
         }
 
