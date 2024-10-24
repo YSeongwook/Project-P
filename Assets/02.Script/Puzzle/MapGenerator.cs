@@ -300,6 +300,9 @@ public class MapGenerator : MonoBehaviour
         EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.RecoveryTicketCountAfterGameClear);
 
         DebugLogger.Log("클리어");
+
+        // 클리어 보상 제공
+        EventManager<StageEvent>.TriggerEvent(StageEvent.GameClear);
     }
 
     // 미션 실패

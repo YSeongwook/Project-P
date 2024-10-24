@@ -30,6 +30,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
     private int ticketTimer = MaxTimer;
 
     public Dictionary<ItemData, int> _itemInventory { get; private set; }
+    private GoldPackageData buyGoldPackageData;
 
     protected new void Awake()
     {
@@ -65,6 +66,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.DecreaseItemCount, DecreaseItemCount);
         EventManager<InventoryItemEvent>.StartListening(InventoryItemEvent.RecoveryTicketCountAfterGameClear, RechargeGameTicket);
         EventManager<UIEvents>.StartListening(UIEvents.UpdatePlayerResources, UpdateUIText);
+        EventManager<InventoryItemEvent>.StartListening(InventoryItemEvent.CallbackPlayerResourceUI, CallChangedRecourceUI);
     }
 
     private void RemoveEvents()
@@ -81,6 +83,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.DecreaseItemCount, DecreaseItemCount);
         EventManager<InventoryItemEvent>.StopListening(InventoryItemEvent.RecoveryTicketCountAfterGameClear, RechargeGameTicket);
         EventManager<UIEvents>.StopListening(UIEvents.UpdatePlayerResources, UpdateUIText);
+        EventManager<InventoryItemEvent>.StopListening(InventoryItemEvent.CallbackPlayerResourceUI, CallChangedRecourceUI);
     }
 
     //Gold와 ERC 초기화
@@ -202,8 +205,6 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
             // 구매 완료 Message 출력
             EventManager<DataEvents>.TriggerEvent(DataEvents.OnPaymentSuccessful, true);
         }
-
-        //UpdateUIText();
     }
 
     //골드 구매 - ERC
@@ -220,20 +221,29 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         }
         else
         {
+            buyGoldPackageData = itemInfo;
+
             _ercValue -= itemInfo.ERCPrice;
-            // Player Inventory View Model에 반영
-            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerERCChanged, _ercValue);
 
-            _goldValue += itemInfo.GiveGold;
-            // Player Inventory View Model에 반영
-            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, _goldValue);
-
-            //계산 완료 PopUp On 
-            EventManager<DataEvents>.TriggerEvent(DataEvents.OnPaymentSuccessful, true);
+            // EPC 지갑에 변동되는 코인 값 전달
+            EventManager<StageEvent>.TriggerEvent(StageEvent.DeleteToken, (int)_ercValue);
         }
+    }
 
+    private void CallChangedRecourceUI()
+    {
+        var itemInfo = buyGoldPackageData;
+        buyGoldPackageData = default;
 
-        //UpdateUIText();
+        // Player Inventory View Model에 반영
+        EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerERCChanged, _ercValue);
+
+        _goldValue += itemInfo.GiveGold;
+        // Player Inventory View Model에 반영
+        EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, _goldValue);
+
+        //계산 완료 PopUp On 
+        EventManager<DataEvents>.TriggerEvent(DataEvents.OnPaymentSuccessful, true);
     }
 
     //골드 획득
