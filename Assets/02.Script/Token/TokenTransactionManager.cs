@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using EnumTypes;
 using EventLibrary;
@@ -102,11 +103,30 @@ public class TokenTransactionManager : MonoBehaviour
     private void OnTokenCreated(string response)
     {
         DebugLogger.Log("토큰 생성 성공!");
+        GetTokenBalance();
     }
 
     private void OnTokenBalanceRetrieved(string response)
     {
         DebugLogger.Log($"현재 토큰 잔액: {response}");
+        try
+        {
+            // JSON 문자열을 파싱하여 token 값을 추출
+            var jsonResponse = JsonConvert.DeserializeObject<Dictionary<string, string>>(response);
+            if (jsonResponse.ContainsKey("token") && int.TryParse(jsonResponse["token"], out int tokenBalance))
+            {
+                // 토큰 잔액을 이벤트로 전달
+                EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerERCChanged, tokenBalance);
+            }
+            else
+            {
+                DebugLogger.LogError("토큰 잔액 변환 실패: 'token' 키가 없거나 형식이 잘못되었습니다.");
+            }
+        }
+        catch (JsonException ex)
+        {
+            DebugLogger.LogError($"JSON 파싱 오류: {ex.Message}");
+        }
     }
 
     private void OnTokenDeleted(string response)

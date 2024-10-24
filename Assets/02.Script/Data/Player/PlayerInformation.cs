@@ -58,7 +58,7 @@ public class PlayerInformation : Singleton<PlayerInformation>
         EventManager<DataEvents>.StartListening(DataEvents.OnUserInformationLoad, SetPlayerData);
         EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerTicketCountChanged, PlayerTicketCountChanged);
         EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
-        EventManager<DataEvents>.StartListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
+        EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerERCChanged, PlayerERCChanged);
         EventManager<DataEvents>.StartListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
         EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerCurrentChapterChanged, PlayerCurrentChapterChanged);
         EventManager<DataEvents>.StartListening<int>(DataEvents.PlayerCurrentStageChanged, PlayerCurrentStageChanged);
@@ -69,7 +69,7 @@ public class PlayerInformation : Singleton<PlayerInformation>
         EventManager<DataEvents>.StopListening(DataEvents.OnUserInformationLoad, SetPlayerData);
         EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerTicketCountChanged, PlayerTicketCountChanged);
         EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerGoldChanged, PlayerGoldChanged);
-        EventManager<DataEvents>.StopListening<float>(DataEvents.PlayerERCChanged, PlayerERCChanged);
+        EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerERCChanged, PlayerERCChanged);
         EventManager<DataEvents>.StopListening<ItemData, int>(DataEvents.PlayerItemListChanged, PlayerItemListChanged);
         EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerCurrentChapterChanged, PlayerCurrentChapterChanged);
         EventManager<DataEvents>.StopListening<int>(DataEvents.PlayerCurrentStageChanged, PlayerCurrentStageChanged);
@@ -231,7 +231,7 @@ public class PlayerInformation : Singleton<PlayerInformation>
         PlayerViewModel.RequestPlayerGoldChanged(gold);
     }
 
-    private void PlayerERCChanged(float erc)
+    private void PlayerERCChanged(int erc)
     {
         PlayerViewModel.RequestPlayerERCChanged(erc);
     }
