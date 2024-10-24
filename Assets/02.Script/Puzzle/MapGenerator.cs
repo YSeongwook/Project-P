@@ -293,7 +293,6 @@ public class MapGenerator : MonoBehaviour
 
         EventManager<DataEvents>.TriggerEvent(DataEvents.UpdateCurrentChapterAndStage, _currentChapter, _currentStage);
         EventManager<StageEvent>.TriggerEvent(StageEvent.StageClear, true);
-        EventManager<StageEvent>.TriggerEvent(StageEvent.CreateToken);
 
         // 디버깅용
         // 클리어하면 입장권 1개 제공
