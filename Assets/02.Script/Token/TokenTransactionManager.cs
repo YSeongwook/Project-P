@@ -22,12 +22,14 @@ public class TokenTransactionManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EventManager<StageEvent>.StartListening(StageEvent.CreateToken, CreateToken);
+        EventManager<StageEvent>.StartListening<int>(StageEvent.CreateToken, CreateToken);
+        EventManager<StageEvent>.StartListening<int>(StageEvent.CreateToken, DeleteToken);
     }
 
     private void OnDisable()
     {
         EventManager<StageEvent>.StopListening(StageEvent.CreateToken, CreateToken);
+        EventManager<StageEvent>.StopListening(StageEvent.CreateToken, DeleteToken);
     }
 
     // 지갑을 생성하는 메서드
@@ -41,6 +43,11 @@ public class TokenTransactionManager : MonoBehaviour
     {
         StartCoroutine(SendRequest(_createToken, "POST", new { uid, value }, OnTokenCreated));
     }
+    
+    public void CreateToken(int token)
+    {
+        StartCoroutine(SendRequest(_createToken, "POST", new { uid, token }, OnTokenCreated));
+    }
 
     // 토큰 잔액을 조회하는 메서드
     public void GetTokenBalance()
@@ -52,6 +59,11 @@ public class TokenTransactionManager : MonoBehaviour
     public void DeleteToken()
     {
         StartCoroutine(SendRequest(_deleteToken, "Delete", new { uid, value }, OnTokenDeleted));
+    }
+    
+    public void DeleteToken(int token)
+    {
+        StartCoroutine(SendRequest(_deleteToken, "Delete", new { uid, token }, OnTokenDeleted));
     }
 
     // 서버 요청을 처리하는 코루틴
@@ -132,5 +144,6 @@ public class TokenTransactionManager : MonoBehaviour
     private void OnTokenDeleted(string response)
     {
         DebugLogger.Log("토큰 삭제 성공!");
+        GetTokenBalance();
     }
 }
