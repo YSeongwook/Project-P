@@ -56,7 +56,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<UIEvents>.StartListening<int, float, float>(UIEvents.GetPlayerInventoryResources, ReadPlayerCapital);
         EventManager<UIEvents>.StartListening(UIEvents.OnClickUseTicket, UseTicket);
         EventManager<UIEvents>.StartListening<ItemData, float>(UIEvents.OnClickItemBuyButton, BuyItem_Gold);
-        EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyItem_ERC);
+        EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyGold_ERC);
         EventManager<GoldEvent>.StartListening<float>(GoldEvent.OnGetGold, GetGold);
         EventManager<InventoryItemEvent>.StartListening<Dictionary<ItemData, int>>(InventoryItemEvent.GetInventoryItemList, GetPlayerItemInventory);
         EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.UseItem, UseItem);
@@ -64,6 +64,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<StageEvent>.StartListening(StageEvent.SetPlayerItemInventoryList, SetGamePlayerItem);
         EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.DecreaseItemCount, DecreaseItemCount);
         EventManager<InventoryItemEvent>.StartListening(InventoryItemEvent.RecoveryTicketCountAfterGameClear, RechargeGameTicket);
+        EventManager<UIEvents>.StartListening(UIEvents.UpdatePlayerResources, UpdateUIText);
     }
 
     private void RemoveEvents()
@@ -71,7 +72,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<UIEvents>.StopListening<int, float, float>(UIEvents.GetPlayerInventoryResources, ReadPlayerCapital);
         EventManager<UIEvents>.StopListening(UIEvents.OnClickUseTicket, UseTicket);
         EventManager<UIEvents>.StopListening<ItemData, float>(UIEvents.OnClickItemBuyButton, BuyItem_Gold);
-        EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyItem_ERC);
+        EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyGold_ERC);
         EventManager<GoldEvent>.StopListening<float>(GoldEvent.OnGetGold, GetGold);
         EventManager<InventoryItemEvent>.StopListening<Dictionary<ItemData, int>>(InventoryItemEvent.GetInventoryItemList, GetPlayerItemInventory);
         EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.UseItem, UseItem);
@@ -79,6 +80,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<StageEvent>.StopListening(StageEvent.SetPlayerItemInventoryList, SetGamePlayerItem);
         EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.DecreaseItemCount, DecreaseItemCount);
         EventManager<InventoryItemEvent>.StopListening(InventoryItemEvent.RecoveryTicketCountAfterGameClear, RechargeGameTicket);
+        EventManager<UIEvents>.StopListening(UIEvents.UpdatePlayerResources, UpdateUIText);
     }
 
     //Gold와 ERC 초기화
@@ -121,7 +123,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         return scaledValue.ToString("0.##") + units[unitIndex];
     }
 
-    // 입장 티겟 구매
+    // 입장 티겟 사용
     private void UseTicket()
     {
         if(_ticketCount <= 0)
@@ -201,11 +203,11 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
             EventManager<DataEvents>.TriggerEvent(DataEvents.OnPaymentSuccessful, true);
         }
 
-        UpdateUIText();
+        //UpdateUIText();
     }
 
-    //아이템 구매 - ERC (Gold가 구매 가격보다 적으면)
-    private void BuyItem_ERC(GoldPackageData itemInfo)
+    //골드 구매 - ERC
+    private void BuyGold_ERC(GoldPackageData itemInfo)
     {
         if (_ercValue < itemInfo.ERCPrice)
         {
@@ -222,12 +224,16 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
             // Player Inventory View Model에 반영
             EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerERCChanged, _ercValue);
 
+            _goldValue += itemInfo.GiveGold;
+            // Player Inventory View Model에 반영
+            EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerGoldChanged, _goldValue);
+
             //계산 완료 PopUp On 
             EventManager<DataEvents>.TriggerEvent(DataEvents.OnPaymentSuccessful, true);
         }
 
 
-        UpdateUIText();
+        //UpdateUIText();
     }
 
     //골드 획득

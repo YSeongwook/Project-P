@@ -29,6 +29,7 @@ namespace EnumTypes
         OnClickNextButton,
         OnClickRestartButton,
         ActiveMiniGameUI,
+        UpdatePlayerResources,
     }
 
     public enum MiniGame

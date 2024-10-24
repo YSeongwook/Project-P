@@ -13,9 +13,9 @@ public class PathFind
     private Dictionary<Vector2, TileNode> _endPoint = new Dictionary<Vector2, TileNode>();
     private Dictionary<Vector2, Vector2> _warpPoints = new Dictionary<Vector2, Vector2>();
     public List<TileNode> _linkTiles { get; private set; } = new List<TileNode>();
+    private List<TileNode> _connectedPoints = new List<TileNode>();
 
     private float CellSize;
-
     private bool isMiniGameStage;
 
     public void SetTileGridEvent(bool isRegister)
@@ -164,30 +164,34 @@ public class PathFind
     public bool TilePathFind()
     {
         bool missionSuccess = false;
+        _connectedPoints.Clear();
+
+        var successfulPaths = new Dictionary<int, Dictionary<Vector2, TileNode>>();
 
         foreach (var startPoint in _startPoint)
         {
-            var successfulPaths = new Dictionary<int, Dictionary<Vector2, TileNode>>();
-            bool allEndPointsConnected = true;
-
             foreach (var endPoint in _endPoint)
             {
                 var path = FindPath(startPoint.Key, endPoint.Key);
                 if (path != null)
                 {
+                    // 이미 연결된 지점이 경로에 존재하면 리턴
+                    if (_connectedPoints.Contains(endPoint.Value)) continue;
+
                     // 경로가 존재할 경우, successfulPaths에 저장
                     int pathIndex = successfulPaths.Count + 1;
                     successfulPaths.Add(pathIndex, path);
+                    _connectedPoints.Add(endPoint.Value);                    
                 }
                 else
                 {
                     // 하나의 endPoint라도 연결되지 못하면 이 startPoint는 실패
-                    allEndPointsConnected = false;
-                    break;
+                    continue;
                 }
             }
 
-            if (allEndPointsConnected)
+            // 완성된 경로가 시작 포인트보다 많으면 종료.
+            if (successfulPaths.Count >= _startPoint.Count)
             {
                 // 하나의 startPoint에서 모든 endPoint들이 연결된 경우
                 _PathTileList = successfulPaths;
