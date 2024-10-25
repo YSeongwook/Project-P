@@ -38,8 +38,8 @@ public class LobbyManager : MonoBehaviour
         int currentChapter = PlayerInformation.Instance.PlayerViewModel.CurrentChapter;
         int currentStage = PlayerInformation.Instance.PlayerViewModel.CurrentStage;
 
-        DebugLogger.Log($"챕터: {currentChapter}");
-        DebugLogger.Log($"스테이지: {currentStage}");
+        // DebugLogger.Log($"챕터: {currentChapter}");
+        // DebugLogger.Log($"스테이지: {currentStage}");
         
         // 조건: 각 챕터의 특정 스테이지를 클리어했을 때만 배경 변경
         if (ShouldChangeBackground(currentChapter, currentStage))

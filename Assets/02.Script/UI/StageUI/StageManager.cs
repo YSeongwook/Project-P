@@ -30,11 +30,18 @@ public class StageManager : Singleton<StageManager>
 
         // 다음 스테이지 번호 계산
         int nextStage = currentStage + 1;
-        int maxStages = currentChapter == 1 ? 5 : 20;
+        int maxStages = currentChapter == 1 ? 10 : 30;
 
         if (nextStage > maxStages)
         {
-            currentChapter++;
+            if(currentChapter < 4) currentChapter++;
+            else
+            {
+                {
+                    DebugLogger.Log("이후 챕터는 업데이트를 기다려주세요");
+                    return;  
+                }
+            }
             nextStage = 1;
             if (currentChapter > 4)  // 마지막 챕터를 넘어섰다면 더 이상 스테이지가 없음
             {

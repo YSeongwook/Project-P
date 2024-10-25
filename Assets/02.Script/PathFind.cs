@@ -127,8 +127,6 @@ public class PathFind
 
                 foreach (var item in path.Reverse())
                 {
-                    DebugLogger.Log(item);
-
                     // 애니메이션을 시퀀스에 추가
                     animationSequence.AppendCallback(() => item.Value.StartPathAnimation());
                     // 각 타일의 애니메이션 시간만큼 지연을 추가 (예: 1초)
