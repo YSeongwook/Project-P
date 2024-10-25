@@ -74,7 +74,7 @@ public class Chapter : MonoBehaviour
         int newChapter = chapter;   
         var newStage = stage + 1;
 
-        if (newStage >= _maxStageCount)
+        if (newStage > _maxStageCount)
         {
             newChapter = Mathf.Clamp(newChapter+1, 0, 5);
             newStage = 1;

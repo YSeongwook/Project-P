@@ -1,3 +1,4 @@
+using System;
 using EnumTypes;
 using EventLibrary;
 using UnityEngine;
@@ -13,7 +14,10 @@ public class LobbyManager : MonoBehaviour
     private void Awake()
     {
         _canvas = backgroundImage.GetComponentInParent<Canvas>();
+    }
 
+    private void OnEnable()
+    {
         EventManager<DataEvents>.StartListening(DataEvents.UpdateLobby, UpdateLobbyBackground);
         EventManager<StageEvent>.StartListening<bool>(StageEvent.SetMiniGame, SetLobbyUI);
     }
@@ -25,7 +29,7 @@ public class LobbyManager : MonoBehaviour
         UpdateLobbyBackground();
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         // 이벤트 핸들러 해제
         EventManager<DataEvents>.StopListening(DataEvents.UpdateLobby, UpdateLobbyBackground);
@@ -49,7 +53,6 @@ public class LobbyManager : MonoBehaviour
             if (spriteIndex >= 0 && spriteIndex < lobbySprites.Length)
             {
                 backgroundImage.sprite = lobbySprites[spriteIndex];
-                DebugLogger.Log("로비 배경 변경");
             }
             else
             {
