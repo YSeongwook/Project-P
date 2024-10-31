@@ -58,6 +58,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<UIEvents>.StartListening(UIEvents.OnClickUseTicket, UseTicket);
         EventManager<UIEvents>.StartListening<ItemData, float>(UIEvents.OnClickItemBuyButton, BuyItem_Gold);
         EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyGold_ERC);
+        EventManager<StageEvent>.StartListening(StageEvent.GameClear, EarnERC);
         EventManager<GoldEvent>.StartListening<float>(GoldEvent.OnGetGold, GetGold);
         EventManager<InventoryItemEvent>.StartListening<Dictionary<ItemData, int>>(InventoryItemEvent.GetInventoryItemList, GetPlayerItemInventory);
         EventManager<InventoryItemEvent>.StartListening<string>(InventoryItemEvent.UseItem, UseItem);
@@ -75,6 +76,7 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
         EventManager<UIEvents>.StopListening(UIEvents.OnClickUseTicket, UseTicket);
         EventManager<UIEvents>.StopListening<ItemData, float>(UIEvents.OnClickItemBuyButton, BuyItem_Gold);
         EventManager<UIEvents>.StartListening<GoldPackageData>(UIEvents.OnClickGoldBuyButton, BuyGold_ERC);
+        EventManager<StageEvent>.StopListening(StageEvent.GameClear, EarnERC);
         EventManager<GoldEvent>.StopListening<float>(GoldEvent.OnGetGold, GetGold);
         EventManager<InventoryItemEvent>.StopListening<Dictionary<ItemData, int>>(InventoryItemEvent.GetInventoryItemList, GetPlayerItemInventory);
         EventManager<InventoryItemEvent>.StopListening<string>(InventoryItemEvent.UseItem, UseItem);
@@ -229,13 +231,20 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
             EventManager<StageEvent>.TriggerEvent(StageEvent.DeleteToken, (int)itemInfo.ERCPrice);
         }
     }
+    
+    // 스테이지 클리어 시 토큰 획득
+    private void EarnERC()
+    {
+        _ercValue += 100;
+        
+        // EPC 지갑에 변동되는 코인 값 전달
+        EventManager<StageEvent>.TriggerEvent(StageEvent.CreateToken);
+    }
 
     private void CallChangedResourceUI()
     {
         var itemInfo = buyGoldPackageData;
-        buyGoldPackageData = itemInfo;
-        
-        _ercValue += 100;
+        buyGoldPackageData = default;
 
         // Player Inventory View Model에 반영
         EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerERCChanged, _ercValue);

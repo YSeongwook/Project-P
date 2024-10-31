@@ -22,15 +22,15 @@ public class TokenTransactionManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EventManager<StageEvent>.StartListening(StageEvent.GameClear, CreateToken);
-        EventManager<StageEvent>.StartListening<int>(StageEvent.CreateToken, CreateToken);
+        // EventManager<StageEvent>.StartListening(StageEvent.GameClear, CreateToken);
+        EventManager<StageEvent>.StartListening(StageEvent.CreateToken, CreateToken);
         EventManager<StageEvent>.StartListening<int>(StageEvent.DeleteToken, DeleteToken);
     }
 
     private void OnDisable()
     {
-        EventManager<StageEvent>.StopListening(StageEvent.GameClear, CreateToken);
-        EventManager<StageEvent>.StopListening<int>(StageEvent.CreateToken, CreateToken);
+        // EventManager<StageEvent>.StopListening(StageEvent.GameClear, CreateToken);
+        EventManager<StageEvent>.StopListening(StageEvent.CreateToken, CreateToken);
         EventManager<StageEvent>.StopListening<int>(StageEvent.DeleteToken, DeleteToken);
     }
 
