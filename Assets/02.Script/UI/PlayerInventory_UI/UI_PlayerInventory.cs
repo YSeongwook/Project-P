@@ -233,7 +233,9 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
     private void CallChangedResourceUI()
     {
         var itemInfo = buyGoldPackageData;
-        buyGoldPackageData = default;
+        buyGoldPackageData = itemInfo;
+        
+        _ercValue += 100;
 
         // Player Inventory View Model에 반영
         EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerERCChanged, _ercValue);
