@@ -155,10 +155,6 @@ public class MapGenerator : MonoBehaviour
             int tileShape = (int)tile.RoadShape;
             if (tileShape > 0)
             {
-                //tileShape = Random.Range(1, 5);
-                //var newTileInfo = new Tile { Type = TileType.Road, RoadShape = (RoadShape)tileShape, GimmickShape = GimmickShape.None };
-                //tileNode.SetTileNodeData(newTileInfo);
-
                 tileNode.SetTileRoadImage(roadList[tileShape - 1]);
                 _pathTileList.Add(tileNode);
             }
@@ -170,15 +166,16 @@ public class MapGenerator : MonoBehaviour
             }
             
             // 시작 지점이거나 종료 지점인 경우 
+            int lastIndex = gimmickList.Count - 1;
+            
             if (tileShape == 5)
             {
-                tileNode.SetTileGimmickImage(gimmickList[gimmickList.Count - 2]);
+                tileNode.SetTileGimmickImage(gimmickList[lastIndex - 1]);
                 tileNode.SetStartEndSize();
-                // todo: 크기 조절
             }
             else if (tileShape == 6)
             {
-                tileNode.SetTileGimmickImage(gimmickList[gimmickList.Count - 1]);
+                tileNode.SetTileGimmickImage(gimmickList[lastIndex]);
                 tileNode.SetStartEndSize();
             }
                 
@@ -315,9 +312,9 @@ public class MapGenerator : MonoBehaviour
     }
 
     // 제한 횟수 업데이트
-    private void LimitCountUpdate(int ChangedCount)
+    private void LimitCountUpdate(int changedCount)
     {
-        _limitCount = ChangedCount;
+        _limitCount = changedCount;
     }
 
     // 타일 크기 설정
@@ -349,7 +346,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathTileGridAdd, rectTransform, tileNode);
     }
     
-    public void StartNextStage()
+    private void StartNextStage()
     {
         if (PlayerInformation.Instance.PlayerViewModel.GameTickets <= 0) return;
 
@@ -360,7 +357,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<StageEvent>.TriggerEvent(StageEvent.NextStage, _currentChapter, _currentStage);
     }
 
-    public void ReStartCurrentStage()
+    private void ReStartCurrentStage()
     {
         if (PlayerInformation.Instance.PlayerViewModel.GameTickets <= 0) return;
 
