@@ -38,18 +38,26 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
 
         Canvas = GetComponentInParent<Canvas>();
         _parent = gameObject.transform.parent.gameObject;
+    }
 
+    private void OnEnable()
+    { 
         AddEvents();
     }
+
     private void Start()
     {
         StartCoroutine(StartRechargeTicket());
     }
 
+    private void OnDisable()
+    {
+        RemoveEvents();
+    }
+
     private void OnDestroy()
     {
         StopAllCoroutines();
-        RemoveEvents();
     }
 
     private void AddEvents()
@@ -318,17 +326,6 @@ public class UI_PlayerInventory : Singleton<UI_PlayerInventory>
 
         // Player Information에 데이터 전달
         EventManager<DataEvents>.TriggerEvent(DataEvents.PlayerItemListChanged, newItemData, _itemInventory[useItem]);
-
-        
-        // 아이템 개수가 0이하가 되면 리스트에서 제거하는 것 같은데 제거하면 아이템 추가시 예외 처리를 해야함
-        // 그래서 주석 처리
-        /*
-        if (_itemInventory[useItem] <= 0)
-        {
-            _itemInventory.Remove(useItem);
-        }
-        */
-        
     }
 
     private void IncreaseItemCount(string itemID)

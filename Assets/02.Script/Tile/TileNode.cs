@@ -207,41 +207,51 @@ public class TileNode : MonoBehaviour
     // 회전 명령 실행
     public void OnClickRotationTile()
     {
-        if (_isEnd) return;
-        if (_rotationTile.IsRotating) return; // 이미 타일이 회전 중이면 더 회전하지 못하게 방지
+        if (_isEnd || _rotationTile.IsRotating) return;
 
         // 짧은 진동 발생
         EventManager<VibrateEvents>.TriggerEvent(VibrateEvents.ShortWeak);
 
-        if (_tile.GimmickShape == GimmickShape.Link && !_isHint)
+        // 힌트 사용 중이면 힌트 실행
+        if (_isHint)
         {
-            EventManager<PuzzleEvent>.TriggerEvent(PuzzleEvent.Rotation, this, _isReverseRotate);
-            EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn); // 제한 횟수 감소 이벤트 발생
-            return;
+            TriggerHint();
+            DebugLogger.Log("힌트 아이템 사용");
         }
-
-        if (_isReverseRotate && !_isHint)
+        // 역회전 아이템 사용 중이면 역회전 실행
+        else if (_isReverseRotate)
         {
             _tile.RotateValue = (_tile.RotateValue + 3) % 4;
 
-            // 사용한 아이템의 수 감소 
+            // 역회전 아이템 사용 후 상태 초기화
             EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.DecreaseItemCount, nameof(ItemID.I1002));
-            // 모든 타일들의 ReverseRotate 값 변화
             EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetReverseRotate, false);
+            _isReverseRotate = false;
         }
-        else if(!_isReverseRotate && _isHint)
-        {
-            TriggerHint();
-        }
+        // 아무런 아이템 사용 중이 아니면 일반 회전
         else
         {
             _tile.RotateValue = (_tile.RotateValue + 1) % 4;
-            EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn); // 제한 횟수 감소 이벤트 발생
+            EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
         }
 
-        if (_rotationTile != null && !_isHint)
+        // 회전 후 힌트 타일과 일치 여부 확인
+        if (_rotationTile != null)
         {
-            _rotationTile.RotateTile(_tile.RotateValue);  // 회전 로직 RotationTile에 위임
+            _rotationTile.RotateTile(_tile.RotateValue);
+            CheckHintMatch(); // 회전 후 힌트와 일치 여부 확인
+        }
+    
+        // 아이템 비활성화 이벤트 호출
+        EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.CallbackPlayerResourceUI);
+    }
+    
+    // 힌트와 타일이 일치하는지 확인하여 힌트 이미지 비활성화
+    private void CheckHintMatch()
+    {
+        if (_tile.RotateValue == CorrectTileInfo.RotateValue)
+        {
+            _imageHint.enabled = false; // 힌트 타일과 일치 시 힌트 이미지 비활성화
         }
     }
 
@@ -260,8 +270,9 @@ public class TileNode : MonoBehaviour
     {
         // 사용한 아이템의 수 감소 
         EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.DecreaseItemCount, nameof(ItemID.I1003));
-
         EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetHint, false);
+        
+        // 힌트 타일 표시 코루틴 시작
         StartCoroutine(ShowHintTile());
     }
 
