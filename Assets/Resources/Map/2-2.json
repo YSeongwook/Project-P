@@ -92,7 +92,7 @@
   {
     "Type": 2,
     "RoadShape": 2,
-    "GimmickShape": 1,
+    "GimmickShape": 0,
     "RotateValue": 0
   }
 ]
