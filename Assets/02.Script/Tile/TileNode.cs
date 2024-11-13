@@ -55,16 +55,11 @@ public class TileNode : MonoBehaviour
 
     public GimmickAnimation Gimmick { get; private set; }
 
-    private Image _background;
     private Image _imageRoad;
     private Image _imageGimmick;
     private Image _imageHint;
-    private RectTransform _rectTransform;
-    private RectTransform _imageRoadRectTransform;
     private RectTransform _imageGimmickRectTransform;
-    private RectTransform _imageHintRectTransform;
     private Outline _backgroundOutline;
-    private DOTweenAnimation tweenAnimation;
 
     private RotationTile _rotationTile; // 타일 회전 스크립트
 
@@ -111,7 +106,6 @@ public class TileNode : MonoBehaviour
     {
         Gimmick = GetComponentInChildren<GimmickAnimation>();
 
-        _background = transform.GetChild(0).GetComponent<Image>();
         _imageRoad = transform.GetChild(1).GetComponent<Image>();
         _imageGimmick = transform.GetChild(2).GetComponent<Image>();
         _imageHint = transform.GetChild(3).GetComponent<Image>();
@@ -121,14 +115,10 @@ public class TileNode : MonoBehaviour
         _imageHint.color = newColor;
 
         _backgroundOutline = transform.GetChild(0).GetComponent<Outline>();
-        _rectTransform = GetComponent<RectTransform>();
 
-        _imageRoadRectTransform = _imageRoad.GetComponent<RectTransform>();
         _imageGimmickRectTransform = _imageGimmick.GetComponent<RectTransform>();
-        _imageHintRectTransform = _imageHint.GetComponent<RectTransform>();
 
         _rotationTile = GetComponent<RotationTile>();
-        tweenAnimation = GetComponent<DOTweenAnimation>();
     }
 
     // 타일 정보 삽입

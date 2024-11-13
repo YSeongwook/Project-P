@@ -1,3 +1,4 @@
+using System;
 using EnumTypes;
 using EventLibrary;
 using Sirenix.OdinInspector;
@@ -12,13 +13,16 @@ public class MiniGameManager : Singleton<MiniGameManager>
     protected new void Awake()
     {
         base.Awake();
-
-        AddEvent();
     }
 
-    private void OnDestroy()
+    private void OnEnable()
     {
-        RemoveEvent();
+        AddEvents();
+    }
+
+    private void OnDisable()
+    {
+        RemoveEvents();
     }
 
     private void Start()
@@ -30,13 +34,13 @@ public class MiniGameManager : Singleton<MiniGameManager>
         }
     }
 
-    private void AddEvent()
+    private void AddEvents()
     {
         EventManager<MiniGame>.StartListening<int, int>(MiniGame.ActiveMiniGame, ActiveMiniGameCanvas);
         EventManager<MiniGame>.StartListening(MiniGame.DisActiveMiniGame, DisActiveMiniGameCanvas);
     }
 
-    private void RemoveEvent()
+    private void RemoveEvents()
     {
         EventManager<MiniGame>.StopListening<int, int>(MiniGame.ActiveMiniGame, ActiveMiniGameCanvas);
         EventManager<MiniGame>.StopListening(MiniGame.DisActiveMiniGame, DisActiveMiniGameCanvas);
