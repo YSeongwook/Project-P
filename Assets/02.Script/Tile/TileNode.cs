@@ -204,7 +204,7 @@ public class TileNode : MonoBehaviour
         }
     }
 
-    // 회전 명령 실행
+    // 회전 명령 실행, 현재 링크 타일이 같이 회전하지 않는 이슈가 있음
     public void OnClickRotationTile()
     {
         if (_isEnd || _rotationTile.IsRotating) return;
@@ -229,6 +229,13 @@ public class TileNode : MonoBehaviour
             _isReverseRotate = false;
         }
         // 아무런 아이템 사용 중이 아니면 일반 회전
+        else if(_tile.GimmickShape == GimmickShape.Link)
+        {
+            EventManager<PuzzleEvent>.TriggerEvent(PuzzleEvent.Rotation, this, _isReverseRotate);
+            EventManager<StageEvent>.TriggerEvent(StageEvent.UseTurn);
+
+            return;
+        }
         else
         {
             _tile.RotateValue = (_tile.RotateValue + 1) % 4;
