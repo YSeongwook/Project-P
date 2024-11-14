@@ -48,26 +48,22 @@ public class TileNode : MonoBehaviour
     [SerializeField] private AnimationCurve scaleCurve;
     [SerializeField] private float animationDuration = 1f;
 
-    public Tile CorrectTileInfo { get; private set; }   // 정답 확인용 Tile
-    private Tile _tile;             // Player에게 조작되는 Tile
-
-    public Tile GetTileInfo {  get { return _tile; } }
-
-    public GimmickAnimation Gimmick { get; private set; }
-
     private Image _imageRoad;
     private Image _imageGimmick;
     private Image _imageHint;
     private RectTransform _imageGimmickRectTransform;
     private Outline _backgroundOutline;
-
     private RotationTile _rotationTile; // 타일 회전 스크립트
-
-    public bool IsCorrect { get; private set; }
-
+    private Tile _tile; // Player에게 조작되는 Tile
+    
     private bool _isReverseRotate;
     private bool _isHint;
     private bool _isEnd;
+
+    public GimmickAnimation Gimmick { get; private set; }
+    public Tile CorrectTileInfo { get; private set; } // 정답 확인용 Tile
+    public Tile GetTileInfo {  get { return _tile; } }
+    public bool IsCorrect { get; private set; }
 
     private void Awake()
     {
@@ -78,17 +74,13 @@ public class TileNode : MonoBehaviour
     {
         _isReverseRotate = false;
         _isEnd = false;
-        
-        EventManager<InventoryItemEvent>.StartListening<bool>(InventoryItemEvent.SetReverseRotate, SetReverse);
-        EventManager<InventoryItemEvent>.StartListening<bool>(InventoryItemEvent.SetHint, UseHintItem);
-        EventManager<StageEvent>.StartListening<bool>(StageEvent.GameEnd, SetGameEnd);
+
+        AddEvents();
     }
 
     private void OnDisable()
     {
-        EventManager<InventoryItemEvent>.StopListening<bool>(InventoryItemEvent.SetReverseRotate, SetReverse);
-        EventManager<InventoryItemEvent>.StopListening<bool>(InventoryItemEvent.SetHint, UseHintItem);
-        EventManager<StageEvent>.StopListening<bool>(StageEvent.GameEnd, SetGameEnd);
+        RemoveEvents();
     }
 
     private void Start()
@@ -100,6 +92,20 @@ public class TileNode : MonoBehaviour
 
         if (_tile.Type == TileType.Road)
             EventManager<DataEvents>.TriggerEvent(DataEvents.SetTileGrid, this);        
+    }
+
+    private void AddEvents()
+    {
+        EventManager<InventoryItemEvent>.StartListening<bool>(InventoryItemEvent.SetReverseRotate, SetReverse);
+        EventManager<InventoryItemEvent>.StartListening<bool>(InventoryItemEvent.SetHint, UseHintItem);
+        EventManager<StageEvent>.StartListening<bool>(StageEvent.GameEnd, SetGameEnd);
+    }
+
+    private void RemoveEvents()
+    {
+        EventManager<InventoryItemEvent>.StopListening<bool>(InventoryItemEvent.SetReverseRotate, SetReverse);
+        EventManager<InventoryItemEvent>.StopListening<bool>(InventoryItemEvent.SetHint, UseHintItem);
+        EventManager<StageEvent>.StopListening<bool>(StageEvent.GameEnd, SetGameEnd);
     }
 
     private void Initialize()
@@ -115,7 +121,6 @@ public class TileNode : MonoBehaviour
         _imageHint.color = newColor;
 
         _backgroundOutline = transform.GetChild(0).GetComponent<Outline>();
-
         _imageGimmickRectTransform = _imageGimmick.GetComponent<RectTransform>();
 
         _rotationTile = GetComponent<RotationTile>();
@@ -143,10 +148,7 @@ public class TileNode : MonoBehaviour
         if (_rotationTile != null)
         {
             _rotationTile.InitRotateTile(_tile.RotateValue);  // 회전 로직 RotationTile에 위임
-            //CheckAnswer(false);
         }
-
-        //RandomTileRotate();
     }
 
     // Gimmick 타일 이미지 변경
@@ -169,7 +171,6 @@ public class TileNode : MonoBehaviour
         if (_rotationTile != null)
         {
             _rotationTile.RandomRotateTile(rotateValue);  // 회전 로직 RotationTile에 위임
-            //CheckAnswer(false);
         }
     }
 
@@ -178,9 +179,6 @@ public class TileNode : MonoBehaviour
         if (_isReverseRotate)
         {
             _tile.RotateValue = (_tile.RotateValue + 3) % 4;
-
-            // 모든 타일들의 ReverseRotate 값 변화
-            //EventManager<InventoryItemEvent>.TriggerEvent(InventoryItemEvent.SetReverseRotate, false);
         }
         else
         {
@@ -190,7 +188,6 @@ public class TileNode : MonoBehaviour
         if (_rotationTile != null)
         {
             _rotationTile.RotateTile(_tile.RotateValue);  // 회전 로직 RotationTile에 위임
-            //CheckAnswer(false);
         }
     }
 
@@ -285,22 +282,18 @@ public class TileNode : MonoBehaviour
     // Scale 애니메이션 실행
     public void StartPathAnimation()
     {
-        //tweenAnimation.DORestart();
-
         // 기본 크기 저장
         var initScale = transform.localScale;
 
         // 시퀀스 생성
         Sequence scaleSequence = DOTween.Sequence();
-
         scaleSequence.Append(transform.DOScale(Vector3.one * 1.5f, animationDuration).SetEase(scaleCurve));
-
         scaleSequence.Append(transform.DOScale(initScale, animationDuration).SetEase(scaleCurve));
     }
 
     private void SetGameEnd(bool isEnd)
     {
-        this._isEnd = isEnd;
+        _isEnd = isEnd;
     }
 
     public void SetStartEndSize()

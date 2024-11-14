@@ -7,14 +7,14 @@ using UnityEngine.UI;
 
 public class PlayerItem : MonoBehaviour
 {
+    [SerializeField] private ItemID id;
+    
     private Button _btnItemSlot;
     private ItemData _data;
     private int _count;
 
     // 현재 활성화된 아이템 유형 관리: 1번은 제한 증가, 2번은 역회전, 3번은 힌트
     private static ItemID? activeItemType = null;
-
-    [SerializeField] private ItemID id;
 
     private void Awake()
     {
@@ -102,7 +102,7 @@ public class PlayerItem : MonoBehaviour
     }
 
     // 아이템 사용 후 상태 초기화
-    public static void DeactivateCurrentItem()
+    private static void DeactivateCurrentItem()
     {
         if (activeItemType == null) return;
 
