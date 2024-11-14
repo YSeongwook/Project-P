@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using DG.Tweening;
 using EnumTypes;
@@ -9,15 +8,38 @@ using UnityEngine;
 public class PathFind
 {
     private Dictionary<Vector2, TileNode> _tileGrid = new Dictionary<Vector2, TileNode>();
-    private Dictionary<int, Dictionary<Vector2, TileNode>> _PathTileList = new Dictionary<int, Dictionary<Vector2, TileNode>>();
+    private Dictionary<int, Dictionary<Vector2, TileNode>> _pathTileList = new Dictionary<int, Dictionary<Vector2, TileNode>>();
     private Dictionary<Vector2, TileNode> _startPoint = new Dictionary<Vector2, TileNode>();
     private Dictionary<Vector2, TileNode> _endPoint = new Dictionary<Vector2, TileNode>();
     private Dictionary<Vector2, Vector2> _warpPoints = new Dictionary<Vector2, Vector2>();
-    public List<TileNode> _linkTiles { get; private set; } = new List<TileNode>();
-    //private List<TileNode> _connectedPoints = new List<TileNode>();
+    private List<TileNode> _linkTiles = new List<TileNode>();
 
-    private float CellSize;
-    private bool isMiniGameStage;
+    private float _cellSize;
+    private bool _isMiniGameStage;
+    
+    // 각 RoadShape와 RotateValue에 따른 방향 설정 사전
+    private static readonly Dictionary<RoadShape, Vector2Int[][]> ShapeDirectionMappings = new Dictionary<RoadShape, Vector2Int[][]>
+    {
+        { RoadShape.Straight, new Vector2Int[][] {
+            new Vector2Int[] { Vector2Int.up, Vector2Int.down },  // 0도, 180도
+            new Vector2Int[] { Vector2Int.left, Vector2Int.right } // 90도, 270도
+        }},
+        { RoadShape.L, new Vector2Int[][] {
+            new Vector2Int[] { Vector2Int.up, Vector2Int.left },   // 0도
+            new Vector2Int[] { Vector2Int.right, Vector2Int.up },  // 90도
+            new Vector2Int[] { Vector2Int.right, Vector2Int.down }, // 180도
+            new Vector2Int[] { Vector2Int.down, Vector2Int.left }   // 270도
+        }},
+        { RoadShape.T, new Vector2Int[][] {
+            new Vector2Int[] { Vector2Int.up, Vector2Int.down, Vector2Int.right }, // 0도
+            new Vector2Int[] { Vector2Int.right, Vector2Int.left, Vector2Int.down }, // 90도
+            new Vector2Int[] { Vector2Int.down, Vector2Int.left, Vector2Int.up }, // 180도
+            new Vector2Int[] { Vector2Int.left, Vector2Int.up, Vector2Int.right } // 270도
+        }},
+        { RoadShape.Cross, new Vector2Int[][] {
+            new Vector2Int[] { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right } // 모든 각도 동일
+        }}
+    };
 
     public void SetTileGridEvent(bool isRegister)
     {
@@ -52,7 +74,7 @@ public class PathFind
         _startPoint.Clear();
         _endPoint.Clear();
         _tileGrid.Clear();
-        _PathTileList.Clear();
+        _pathTileList.Clear();
         _warpPoints.Clear();
         _linkTiles.Clear();
     }
@@ -65,10 +87,9 @@ public class PathFind
 
     private void SetStartAndEndPoint(float cellSize)
     {
-        CellSize = cellSize;
+        _cellSize = cellSize;
 
         List<Vector2> unpairedWarps = new List<Vector2>();
-        List<TileNode> unpaireLinks = new List<TileNode>();
 
         foreach (var tile in _tileGrid)
         {
@@ -93,7 +114,6 @@ public class PathFind
             if(tile.Value.GetTileInfo.GimmickShape == GimmickShape.Link)
             {
                 _linkTiles.Add(tile.Value);
-                continue;
             }
         }
 
@@ -122,7 +142,7 @@ public class PathFind
 
             Sequence animationSequence = DOTween.Sequence();
 
-            foreach (var path in _PathTileList.Values)
+            foreach (var path in _pathTileList.Values)
             {
 
                 foreach (var item in path.Reverse())
@@ -138,7 +158,7 @@ public class PathFind
             {
                 DOVirtual.DelayedCall(1f, () =>
                 {
-                    if (isMiniGameStage)
+                    if (_isMiniGameStage)
                     {
                         // 로비와 Stage UI Disable
                         EventManager<StageEvent>.TriggerEvent(StageEvent.SetMiniGame, false);
@@ -177,9 +197,6 @@ public class PathFind
                 var path = FindPath(startPoint.Key, endPoint.Key);
                 if (path != null)
                 {
-                    // 이미 연결된 지점이 경로에 존재하면 리턴
-                    //if (_connectedPoints.Contains(endPoint.Value)) continue;
-
                     // 경로가 존재할 경우, successfulPaths에 저장
                     int pathIndex = successfulPaths.Count + 1;
                     successfulPaths.Add(pathIndex, path);
@@ -190,18 +207,13 @@ public class PathFind
                     if (!_connectedPoints.Contains(endPoint.Value))
                         _connectedPoints.Add(endPoint.Value);                    
                 }
-                else
-                {
-                    // 하나의 endPoint라도 연결되지 못하면 이 startPoint는 실패
-                    continue;
-                }
             }
 
             // 완성된 경로가 시작 포인트보다 많으면 종료.
             if (_connectedPoints.Count >=( _startPoint.Count + _endPoint.Count))
             {
                 // 하나의 startPoint에서 모든 endPoint들이 연결된 경우
-                _PathTileList = successfulPaths;
+                _pathTileList = successfulPaths;
                 missionSuccess = true;
                 break;
             }
@@ -272,7 +284,7 @@ public class PathFind
 
         foreach (var direction in new[] { Vector2.up, Vector2.right, Vector2.down, Vector2.left })
         {
-            Vector2 neighborPos = current + direction * CellSize;
+            Vector2 neighborPos = current + direction * _cellSize;
             bool a = _tileGrid.ContainsKey(neighborPos);
             if (a)
             {
@@ -301,8 +313,8 @@ public class PathFind
         List<Vector2Int> neighborConnections = GetConnectedDirections(neighborNode);
 
         // 현재 타일에서 이웃 타일로의 방향
-        Vector2Int directionToNeighbor = Vector2Int.RoundToInt((neighbor - current)/CellSize);
-        Vector2Int directionFromNeighbor = Vector2Int.RoundToInt((current - neighbor)/CellSize);
+        Vector2Int directionToNeighbor = Vector2Int.RoundToInt((neighbor - current)/_cellSize);
+        Vector2Int directionFromNeighbor = Vector2Int.RoundToInt((current - neighbor)/_cellSize);
 
         return currentConnections.Contains(directionToNeighbor) && neighborConnections.Contains(directionFromNeighbor);
     }
@@ -315,109 +327,50 @@ public class PathFind
         switch (tileNode.GetTileInfo.RoadShape)
         {
             case RoadShape.Straight:
-                if (tileNode.GetTileInfo.RotateValue % 2 == 0) // 0도, 180도
-                {
-                    connections.Add(Vector2Int.up);
-                    connections.Add(Vector2Int.down);
-                }
-                else // 90도, 270도
-                {
-                    connections.Add(Vector2Int.left);
-                    connections.Add(Vector2Int.right);
-                }
-                break;
             case RoadShape.L:
-                switch (tileNode.GetTileInfo.RotateValue)
-                {
-                    case 0:
-                        connections.Add(Vector2Int.up);
-                        connections.Add(Vector2Int.left);
-                        break;
-                    case 1:
-                        connections.Add(Vector2Int.right);
-                        connections.Add(Vector2Int.up);
-                        break;
-                    case 2:
-                        connections.Add(Vector2Int.right);
-                        connections.Add(Vector2Int.down);
-                        break;
-                    case 3:
-                        connections.Add(Vector2Int.down);
-                        connections.Add(Vector2Int.left);
-                        break;
-                }
-                break;
             case RoadShape.T:
-                switch (tileNode.GetTileInfo.RotateValue)
-                {
-                    case 0:
-                        connections.Add(Vector2Int.up);
-                        connections.Add(Vector2Int.down);
-                        connections.Add(Vector2Int.right);
-                        break;
-                    case 1:
-                        connections.Add(Vector2Int.right);
-                        connections.Add(Vector2Int.left);
-                        connections.Add(Vector2Int.down);
-                        break;
-                    case 2:
-                        connections.Add(Vector2Int.down);
-                        connections.Add(Vector2Int.left);
-                        connections.Add(Vector2Int.up);
-                        break;
-                    case 3:
-                        connections.Add(Vector2Int.left);
-                        connections.Add(Vector2Int.up);
-                        connections.Add(Vector2Int.right);
-                        break;
-                }
-                break;
             case RoadShape.Cross:
-                connections.Add(Vector2Int.up);
-                connections.Add(Vector2Int.down);
-                connections.Add(Vector2Int.left);
-                connections.Add(Vector2Int.right);
+                connections.AddRange(GetConnectionsForShape(tileNode.GetTileInfo.RoadShape, tileNode.GetTileInfo.RotateValue));
                 break;
             // Start와 End 타일의 경우, 특정 연결 상태만을 가질 수 있도록 처리
             case RoadShape.Start:
-                if (tileNode.GetTileInfo.RotateValue == 0)
-                {
-                    connections.Add(Vector2Int.down);
-                }
-                else if (tileNode.GetTileInfo.RotateValue == 1)
-                {
-                    connections.Add(Vector2Int.left);
-                }
-                else if (tileNode.GetTileInfo.RotateValue == 2)
-                {
-                    connections.Add(Vector2Int.up);
-                }
-                else if (tileNode.GetTileInfo.RotateValue == 3)
-                {
-                    connections.Add(Vector2Int.right);
-                }
+                connections.Add(GetDirectionForRotation(tileNode.GetTileInfo.RotateValue, true));
                 break;
             case RoadShape.End:
-                if (tileNode.GetTileInfo.RotateValue == 0)
-                {
-                    connections.Add(Vector2Int.up);
-                }
-                else if (tileNode.GetTileInfo.RotateValue == 1)
-                {
-                    connections.Add(Vector2Int.right);
-                }
-                else if (tileNode.GetTileInfo.RotateValue == 2)
-                {
-                    connections.Add(Vector2Int.down);
-                }
-                else if (tileNode.GetTileInfo.RotateValue == 3)
-                {
-                    connections.Add(Vector2Int.left);
-                }
+                connections.Add(GetDirectionForRotation(tileNode.GetTileInfo.RotateValue, false));
                 break;
         }
 
         return connections;
+    }
+    
+    // 연결 방향을 반환하는 메서드
+    private List<Vector2Int> GetConnectionsForShape(RoadShape shape, int rotateValue)
+    {
+        List<Vector2Int> connections = new List<Vector2Int>();
+
+        if (ShapeDirectionMappings.TryGetValue(shape, out Vector2Int[][] directions))
+        {
+            // rotateValue를 0~3 사이로 제한하고 해당 방향 추가
+            int rotationIndex = rotateValue % directions.Length;
+            connections.AddRange(directions[rotationIndex]);
+        }
+
+        return connections;
+    }
+    
+    // 방향 설정 메서드 분리
+    private Vector2Int GetDirectionForRotation(int rotateValue, bool isStart)
+    {
+        // isStart가 true이면 Start 타일의 방향을 반환, false이면 End 타일의 방향을 반환
+        return rotateValue switch
+        {
+            0 => isStart ? Vector2Int.down : Vector2Int.up,
+            1 => isStart ? Vector2Int.left : Vector2Int.right,
+            2 => isStart ? Vector2Int.up : Vector2Int.down,
+            3 => isStart ? Vector2Int.right : Vector2Int.left,
+            _ => Vector2Int.zero // rotateValue가 0~3 외의 값일 경우를 대비
+        };
     }
 
     private void LinkTileRotate(TileNode tile, bool isReverse)
@@ -453,8 +406,6 @@ public class PathFind
             {
                 linkTile.SetLinkTileRotate(false);
             }
-
-            //DebugLogger.Log($"{linkTile.transform.name} : {linkTile.GetTileInfo.RotateValue}");
         }
     }
 
@@ -464,9 +415,7 @@ public class PathFind
         for(int i=0; i< _pathTileList.Count; i++)
         {
             var correctRotateValue = _pathTileList[i].CorrectTileInfo.RotateValue;
-            DebugLogger.Log($"1. {_pathTileList[i].transform.name} : {correctRotateValue}");
             var checkTargetRotateValue = _pathTileList[i].GetTileInfo.RotateValue;
-            DebugLogger.Log($"2. {_pathTileList[i].transform.name} : {checkTargetRotateValue}");
 
             var disValue = 0;
             switch (_pathTileList[i].GetTileInfo.RoadShape)
@@ -491,9 +440,9 @@ public class PathFind
 
     private void SetMiniGameStage(bool isMiniGameStage)
     {
-        if (this.isMiniGameStage == isMiniGameStage) return;
+        if (this._isMiniGameStage == isMiniGameStage) return;
 
-        this.isMiniGameStage = isMiniGameStage;
+        this._isMiniGameStage = isMiniGameStage;
 
         DebugLogger.Log($"{isMiniGameStage}");
     }
