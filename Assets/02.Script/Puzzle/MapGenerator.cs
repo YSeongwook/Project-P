@@ -12,7 +12,7 @@ public class MapGenerator : MonoBehaviour
     public GameObject mapGridLayout;
     
     [FoldoutGroup("Tile")][SerializeField] private GameObject _tileNode;
-    [FoldoutGroup("Tile")][SerializeField] private float _tileSize;
+    [FoldoutGroup("Tile")][SerializeField] private float tileSize;
 
     [FoldoutGroup("Tile Sprite")] [SerializeField] private List<Sprite> roadList;
     [FoldoutGroup("Tile Sprite")] [SerializeField] private List<Sprite> gimmickList;
@@ -22,20 +22,21 @@ public class MapGenerator : MonoBehaviour
     private RectTransform _rectTransform;
     private GridLayoutGroup _grid;
     private int _limitCount;
-    
     private int _currentChapter;
     private int _currentStage;
-
     private bool _isTutorial;
 
-    private PathFind checkPath; // 디버거
+    private PathFind _checkPath; // 디버거
 
     private void Awake()
     {
         _rectTransform = mapGridLayout.GetComponent<RectTransform>();
         _grid = mapGridLayout.GetComponent<GridLayoutGroup>();
-        checkPath = new PathFind();
+        _checkPath = new PathFind();
+    }
 
+    private void OnEnable()
+    {
         AddEvents();
     }
 
@@ -44,7 +45,7 @@ public class MapGenerator : MonoBehaviour
         stageCanvas.enabled = false;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         RemoveEvents();
     }
@@ -61,7 +62,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<UIEvents>.StartListening(UIEvents.OnClickRestartButton, ReStartCurrentStage);
         EventManager<StageEvent>.StartListening<bool>(StageEvent.TutorialStage, SetTutorialStage);
         EventManager<MiniGame>.StartListening(MiniGame.StartMiniGame, OpenMiniGame);
-        checkPath.SetTileGridEvent(true);
+        _checkPath.SetTileGridEvent(true);
     }
 
     private void RemoveEvents()
@@ -76,7 +77,7 @@ public class MapGenerator : MonoBehaviour
         EventManager<UIEvents>.StopListening(UIEvents.OnClickRestartButton, ReStartCurrentStage);
         EventManager<StageEvent>.StopListening<bool>(StageEvent.TutorialStage, SetTutorialStage);
         EventManager<MiniGame>.StopListening(MiniGame.StartMiniGame, OpenMiniGame);
-        checkPath.SetTileGridEvent(false);
+        _checkPath.SetTileGridEvent(false);
     }
 
     // 스테이지 열기
@@ -128,9 +129,9 @@ public class MapGenerator : MonoBehaviour
     private void SetupGridSize()
     {
         DetectTileSize(_tileList.Count);
-        _grid.cellSize = new Vector2(_tileSize, _tileSize);
+        _grid.cellSize = new Vector2(tileSize, tileSize);
 
-        float sizeValue = Mathf.Sqrt(_tileList.Count) * _tileSize;
+        float sizeValue = Mathf.Sqrt(_tileList.Count) * tileSize;
         _rectTransform.sizeDelta = new Vector2(sizeValue, sizeValue);
     }
 
@@ -149,7 +150,7 @@ public class MapGenerator : MonoBehaviour
             var tileNode = newTile.GetComponent<TileNode>();
             if (tileNode == null) continue;
 
-            tileNode.Gimmick.SetScale(_tileSize);
+            tileNode.Gimmick.SetScale(tileSize);
             tileNode.SetTileNodeData(tile);
 
             int tileShape = (int)tile.RoadShape;
@@ -220,7 +221,7 @@ public class MapGenerator : MonoBehaviour
             }
 
             // Test
-            isLoop = IsCorrectAnswer() && checkPath.GetRotationConditionSuccess(5, allTiles);
+            isLoop = IsCorrectAnswer() && _checkPath.GetRotationConditionSuccess(5, allTiles);
         }
     }
     
@@ -245,7 +246,7 @@ public class MapGenerator : MonoBehaviour
     // 스테이지 생성 완료 후 처리
     private void FinalizeStage()
     {
-        EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathEndPoint, _tileSize);
+        EventManager<StageEvent>.TriggerEvent(StageEvent.SetPathEndPoint, tileSize);
         EventManager<StageEvent>.TriggerEvent(StageEvent.StartStage, _limitCount);
     }
 
@@ -270,7 +271,7 @@ public class MapGenerator : MonoBehaviour
     // 정답 여부 확인
     private bool IsCorrectAnswer()
     {
-        bool isLoop = checkPath.TilePathFind();
+        bool isLoop = _checkPath.TilePathFind();
         return isLoop;
     }
 
@@ -323,19 +324,19 @@ public class MapGenerator : MonoBehaviour
         switch (Mathf.Sqrt(listCount))
         {
             case 3:
-                _tileSize = 320;
+                tileSize = 320;
                 break;
             case 4:
-                _tileSize = 250;
+                tileSize = 250;
                 break;
             case 5:
-                _tileSize = 220;
+                tileSize = 220;
                 break;
             case 6:
-                _tileSize = 170;
+                tileSize = 170;
                 break;
             case 7:
-                _tileSize = 150;
+                tileSize = 150;
                 break;
         }
     }

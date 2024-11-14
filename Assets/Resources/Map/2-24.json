@@ -169,7 +169,7 @@
   },
   {
     "Type": 1,
-    "RoadShape": 5,
+    "RoadShape": 6,
     "GimmickShape": 0,
     "RotateValue": 1
   },
@@ -181,7 +181,7 @@
   },
   {
     "Type": 1,
-    "RoadShape": 6,
+    "RoadShape": 5,
     "GimmickShape": 0,
     "RotateValue": 0
   },

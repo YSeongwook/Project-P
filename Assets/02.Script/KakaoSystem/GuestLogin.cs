@@ -17,7 +17,7 @@ public class GuestLogin : MonoBehaviour
     }
 
     // 패널 화면에 있는 로그인 버튼
-    public void GusetLoginStart()
+    public void GuestLoginStart()
     {
         string GuestID = IDInputField.text;
 
@@ -59,8 +59,5 @@ public class GuestLogin : MonoBehaviour
                 IDInputField.text = "";
                 return;
         }
-
-        //BGBtn.gameObject.SetActive(false);
-        //AlertFadeOut.OnAlertMsg($"'{GuestID}' Login.");
     }
 }
