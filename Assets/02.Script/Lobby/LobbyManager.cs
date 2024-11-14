@@ -22,7 +22,6 @@ public class LobbyManager : MonoBehaviour
         EventManager<StageEvent>.StartListening<bool>(StageEvent.SetMiniGame, SetLobbyUI);
     }
 
-    // Awake에서 호출 시 Null 에러
     private void Start()
     {
         // 게임 시작 시 로비 배경 업데이트
@@ -42,67 +41,66 @@ public class LobbyManager : MonoBehaviour
         int currentChapter = PlayerInformation.Instance.PlayerViewModel.CurrentChapter;
         int currentStage = PlayerInformation.Instance.PlayerViewModel.CurrentStage;
 
-        // DebugLogger.Log($"챕터: {currentChapter}");
-        // DebugLogger.Log($"스테이지: {currentStage}");
-        
-        // 조건: 각 챕터의 특정 스테이지를 클리어했을 때만 배경 변경
-        if (ShouldChangeBackground(currentChapter, currentStage))
+        // 챕터와 스테이지 값이 유효한 경우에만 배경을 업데이트
+        if (currentChapter <= 0 || currentStage <= 0)
         {
-            // 스프라이트 인덱스를 챕터에 맞게 설정 (챕터별로 다른 이미지를 적용)
-            int spriteIndex = GetSpriteIndex(currentChapter, currentStage);
-            if (spriteIndex >= 0 && spriteIndex < lobbySprites.Length)
-            {
-                backgroundImage.sprite = lobbySprites[spriteIndex];
-            }
-            else
-            {
-                DebugLogger.LogError("스프라이트 인덱스 범위를 벗어났습니다.");
-            }
+            return;
+        }
+
+        // 현재 스테이지가 주요 스테이지(10, 20, 30)인지 확인
+        int latestClearedStage = Mathf.FloorToInt(currentStage / 10f) * 10;
+        if (latestClearedStage > 30) latestClearedStage = 30;
+
+        // 주요 스테이지가 아닐 경우 로비 이미지 업데이트 중단
+        if (!ShouldChangeBackground(currentChapter, latestClearedStage))
+        {
+            DebugLogger.Log("주요 스테이지가 아니므로 로비 이미지 변경을 건너뜁니다.");
+            return;
+        }
+
+        int spriteIndex = GetSpriteIndex(currentChapter, latestClearedStage);
+        if (spriteIndex >= 0 && spriteIndex < lobbySprites.Length)
+        {
+            backgroundImage.sprite = lobbySprites[spriteIndex];
+        }
+        else
+        {
+            DebugLogger.LogError("스프라이트 인덱스 범위를 벗어났습니다.");
         }
     }
 
     // 특정 챕터와 스테이지일 때 배경 변경 여부를 결정하는 메서드
     private bool ShouldChangeBackground(int chapter, int stage)
     {
-        switch (chapter)
-        {
-            case 1:
-                return stage == 10; // 1챕터의 10스테이지 클리어 시
-            case 2:
-            case 3:
-            case 4:
-                return stage == 1 || stage == 11 || stage == 21 || stage == 30; // 2, 3, 4챕터의 10, 20, 30스테이지 클리어 시
-            default:
-                return false;
-        }
+        return stage % 10 == 0 && stage <= 30;
     }
 
     // 챕터와 스테이지에 맞는 스프라이트 인덱스를 반환하는 메서드
     private int GetSpriteIndex(int chapter, int stage)
     {
-        if (chapter == 2)
+        // 클리어된 주요 스테이지(10, 20, 30)의 누적 개수 계산
+        int clearedStages = 0;
+
+        // 1챕터의 주요 스테이지는 1개(10)만 있음
+        if (chapter > 1) clearedStages += 1;
+
+        // 2챕터부터는 각 챕터마다 주요 스테이지가 3개씩 있음
+        for (int ch = 2; ch < chapter; ch++)
         {
-            if (stage == 1) return 1;
-            if (stage == 11) return 2;
-            if (stage == 21) return 3;
-        }
-        if (chapter == 3)
-        {
-            if (stage == 1) return 4;
-            if (stage == 11) return 5;
-            if (stage == 21) return 6;
-        }
-        if (chapter == 4)
-        {
-            if (stage == 1) return 7;
-            if (stage == 11) return 8;
-            if (stage == 21) return 9;
-            if (stage == 30) return 10;
+            clearedStages += 3;
         }
 
-        return -1; // 스프라이트가 없는 경우
+        // 현재 챕터의 주요 스테이지 클리어 개수 추가
+        if (stage >= 10) clearedStages += 1;
+        if (stage >= 20) clearedStages += 1;
+        if (stage >= 30) clearedStages += 1;
+
+        // 첫 번째 주요 스테이지 클리어 시 1번 인덱스를 할당
+        int spriteIndex = clearedStages;
+        return (spriteIndex >= 1 && spriteIndex < lobbySprites.Length) ? spriteIndex : 0;
     }
 
+    // 로비 UI의 활성화 여부 설정 메서드
     private void SetLobbyUI(bool SetEnable)
     {
         _canvas.enabled = SetEnable;

@@ -6,11 +6,10 @@ using UnityEngine.UI;
 public class Stage : MonoBehaviour
 {
     [SerializeField] private int stageNumber;
+    
     private int _chapter;
-
     private bool _isLastStage;
     private bool _isMiniGameStage;
-    
     private Button _btnStage;
     private Image _lock;
 
@@ -35,7 +34,6 @@ public class Stage : MonoBehaviour
         }
         
         EventManager<UIEvents>.TriggerEvent(UIEvents.OnClickUseTicket);
-
         EventManager<DataEvents>.TriggerEvent(DataEvents.SelectStage, this._chapter,stageNumber);
 
         // 플레이어 아이템 게임 캔버스에 적용
@@ -59,14 +57,11 @@ public class Stage : MonoBehaviour
 
     public void SetLastStage(bool isLastStage)
     {
-        if (this._isLastStage != isLastStage)
-        {
-            this._isLastStage = isLastStage;
-        }
+        _isLastStage = isLastStage;
     }
 
     public void SetMiniGameStage(bool isMiniGameStage)
     {
-        this._isMiniGameStage = isMiniGameStage;
+        _isMiniGameStage = isMiniGameStage;
     }
 }
