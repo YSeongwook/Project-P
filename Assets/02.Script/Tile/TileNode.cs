@@ -195,6 +195,7 @@ public class TileNode : MonoBehaviour
     public void OnClickRotationTile()
     {
         if (_isEnd || _rotationTile.IsRotating) return;
+        if (_tile.GimmickShape == GimmickShape.Rock) return;
 
         // 짧은 진동 발생
         EventManager<VibrateEvents>.TriggerEvent(VibrateEvents.ShortWeak);
