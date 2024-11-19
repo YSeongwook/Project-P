@@ -48,13 +48,18 @@ public class MiniGameManager : Singleton<MiniGameManager>
 
     private void ActiveMiniGameCanvas(int chapter, int stage)
     {
-        int index = 0;
-        if (chapter > 1 && stage % 10 == 0)
+        // 스테이지가 10의 배수이거나 30일 때 실행
+        if (chapter > 1 && (stage % 10 == 0 || stage == 30))
         {
-            index = chapter - 2 + (stage % 10);
-        }
+            // index 계산: (챕터 - 2) * 3 + (stage / 10 - 1)
+            int index = (chapter - 2) * 3 + (stage / 10 - 1);
 
-        if(index < miniGameList.Count - 1) miniGameList[index].gameObject.SetActive(true);
+            // 유효한 인덱스인지 확인 후 미니게임 활성화
+            if (index >= 0 && index < miniGameList.Count)
+            {
+                miniGameList[index].gameObject.SetActive(true);
+            }
+        }
     }
 
     private void DisActiveMiniGameCanvas()
