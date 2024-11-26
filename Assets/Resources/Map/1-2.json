@@ -1,0 +1,56 @@
+[
+  {
+    "Type": 1,
+    "RoadShape": 5,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 1,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 1,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 2,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 1,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 2,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 1,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 1,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  },
+  {
+    "Type": 1,
+    "RoadShape": 6,
+    "GimmickShape": 0,
+    "RotateValue": 0
+  }
+]
